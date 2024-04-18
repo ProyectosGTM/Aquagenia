@@ -1,0 +1,124 @@
+<body>
+  <div class="contenedorr" style="background-color: #2d313e; color: white; width: 100%; height: 70px; display: flex; justify-content: center; align-items: center;">
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            AQUAGENIA.
+          </div>
+          <!-- <div class="col-lg-6">
+            <div class="text-sm-end d-none d-sm-block">
+              Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-reset">Themesbrand</a>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="contenedor">
+    <div class="card-group">
+      <div class="card" style="background-color: #2d313e; border-color: #2d313e;">
+        <div class="d-flex justify-content-center align-items-center h-100" >
+          <img src="../../../../assets/images/aqua.png" class="img-fluid rounded-start" style="max-width: 85%;" alt="...">
+        </div>
+      </div>
+      <div class="card" style="background-color: #2d313e; border-color: #2d313e;">
+        <div class="card-body" style="background-color: #2d313e; border-color: #2d313e;">
+          <div class="card-body p-4">
+            <div class="text-center mt-2">
+              <h5  style="color: #ffdd00;">Bienvenido !</h5>
+              <p  style="color: rgb(161, 161, 161);">Inicia sesión para continuar.</p>
+            </div>
+            <div class="p-2 mt-4">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                @if(error)
+                { <ngb-alert type="danger" [dismissible]="false">{{ error }}</ngb-alert>
+                }
+                <div class="mb-3">
+                  <label for="email" style="color: rgb(161, 161, 161);">Usuario</label>
+                  <input type="email" formControlName="email" class="form-control" id="email" placeholder="Email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                  @if(submitted && f.email.errors){
+                  <div class="invalid-feedback">
+                    @if(f.email.errors.required){
+                    <div>Correo electrónico es requerido</div>
+                    }@if(f.email.errors.email){
+                    <div>El correo electrónico debe ser una dirección de correo electrónico válida.</div>
+                    }
+                  </div>}
+                </div>
+  
+                <div class="mb-3">
+                  <div class="float-end">
+                    <a href="/account/reset-password" class="text-muted">Contraseña olvidada?</a>
+                  </div>
+                  <label for="password" style="color: rgb(161, 161, 161);">Contraseña</label>
+                  <input type="password" formControlName="password" class="form-control" id="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Password" />
+                  @if(submitted && f.email.errors){
+                  <div class="invalid-feedback">
+                    @if(f.email.errors.required){
+                    <div>Password is required</div>}
+                  </div>}
+                </div>
+  
+                <!-- <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="auth-remember-check">
+                  <label class="form-check-label" for="auth-remember-check">Remember me</label>
+                </div> -->
+  
+                <div class="mt-3 text-end">
+                  <button class="btn btn-primary w-sm waves-effect waves-light" type="submit">Ingresar</button>
+                </div>
+                <!-- <div class="mt-4 text-center">
+                  <div class="signin-other-title">
+                    <h5 class="font-size-14 mb-3 title">Siguenos en nuestras redes sociales!</h5>
+                  </div>
+  
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <a href="javascript:void()" class="social-list-item bg-primary text-white border-primary">
+                        <i class="mdi mdi-facebook"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="javascript:void()" class="social-list-item bg-info text-white border-info">
+                        <i class="mdi mdi-twitter"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="javascript:void()" class="social-list-item bg-danger text-white border-danger">
+                        <i class="mdi mdi-google"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div> -->
+  
+                <!-- <div class="mt-4 text-center">
+                  <p class="mb-0">Don't have an account ? <a href="/account/signup" class="fw-medium text-primary">
+                      Signup now </a> </p>
+                </div> -->
+              </form>
+            </div>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="contenedorr" style="background-color: #2d313e; color: white; position: absolute; bottom: 0; width: 100%; height: 8%; display: flex; justify-content: center; align-items: center;">
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            Copyright 2024 © AQUAGENIA Todos los derechos reservados.
+          </div>
+          <!-- <div class="col-lg-6">
+            <div class="text-sm-end d-none d-sm-block">
+              Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-reset">Themesbrand</a>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<!-- end page -->

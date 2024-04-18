@@ -1,0 +1,516 @@
+.cssplay-menu {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  margin: 20px auto 0;
+  width: 100%;
+  max-width: 400px; /* Reducir el ancho máximo del menú */
+  height: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.cssplay-menu > div {
+  position: relative;
+  margin-bottom: 200px;
+  padding-bottom: 80%;
+  max-width: 100%;
+  height: 0;
+}
+
+.cssplay-menu * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.cssplay-menu .holder {
+  position: relative;
+  padding-bottom: 100%;
+  max-width: 100%;
+  height: 0;
+  overflow: hidden;
+}
+
+.cssplay-menu input {
+  position: absolute;
+  display: none;
+}
+
+.cssplay-menu .segment {
+  position: absolute;
+  z-index: 100;
+  left: 50%;
+  top: 50%;
+  margin-left: -45%; /* Ajustar el margen izquierdo */
+  margin-top: -45%; /* Ajustar el margen superior */
+  width: 90%; /* Reducir el ancho del segmento */
+  height: 90%; /* Reducir la altura del segmento */
+  border-radius: 50%;
+  overflow: hidden;
+  transform: scale(0);
+  transition: 0.5s cubic-bezier(.58, 2.4, 0.5, 0.5);
+  transition: 0.5s ease;
+}
+
+.cssplay-menu .curve-upper {
+  position: absolute;
+  left: 1%;
+  top: 1%;
+  width: 98%;
+  height: 98%;
+  background: #686565;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 0s;
+}
+
+.cssplay-menu .curve-lower {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  transform: rotate(-140deg) scale(0);
+  transition: 0s;
+}
+
+.cssplay-menu .curve {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  background: #e0e215;
+  transform-origin: left top;
+  transform: rotate(0deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:hover {
+  background-color: #515151; /* Cambiar al color rosa deseado */
+}
+
+.cssplay-menu .segment label {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 50%;
+  height: 50%;
+  background: #323232;
+  border: 1px solid #e9e9e9;
+  cursor: pointer;
+  transform-origin: left top;
+  transition: 0.25s cubic-bezier(0, 0, 1, 1);
+  transition: 0.25s ease;
+}
+
+.cssplay-menu .segment label span {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 15px;
+  bottom: 25px;
+  margin: auto;
+  width: 35px;
+  height: 35px;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.cssplay-menu .segment label:nth-of-type(1) {
+  transform: rotate(-140deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(2) {
+  transform: rotate(-100deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(3) {
+  transform: rotate(-60deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(4) {
+  transform: rotate(-20deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(5) {
+  transform: rotate(20deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(6) {
+  transform: rotate(60deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(7) {
+  transform: rotate(100deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(8) {
+  transform: rotate(140deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(9) {
+  transform: rotate(180deg) skewY(50deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(1) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(0deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(2) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(-40deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(3) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(-80deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(4) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(-120deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(5) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(-160deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(6) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(-200deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(7) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(-240deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(8) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(-280deg);
+}
+
+.cssplay-menu .segment label:nth-of-type(9) span {
+  background: url(../../../../assets/images/aqua.png);
+  transform: skewY(-50deg) rotate(-320deg);
+}
+
+.cssplay-menu .center {
+  display: block;
+  position: absolute;
+  z-index: 200;
+  left: 50%;
+  top: 50%;
+  margin-left: -15%; /* Ajustar el margen izquierdo */
+  margin-top: -15%; /* Ajustar el margen superior */
+  width: 30%; /* Reducir el tamaño del centro */
+  height: 30%; /* Reducir el tamaño del centro */
+  border-radius: 50%;
+  background: #e9e9e9;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.cssplay-menu #toggle:checked + .holder .segment {
+  transition: 0.5s cubic-bezier(.58, 3, 0.5, 0.5);
+  transition: 0.5s ease;
+  transform: scale(1);
+}
+
+.cssplay-menu #toggle:checked + .holder .center {
+  transition: 0.5s cubic-bezier(.58, 3, 0.5, 0.5);
+  transition: 0.5s ease;
+  transform: scale(1.2);
+}
+
+.cssplay-menu #toggle:checked + .holder .curve-upper {
+  transition: 0.5s cubic-bezier(.58, 3, 0.5, 0.5);
+  transition: 1s ease;
+  transform: scale(1);
+}
+
+.cssplay-menu #toggle:checked + .holder .curve-lower {
+  transition: 0.5s cubic-bezier(.58, 3, 0.5, 0.5);
+  transition: 1s ease;
+  transform: rotate(-140deg) scale(1);
+}
+
+.cssplay-menu #c1:checked ~ .holder .segment label:nth-of-type(1),
+.cssplay-menu #c2:checked ~ .holder .segment label:nth-of-type(2),
+.cssplay-menu #c3:checked ~ .holder .segment label:nth-of-type(3),
+.cssplay-menu #c4:checked ~ .holder .segment label:nth-of-type(4),
+.cssplay-menu #c5:checked ~ .holder .segment label:nth-of-type(5),
+.cssplay-menu #c6:checked ~ .holder .segment label:nth-of-type(6),
+.cssplay-menu #c7:checked ~ .holder .segment label:nth-of-type(7),
+.cssplay-menu #c8:checked ~ .holder .segment label:nth-of-type(8),
+.cssplay-menu #c9:checked ~ .holder .segment label:nth-of-type(9) {
+  background: #515151;
+}
+
+.cssplay-menu label {
+  transform: rotate(180deg);
+  display: block;
+}
+
+.circulo {
+  width: 45px;
+  transform: rotate(170deg);
+  height: 45px;
+  border-radius: 50%; /* Hace que el div tenga forma de círculo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.uno {
+  background-color: #4a97cc;
+}
+
+.dos {
+  background-color: #6ac7d4;
+}
+
+.tres {
+  background-color: #71aec5;
+}
+
+.cuatro {
+  background-color: #cd4040;
+}
+
+.cinco {
+  background-color: #45b47f;
+}
+
+.seis {
+  background-color: #6ad483;
+}
+
+.siete {
+  background-color: #50b43c;
+}
+
+.ocho {
+  background-color: #4a97cc;
+}
+
+.nueve {
+  background-color: #cd4040;
+}
+
+/* Estilo del icono */
+.circulo i {
+  color: white; /* Color del icono */
+  font-size: 25px; /* Tamaño del icono */
+}
+
+.cssplay-menu #c1:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(220deg)
+}
+
+.cssplay-menu #c2:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(-100deg)
+}
+
+.cssplay-menu #c3:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(-60deg)
+}
+
+.cssplay-menu #c4:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(-20deg)
+}
+
+.cssplay-menu #c5:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(20deg)
+}
+
+.cssplay-menu #c6:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(60deg)
+}
+
+.cssplay-menu #c7:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(100deg)
+}
+
+.cssplay-menu #c8:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(140deg)
+}
+
+.cssplay-menu #c9:checked ~ #toggle:checked ~ .holder .curve-lower {
+  transform: rotate(180deg)
+}
+
+.cssplay-menu .sub {
+  position: absolute;
+  left: 75%;
+  top: 120%;
+  margin-left: -50%;
+  width: 200px;
+  height: 0;
+  overflow: hidden;
+}
+
+.cssplay-menu .sub dl {
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  margin-left: -25%;
+  padding: 0;
+  width: 50%;
+  opacity: 0;
+  transition: 0.5s cubic-bezier(.58, 3, 0.5, 0.5);
+  transition: all 0.5s ease;
+}
+
+.cssplay-menu .sub dl dt {
+  text-align: center;
+  font: bold 16px/20px 'Lato', arial, sans-serif;
+  color: #e0e215;
+}
+
+.cssplay-menu .sub dl dd {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font: normal 15px/20px 'Lato', arial, sans-serif;
+  color: #000;
+}
+
+.cssplay-menu .sub dl dd a {
+  color: #e9e9e9;
+}
+
+.cssplay-menu #c1:checked ~ #toggle:checked ~ .sub dl:nth-of-type(1),
+.cssplay-menu #c2:checked ~ #toggle:checked ~ .sub dl:nth-of-type(2),
+.cssplay-menu #c3:checked ~ #toggle:checked ~ .sub dl:nth-of-type(3),
+.cssplay-menu #c4:checked ~ #toggle:checked ~ .sub dl:nth-of-type(4),
+.cssplay-menu #c5:checked ~ #toggle:checked ~ .sub dl:nth-of-type(5),
+.cssplay-menu #c6:checked ~ #toggle:checked ~ .sub dl:nth-of-type(6),
+.cssplay-menu #c7:checked ~ #toggle:checked ~ .sub dl:nth-of-type(7),
+.cssplay-menu #c8:checked ~ #toggle:checked ~ .sub dl:nth-of-type(8),
+.cssplay-menu #c9:checked ~ #toggle:checked ~ .sub dl:nth-of-type(9) {
+  top: 20px;
+  opacity: 1;
+  transition: 0.5s cubic-bezier(.58, 3, 0.5, 0.5) 0.5s;
+  transition: opacity 0.5s ease, top 0.5s ease 0.5s;
+}
+
+.cssplay-menu #c1:checked ~ #toggle:checked ~ .sub,
+.cssplay-menu #c2:checked ~ #toggle:checked ~ .sub,
+.cssplay-menu #c3:checked ~ #toggle:checked ~ .sub,
+.cssplay-menu #c4:checked ~ #toggle:checked ~ .sub,
+.cssplay-menu #c5:checked ~ #toggle:checked ~ .sub,
+.cssplay-menu #c6:checked ~ #toggle:checked ~ .sub,
+.cssplay-menu #c7:checked ~ #toggle:checked ~ .sub,
+.cssplay-menu #c8:checked ~ #toggle:checked ~ .sub,
+.cssplay-menu #c9:checked ~ #toggle:checked ~ .sub {
+  height: 250px
+}
+
+// can touch this!
+$items: 6;
+$size: 100;
+$bgcolor: #F6717F;
+
+// can't touch this!
+$deg: 360/$items;
+$unrotate: - (90 - $deg)/2;
+$skew: 90 - $deg;
+
+html {
+  background: #44384E;
+  margin: 70px;
+}
+
+ul {
+  transform:(scale(0.2));
+  transition:(.3s ease-out all);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: inline-block;
+  width: #{$size*2}px;
+  height: #{$size*2}px;
+  
+  li {
+    position: absolute;
+    width: #{$size}px;height: #{$size}px;
+    -webkit-transform-origin: 100% 100%;
+    overflow: hidden;
+    display: none;
+    
+    a {
+      color: lighten($bgcolor, 20%);
+      display: block;
+      width: #{$size*2}px;height: #{$size*2}px;
+      border-radius:50%;
+      text-align: center;
+      background: $bgcolor;
+      font-size: 25px;
+    }
+    
+    &:nth-child(odd){
+        a {
+          background: lighten($bgcolor, 2%);
+        }
+    }
+    
+    @for $i from 1 through $items {
+      &:nth-child(#{$i}) {
+        display: block;
+        transform:(rotate(#{$i*$deg}deg) skew(#{$skew}deg));
+
+        a {
+          line-height: #{$size/2}px;
+          transform:(skew(#{-$skew}deg) rotate(-#{$deg}deg));
+
+          &:hover {
+            background: darken($bgcolor, 5%);
+            color: white;
+          }
+        }
+      }
+    }
+
+    &.close {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      left: calc(50% - 25px);
+      top: calc(50% - 25px);
+      display: block;
+      transform:(scale(3.8) rotate(45deg));
+      transition:(.3s ease-in-out all);
+      -webkit-transform-origin: 50% 50%;
+      
+      a {
+        background: none;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        color: #ccc;
+      }
+    }
+  }
+
+  &.active {
+    transform:(scale(1));
+
+    .close {
+      transform:(rotate(0deg));
+    }
+  }
+}
