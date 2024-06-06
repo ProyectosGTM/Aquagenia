@@ -1,4 +1,4 @@
-<div id="myDiagramDiv" style="border: 1px solid black; width: 100%; height: 500px;"></div>
+<div #myDiagramDiv style="width:100%; height:600px; border:1px solid black;"></div>
 
 <p>
   A <em>process flow diagram</em> is commonly used in chemical and process engineering to indicate the general flow of plant processes and equipment.
@@ -12,10 +12,3 @@
 <p>
   There is also a custom animation that modifies the <a href="../api/symbols/Shape.html#strokeDashOffset" target="api">Shape.strokeDashOffset</a> for each link.
 </p>
-
-<div>
-  <button id="SaveButton" (click)="save()" [disabled]="!isDiagramModified()">Guardar</button>
-  <button (click)="load()">Cargar</button>
-</div>
-
-<textarea id="mySavedModel" style="width:100%;height:300px">{{ savedModel }}</textarea>
