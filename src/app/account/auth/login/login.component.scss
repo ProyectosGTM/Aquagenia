@@ -1,33 +1,33 @@
 .contenedor {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    background-size: 100% 100%;
-    background-image: url("../../../../assets/images/Fondo\ escritorio.png");
-    font-family: "Varela Round", sans-serif;
-    line-height: 1.5;
-    margin: 0;
-    min-block-size: 100vh;
-  }
-  
-  .cards {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .col {
-    flex: 0 0 auto;
-    margin: 10px; /* Ajusta el espacio entre las imágenes según sea necesario */
-  }
-  
-  .custom-img {
-    width: 600px; /* Ancho deseado */
-    height: 180px; /* Alto deseado */
-  }
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  background-size: 100% 100%;
+  background-image: url("../../../../assets/images/Fondo\ escritorio.png");
+  font-family: "Varela Round", sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  min-block-size: 100vh;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 0 0 auto;
+  margin: 10px; /* Ajusta el espacio entre las imágenes según sea necesario */
+}
+
+.custom-img {
+  width: 600px; /* Ancho deseado */
+  height: 180px; /* Alto deseado */
+}

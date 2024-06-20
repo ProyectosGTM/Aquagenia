@@ -26,7 +26,8 @@ const routes: Routes = [
   { path: 'icons', loadChildren: () => import('./icons/icons.module').then(m => m.IconsModule) },
   { path: 'maps', loadChildren: () => import('./maps/maps.module').then(m => m.MapsModule) },
   // { path: 'diagrama', component: DiagramaComponent },
-  { path: 'diagrama', loadChildren: () => import('./diagrama/diagrama.module').then(m => m.DiagramaModule)}
+  { path: 'diagrama', loadChildren: () => import('./diagrama/diagrama.module').then(m => m.DiagramaModule)},
+  { path: 'estaciones', loadChildren: () => import('./estaciones/estaciones.module').then(m => m.EstacionesModule)}
 ];
 
 @NgModule({

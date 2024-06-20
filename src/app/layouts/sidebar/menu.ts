@@ -561,35 +561,6 @@ export const MENU: MenuItem[] = [
     //         }
     //     ]
     // },
-    // {
-    //     id: 104,
-    //     label: 'MENUITEMS.MULTILEVEL.TEXT',
-    //     icon: 'uil-share-alt',
-    //     subItems: [
-    //         {
-    //             id: 105,
-    //             label: 'MENUITEMS.MULTILEVEL.LIST.LEVEL1.1',
-    //             parentId: 104
-    //         },
-    //         {
-    //             id: 106,
-    //             label: 'MENUITEMS.MULTILEVEL.LIST.LEVEL1.2',
-    //             parentId: 104,
-    //             subItems: [
-    //                 {
-    //                     id: 107,
-    //                     label: 'MENUITEMS.MULTILEVEL.LIST.LEVEL1.LEVEL2.1',
-    //                     parentId: 106,
-    //                 },
-    //                 {
-    //                     id: 108,
-    //                     label: 'MENUITEMS.MULTILEVEL.LIST.LEVEL1.LEVEL2.2',
-    //                     parentId: 106,
-    //                 }
-    //             ]
-    //         },
-    //     ]
-    // }
     {
         id: 109,
         label: 'MENUITEMS.PRUEBACOMPONENT.TEXT',
@@ -624,6 +595,24 @@ export const MENU: MenuItem[] = [
         label: 'MENUITEMS.PRUEBACINCO.TEXT',
         icon: 'uil-graph-bar',
         link: '/diagrama/generador-diagrama',
+    },
+    {
+        id: 117,
+        label: 'Mapa',
+        isTitle: true
+    },
+    {
+        id: 104,
+        label: 'Monitoreo',
+        icon: 'uil-share-alt',
+        subItems: [
+            {
+                id: 105,
+                link: '/estaciones/lista-estaciones',
+                label: 'Mapa',
+                parentId: 104
+            },
+        ]
     },
     {
         id: 115,
