@@ -458,3 +458,20 @@ html {
 .width {
   width: 200%;
 }
+
+.fondoUno{
+  background-color: #515151;
+  border-radius: 12px;
+  transition: 0.2s ease-in-out all;
+}
+
+.fondoUno:hover{
+  transition: 0.2s ease-in-out all;
+  background-color: #3f3f3f;
+}
+
+.cssplay-menu[_ngcontent-ng-c788320832] .sub[_ngcontent-ng-c788320832] dl[_ngcontent-ng-c788320832] dt[_ngcontent-ng-c788320832] {
+  text-align: left;
+  font: bold 16px / 20px "Lato", arial, sans-serif;
+  color: #e0e215;
+}
