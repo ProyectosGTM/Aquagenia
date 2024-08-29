@@ -45,8 +45,25 @@
 
 .map-container{
   height: 600px;
-                width: 1190px;
                 position: relative;
                 overflow: hidden;
             
+}
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.full {
+  height: 100% !important;
+}
+
+.fondoAmarillo{
+  color: yellow;
+}
+
+.col-md-12{
+  font-size: 15px;
 }

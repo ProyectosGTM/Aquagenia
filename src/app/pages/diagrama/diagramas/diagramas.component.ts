@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DxDiagramComponent } from 'devextreme-angular';
 import * as go from 'gojs';
 
 @Component({
@@ -7,53 +9,19 @@ import * as go from 'gojs';
   styleUrls: ['./diagramas.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class DiagramasComponent implements AfterViewInit {
-  
-  @ViewChild('myDiagramDiv', { static: true }) diagramDiv!: ElementRef;
+export class DiagramasComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild(DxDiagramComponent, { static: false }) diagram: DxDiagramComponent;
 
-  ngAfterViewInit(): void {
-    const $ = go.GraphObject.make;
-
-    const myDiagram = $(go.Diagram, this.diagramDiv.nativeElement, {
-      'undoManager.isEnabled': true // enable undo & redo
+  constructor(http: HttpClient) {
+    http.get('data/diagram-hardware.json').subscribe({
+      next: (data) => { this.diagram.instance.import(JSON.stringify(data)); },
+      error: (err) => { throw 'Data Loading Error'; },
     });
-
-    // Define the node template
-    myDiagram.nodeTemplate =
-    $(go.Node, "Auto",
-      $(go.Shape, "RoundedRectangle",
-        { fill: "#FFF8DC", stroke: "#708090", strokeWidth: 2 },
-        new go.Binding("figure", "shape")),
-      $(go.TextBlock,
-        { margin: 8, font: "bold 12px sans-serif" },
-        new go.Binding("text", "key"))
-    );
-
-    // Set the background grid
-    myDiagram.grid = $(go.Panel, 'Grid',
-      { gridCellSize: new go.Size(20, 20) },
-      $(go.Shape, 'LineH', { stroke: 'black', strokeWidth: 0.5 }),
-      $(go.Shape, 'LineV', { stroke: 'black', strokeWidth: 0.5 })
-    );
-
-    // Set the background color
-    this.diagramDiv.nativeElement.style.background = 'white';
-
-    // Create the model data
-    myDiagram.model = new go.GraphLinksModel(
-      [
-        { key: 'Pump', color: 'lightblue' },
-        { key: 'Valve', color: 'lightgreen' },
-        { key: 'Pipe', color: 'lightyellow' },
-        { key: 'Tank', color: 'lightcoral' }
-      ],
-      [
-        { from: 'Pump', to: 'Valve' },
-        { from: 'Valve', to: 'Pipe' },
-        { from: 'Pipe', to: 'Tank' }
-      ]
-    );
   }
+  
+  ngOnInit(): void {
+      
+  }
+  
 }

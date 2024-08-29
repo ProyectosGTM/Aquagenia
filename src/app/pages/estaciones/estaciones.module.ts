@@ -12,6 +12,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
     CommonModule,
     EstacionesRoutingModule,
     GoogleMapsModule
-  ]
+  ],
 })
 export class EstacionesModule { }
