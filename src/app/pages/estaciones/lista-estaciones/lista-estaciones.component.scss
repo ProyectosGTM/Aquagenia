@@ -1,3 +1,48 @@
+.card-new-design {
+  border-radius: 15px;
+  background-color: #424d5e;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-new-design .card-header {
+  background-color: #343a40;
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+}
+
+.card-new-design .card-title {
+  font-size: 1.2rem;
+  margin-bottom: 0;
+}
+
+.card-new-design .list-group-item {
+  background-color: transparent;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.card-new-design .badge {
+  font-size: 0.85rem;
+  padding: 0.4em 0.8em;
+  border-radius: 5px;
+}
+
+.no-image {
+  color: gray;
+  font-size: 0.9rem;
+}
+
+.img-fluid {
+  border-radius: 10px;
+}
+
+.map-container {
+  border-radius: 15px;
+}
+
+
 .container-fluid {
   padding: 5px;
 }

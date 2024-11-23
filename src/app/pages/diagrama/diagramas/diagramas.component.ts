@@ -1,27 +1,36 @@
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DxDiagramComponent } from 'devextreme-angular';
-import * as go from 'gojs';
+import { Employee, Service } from './app.service';
 
 @Component({
   selector: 'app-diagramas',
   templateUrl: './diagramas.component.html',
   styleUrls: ['./diagramas.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers: [Service],
 })
 export class DiagramasComponent implements OnInit {
-
+  employees: Employee[]; // Lista de empleados
   @ViewChild(DxDiagramComponent, { static: false }) diagram: DxDiagramComponent;
 
-  constructor(http: HttpClient) {
-    http.get('data/diagram-hardware.json').subscribe({
-      next: (data) => { this.diagram.instance.import(JSON.stringify(data)); },
-      error: (err) => { throw 'Data Loading Error'; },
+  constructor(service: Service, private http: HttpClient) {
+    // Obtener lista de empleados desde el servicio
+    this.employees = service.getEmployees();
+  }
+
+  ngOnInit(): void {
+    // Cargar el JSON del diagrama
+    this.http.get('assets/diagram-employees.json').subscribe({
+      next: (data: any) => {
+        console.log('Datos cargados:', data);
+
+        // Importar los datos al diagrama
+        this.diagram.instance.import(JSON.stringify(data));
+      },
+      error: (err) => {
+        console.error('Error al cargar el archivo JSON:', err);
+      },
     });
   }
-  
-  ngOnInit(): void {
-      
-  }
-  
 }

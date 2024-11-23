@@ -12,72 +12,60 @@
             <div class="col-lg-3">
               <div class="content-cards">
                 <div class="operation mb-3" *ngFor="let operation of operations">
-                  <div class="card" style="background-color: #3f4252;">
-                    <div class="card-body">
-                      <div class="image-container mb-2" *ngIf="operation.imageUrl">
-                        <img [src]="operation.imageUrl" alt="Operation Image" class="img-fluid">
+                  <div class="card card-new-design mb-4 tooltip-custom">
+                    <div class="card-header bg-dark text-light">
+                      <h5 class="card-title text-center">{{ operation.name }}</h5>
+                    </div>
+                    <div class="card-body p-3">
+                      <div class="image-container mb-3" *ngIf="operation.imageUrl">
+                        <img [src]="operation.imageUrl" alt="Operation Image" class="img-fluid rounded">
                       </div>
-                      <div class="no-image mb-2" *ngIf="!operation.imageUrl">No image available</div>
+                      <div class="no-image mb-3" *ngIf="!operation.imageUrl" style="text-align: center; color: gray;">
+                        No image available
+                      </div>
                       <div class="details">
-                        <div class="row">
-                          <div class="col-md-12" style="display: flex; justify-content: center; align-items: center;">
-                              {{ operation.name }}
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-12" style="display: flex;">
-                            <div class="col-md-6">
-                              Operación
-                            </div>
-                            <div class="col-md-6 fondoAmarillo" style="text-align: right;">
-                              {{ operation.opertion }}
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row mt-2">
-                          <div class="col-md-12" style="display: flex;">
-                            <div class="col-md-6">
-                              Det
-                            </div>
-                            <div class="col-md-6" style="text-align: right;">
-                              {{ operation.det }}
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row mt-2">
-                          <div class="col-md-12" style="display: flex;">
-                            <div class="col-md-6">
-                              Empresa
-                            </div>
-                            <div class="col-md-6" style="text-align: right;">
-                              {{ operation.company }}
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row mt-2">
-                          <div class="col-md-12" style="display: flex;">
-                            <div class="col-md-6">
-                              Fecha:
-                            </div>
-                            <div class="col-md-6" style="text-align: right;">
-                              {{ operation.date }}
-                            </div>
-                          </div>
-                        </div>
+                        <ul class="list-group">
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                              <i class="fa fa-list" aria-hidden="true"></i> Operación:
+                            </span>
+                            <span class="badge bg-warning text-dark">{{ operation.opertion }}</span>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                              <i class="fa fa-file-text" aria-hidden="true"></i> Det:
+                            </span>
+                            <span>{{ operation.det }}</span>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                              <i class="fa fa-home" aria-hidden="true"></i> Empresa:
+                            </span>
+                            <span>{{ operation.company }}</span>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                              <i class="fa fa-calendar" aria-hidden="true"></i> Fecha:
+                            </span>
+                            <span>{{ operation.date }}</span>
+                          </li>
+                        </ul>
                       </div>
+                      <!-- Custom Tooltip -->
+                      <!-- <span class="tooltip-text">
+                        Operación: {{ operation.opertion }} <br>
+                        Det: {{ operation.det }} <br>
+                        Empresa: {{ operation.company }} <br>
+                        Fecha: {{ operation.date }}
+                      </span> -->
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-9 map-container" style="background-color: aqua; display: flex; align-items: center; justify-content: center;">
-              <div class="card-body">
-                <google-map [center]="center" [zoom]="zoom">
-                  <map-marker *ngFor="let operation of operations" [position]="operation.position" [label]="operation.label"></map-marker>
-                </google-map>
-              </div>
+            <div class="col-lg-9 map-container" style="display: flex; align-items: center; justify-content: center;">
+              <div id="map" style="height: 500px; width: 100%;"></div>
             </div>
-            
           </div>
         </div>
       </div>
