@@ -5,6 +5,7 @@ import { DiagramaRoutingModule } from './diagrama-routing.module';
 import { DxButtonModule, DxDiagramModule } from 'devextreme-angular';
 import { DiagramasComponent } from './diagramas/diagramas.component';
 import { HttpClientModule } from '@angular/common/http';
+import { Service } from './diagramas/app.service';
 
 
 @NgModule({
@@ -17,5 +18,6 @@ import { HttpClientModule } from '@angular/common/http';
     DxButtonModule
   ],
   bootstrap: [DiagramasComponent],
+  providers: [Service],
 })
 export class DiagramaModule { }
