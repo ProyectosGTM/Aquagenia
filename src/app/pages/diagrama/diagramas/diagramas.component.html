@@ -1,18 +1,268 @@
-<dx-diagram #diagram id="diagram">
-  <dxi-custom-shape
-    *ngFor="let emp of employees"
-    category="employees"
-    [type]="'employee' + emp.ID"
-    baseType="rectangle"
-    [defaultText]="emp.Full_Name"
-    [allowEditText]="false"
-  >
-  </dxi-custom-shape>
-  <dxo-toolbox>
-    <dxi-group
-      category="employees"
-      title="Employees"
-      displayMode="texts"
-    ></dxi-group>
-  </dxo-toolbox>
-</dx-diagram>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <dx-diagram #diagram id="diagram">
+                <dxi-custom-shape
+                  category="hardware"
+                  type="internet"
+                  title="Internet"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Internet"
+                  [allowEditText]="false"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="laptop"
+                  title="Laptop"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Laptop"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="mobile"
+                  title="Mobile"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Mobile"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="pc"
+                  title="PC"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="PC"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="phone"
+                  title="Phone"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Phone"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="printer"
+                  title="Printer"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Printer"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="router"
+                  title="Router"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Router"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="scaner"
+                  title="Scaner"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Scaner"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                  >"
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="server"
+                  title="Server"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Server"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="switch"
+                  title="Switch"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Switch"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape
+                  category="hardware"
+                  type="wifi"
+                  title="Wi Fi Router"
+                  backgroundImageUrl="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+                  [backgroundImageLeft]="0.15"
+                  [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7"
+                  [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75"
+                  [defaultHeight]="0.75"
+                  defaultText="Wi Fi"
+                  [allowEditText]="true"
+                  [textLeft]="0"
+                  [textTop]="0.7"
+                  [textWidth]="1"
+                  [textHeight]="0.3"
+                >
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxo-toolbox>
+                  <dxi-group category="hardware" title="Hardware"></dxi-group>
+                </dxo-toolbox>
+              </dx-diagram>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

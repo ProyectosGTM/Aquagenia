@@ -2450,6 +2450,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/devextreme@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.npmjs.org/@types/devextreme/-/devextreme-16.2.0.tgz"
+  integrity sha512-pxnTx4kjYJX/lGU2wxmmvyUiDmE0SLQ3zYrjYzgmG5jmbeET7iYuVwQKo8cFv5DdHrUhmfXtC+ghOucwfm+s1A==
+  dependencies:
+    "@types/jquery" "*"
+
 "@types/eslint-scope@^3.7.3":
   version "3.7.5"
   resolved "https://registry.npmjs.org/@types/eslint-scope/-/eslint-scope-3.7.5.tgz"
@@ -2524,6 +2531,13 @@
   integrity sha512-aJ3wj8tXMpBrzQ5ghIaqMisD8C3FIrcO6sDKHqFbuqAsI7yOxj0fA7MrRCPLZHIVUjERIwsMmGn/vB0UQ9u0Hg==
   dependencies:
     "@types/jasmine" "*"
+
+"@types/jquery@*":
+  version "3.5.32"
+  resolved "https://registry.npmjs.org/@types/jquery/-/jquery-3.5.32.tgz"
+  integrity sha512-b9Xbf4CkMqS02YH8zACqN1xzdxc3cO735Qe5AbSUFmyOiaWAbcpqh9Wna+Uk0vgACvoQHpWDg2rGdHkYPLmCiQ==
+  dependencies:
+    "@types/sizzle" "*"
 
 "@types/json-schema@*", "@types/json-schema@^7.0.8", "@types/json-schema@^7.0.9":
   version "7.0.11"
@@ -2609,6 +2623,11 @@
     "@types/http-errors" "*"
     "@types/mime" "*"
     "@types/node" "*"
+
+"@types/sizzle@*":
+  version "2.3.9"
+  resolved "https://registry.npmjs.org/@types/sizzle/-/sizzle-2.3.9.tgz"
+  integrity sha512-xzLEyKB50yqCUPUJkIsrVvoWNfFUbIZI+RspLWt8u+tIW/BetMBZtgV2LY/2o+tYH8dRvQ+eoPf3NdhQCcLE2w==
 
 "@types/sockjs@^0.3.33":
   version "0.3.34"

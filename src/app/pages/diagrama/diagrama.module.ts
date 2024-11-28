@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DiagramaRoutingModule } from './diagrama-routing.module';
@@ -10,6 +10,7 @@ import { Service } from './diagramas/app.service';
 
 @NgModule({
   declarations: [DiagramasComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
     HttpClientModule,

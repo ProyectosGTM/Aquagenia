@@ -41,6 +41,7 @@
             "styles": [
               "node_modules/devextreme/dist/css/dx.common.css",
               "node_modules/devextreme/dist/css/dx.light.css",
+              "node_modules/devexpress-diagram/dist/dx-diagram.min.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/chartist/dist/index.css",
               "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
@@ -128,9 +129,13 @@
               "node_modules/devextreme/dist/css/dx.common.css",
               "node_modules/devextreme/dist/css/dx.light.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/devexpress-diagram/dist/dx-diagram.min.css",  
               "src/styles.scss"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/devexpress-diagram/dist/dx-diagram.min.js"
+            ]
           }
         },
         "e2e": {

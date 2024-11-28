@@ -1,5 +1,19 @@
+.diagram-container {
+  position: fixed; /* Fija el contenedor en la pantalla */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Ancho completo de la ventana */
+  height: 100vh; /* Alto completo de la ventana */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Elimina cualquier scroll */
+  background-color: #f4f4f4; /* Cambia el color de fondo si es necesario */
+}
+
 #diagram {
   width: 100%;
-  height: 100vh; /* Ajusta según el espacio disponible */
-  background-color: white; /* O cambia según el tema */
+  height: 78vh;
 }

@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
   defaultauth: 'fackbackend',
   firebaseConfig: {
