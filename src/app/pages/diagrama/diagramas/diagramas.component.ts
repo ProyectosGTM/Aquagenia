@@ -29,19 +29,13 @@ export class DiagramasComponent implements OnInit {
   }
 
   exportDiagram() {
-    // Obtén el JSON del diagrama
     const json = this.diagram.instance.export();
-    // Crea un enlace para descargar el archivo
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-
-    // Crea un elemento <a> para descargar el archivo
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'diagram.json'; // Nombre del archivo
+    a.download = 'diagram.json';
     a.click();
-
-    // Limpia el objeto URL
     URL.revokeObjectURL(url);
   }
 
