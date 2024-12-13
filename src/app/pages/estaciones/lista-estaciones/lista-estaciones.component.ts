@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-estaciones',
@@ -41,9 +42,17 @@ export class ListaEstacionesComponent implements OnInit {
     }
   ];
 
+  constructor(private route: Router){
+
+  }
+
   ngOnInit(): void {
     this.loadGoogleMaps();
     this.initializeTooltips();
+  }
+
+  irDetalle(){
+    this.route.navigateByUrl('/estaciones/detalle-estaciones')
   }
 
   loadGoogleMaps() {
