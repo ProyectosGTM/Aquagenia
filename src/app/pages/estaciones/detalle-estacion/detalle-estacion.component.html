@@ -8,6 +8,45 @@
         </div>
     </div>
 
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                          <div
+                            class="card p-3 mb-3"
+                            *ngFor="let item of items"
+                            draggable="true"
+                            (dragstart)="onDragStart($event, item)"
+                          >
+                            {{ item.name }}
+                          </div>
+                        </div>
+                  
+                        <div
+                          #dropzone
+                          class="col-9 dropzone p-4"
+                          (dragover)="onDragOver($event)"
+                          (drop)="onDrop($event)"
+                        >
+                          <h4>Drop Items Here</h4>
+                          <div
+                            class="resizable draggable card p-3 mb-3"
+                            *ngFor="let item of droppedItems; let i = index"
+                            [ngStyle]="{ left: item.x + 'px', top: item.y + 'px' }"
+                            (mousedown)="onMouseDown($event, i)"
+                          >
+                            {{ item.name }}
+                          </div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Fila 1 -->
     <div class="row mb-3">
         <div class="col-md-6">
@@ -69,13 +108,26 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
+                <div class="card-header">
                     <h5 class="card-title">Tarjeta 5</h5>
                     <p class="card-text">Contenido de la tarjeta 5, que abarca toda la fila.</p>
+                </div>
+                <div class="card-body">
+                    <dx-data-grid
+  id="gridContainer"
+  [dataSource]="customers"
+  keyExpr="ID"
+  [showBorders]="true"
+>
+  <dxi-column *ngFor="let column of columns" [dataField]="column"></dxi-column>
+</dx-data-grid>
                 </div>
             </div>
         </div>
     </div>
+
+    
 </div>
 
 <!-- NO BORRAR CODIGO -->
+
