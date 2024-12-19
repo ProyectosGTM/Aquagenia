@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { fadeInUpAnimation } from 'src/app/core/animations/fade-in-up.animation';
 
 @Component({
   selector: 'app-lista-estaciones',
   templateUrl: './lista-estaciones.component.html',
-  styleUrls: ['./lista-estaciones.component.scss']
+  styleUrls: ['./lista-estaciones.component.scss'],
+  animations: [fadeInUpAnimation]
 })
 export class ListaEstacionesComponent implements OnInit {
-  center = { lat: 23.6345, lng: -102.5528 }; // Center of Mexico
+  center = { lat: 23.6345, lng: -102.5528 };
   zoom = 5;
   operations = [
     {
@@ -49,59 +51,74 @@ export class ListaEstacionesComponent implements OnInit {
   ngOnInit(): void {
     this.loadGoogleMaps();
     this.initializeTooltips();
+    this.showMapZoom = false;
   }
 
   irDetalle(){
     this.route.navigateByUrl('/estaciones/detalle-estaciones')
   }
 
+  map!: google.maps.Map;
+  public showMapZoom: boolean;
+
+
   loadGoogleMaps() {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCViGKafQxsHPmgGtlPsUDIaOdttLKJLk4&callback=initMap`;
-    script.defer = true;
-    document.head.appendChild(script);
-  
-    (window as any).initMap = () => {
-      const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
-        center: this.center,
-        zoom: this.zoom
-      });
-  
-      const icon = {
-        url: 'assets/images/marker.png',  // Ruta del ícono
-        scaledSize: new google.maps.Size(50, 50),  // Ajusta el tamaño del ícono (ancho x alto)
-        origin: new google.maps.Point(0, 0),  // Origen del ícono (opcional, puede ser (0, 0))
-        anchor: new google.maps.Point(20, 40)  // Anclaje del ícono (centra el marcador en la base)
-      };
-  
-      this.operations.forEach(operation => {
-        const marker = new google.maps.Marker({
-          position: operation.position,
-          map,
-          label: operation.label,
-          icon: icon  // Aplica el ícono con tamaño ajustado
-        });
-  
-        const infoWindow = new google.maps.InfoWindow({
-          content: `<div><strong>${operation.name}</strong><br>
-                    Operación: ${operation.opertion}<br>
-                    Det: ${operation.det}<br>
-                    Empresa: ${operation.company}<br>
-                    Fecha: ${operation.date}</div>`
-        });
-  
-        marker.addListener('mouseover', () => {
-          infoWindow.open(map, marker);
-        });
-  
-        marker.addListener('mouseout', () => {
-          infoWindow.close();
-        });
-      });
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCViGKafQxsHPmgGtlPsUDIaOdttLKJLk4&callback=initMap`;
+  script.defer = true;
+  document.head.appendChild(script);
+
+  (window as any).initMap = () => {
+    this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      center: this.center,
+      zoom: this.zoom
+    });
+
+    const icon = {
+      url: 'assets/images/marker.png',
+      scaledSize: new google.maps.Size(50, 50),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(20, 40)
     };
+
+    this.operations.forEach(operation => {
+      const marker = new google.maps.Marker({
+        position: operation.position,
+        map: this.map,
+        label: operation.label,
+        icon: icon
+      });
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `<div><strong>${operation.name}</strong><br>
+                  Operación: ${operation.opertion}<br>
+                  Det: ${operation.det}<br>
+                  Empresa: ${operation.company}<br>
+                  Fecha: ${operation.date}</div>`
+      });
+
+      marker.addListener('mouseover', () => infoWindow.open(this.map, marker));
+      marker.addListener('mouseout', () => infoWindow.close());
+    });
+  };
+  }
+
+  restaurarMapa() {
+    if (this.map) {
+      this.showMapZoom = false;
+      this.map.setCenter(this.center);
+      this.map.setZoom(this.zoom);    
+    }
   }
   
-  
+
+  centrarEnUbicacion(position: { lat: number; lng: number }) {
+    if (this.map) {
+      this.showMapZoom = true;
+      this.map.setCenter(position);
+      this.map.setZoom(15);
+    }
+  }
   
 
   ngAfterViewInit() {

@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DxDataGridModule } from 'devextreme-angular';
+import { DxDataGridModule, DxDiagramModule } from 'devextreme-angular';
 
 
 @NgModule({
@@ -21,6 +21,7 @@ import { DxDataGridModule } from 'devextreme-angular';
     EstacionesRoutingModule,
     GoogleMapsModule,
     DxDataGridModule,
+    DxDiagramModule,
 
     MatCardModule,
     DragDropModule

@@ -103,3 +103,8 @@
     border: 1px solid #ddd;
     cursor: pointer;
   }
+
+  ::ng-deep #diagram {
+    height: 125px;
+  }
+  

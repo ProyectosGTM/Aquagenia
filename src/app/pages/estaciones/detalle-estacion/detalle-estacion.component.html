@@ -12,36 +12,39 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                <div class="card-header cardSeconday">
+                    <h5 class="card-title">Diagram 1</h5>
+                </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-3">
-                          <div
-                            class="card p-3 mb-3"
-                            *ngFor="let item of items"
-                            draggable="true"
-                            (dragstart)="onDragStart($event, item)"
-                          >
-                            {{ item.name }}
-                          </div>
-                        </div>
-                  
-                        <div
-                          #dropzone
-                          class="col-9 dropzone p-4"
-                          (dragover)="onDragOver($event)"
-                          (drop)="onDrop($event)"
-                        >
-                          <h4>Drop Items Here</h4>
-                          <div
-                            class="resizable draggable card p-3 mb-3"
-                            *ngFor="let item of droppedItems; let i = index"
-                            [ngStyle]="{ left: item.x + 'px', top: item.y + 'px' }"
-                            (mousedown)="onMouseDown($event, i)"
-                          >
-                            {{ item.name }}
-                          </div>
-                        </div>
-                      </div>
+                    <dx-diagram #diagram id="diagram" [simpleView]="true">
+                        <dxo-nodes [dataSource]="dataSource" keyExpr="ID" textExpr="Title" parentKeyExpr="Head_ID">
+                            <dxo-auto-layout type="tree"></dxo-auto-layout>
+                        </dxo-nodes>
+                        <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
+                        <dxo-toolbox visibility="visible" [showSearch]="false" [shapeIconsPerRow]="4" [width]="220">
+                            <dxi-group category="hardware" title="Hardware" [expanded]="false"></dxi-group>
+                            <dxi-group category="employees" title="Employees" [expanded]="false" displayMode="texts"></dxi-group>
+                            <dxi-group category="general" title="General" [expanded]="false"></dxi-group>
+                            <dxi-group category="flowchart" title="Flowchart" [expanded]="false"></dxi-group>
+                            <dxi-group category="containers" title="Containers" [expanded]="false"></dxi-group>
+                            <dxi-group title="Items" [shapes]="['rectangle']" [expanded]="false"></dxi-group>
+                            <dxi-group category="orgChart" title="Organizational Chart" [expanded]="false"></dxi-group>
+                        </dxo-toolbox>
+                        <dxi-custom-shape *ngFor="let image of imagess; let i = index" [category]="'hardware'"
+                            [type]="'shape-' + i" [title]="'Shape ' + i" [backgroundImageUrl]="image"
+                            [backgroundImageLeft]="0.15" [backgroundImageTop]="0" [backgroundImageWidth]="0.7"
+                            [backgroundImageHeight]="0.7" [defaultWidth]="0.75" [defaultHeight]="0.75"
+                            [defaultText]="'Shape ' + i" [allowEditText]="true" [textLeft]="0" [textTop]="0.7"
+                            [textWidth]="1" [textHeight]="0.3">
+                            <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                            <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                            <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                            <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                        </dxi-custom-shape>
+                        <dxi-custom-shape *ngFor="let emp of employee" category="employees" [type]="'employee' + emp.ID"
+                            baseType="rectangle" [defaultText]="emp.Full_Name" [allowEditText]="false">
+                        </dxi-custom-shape>
+                    </dx-diagram>
                 </div>
             </div>
         </div>
@@ -66,10 +69,10 @@
                 </div>
                 <div class="card-body">
                     <!-- Contenedor del mapa -->
-                    <div id="map" style="height: 300px; width: 100%;"></div>
+                    <div id="map" style="height: 285px; width: 100%;"></div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
 
     <!-- Fila 2 -->
@@ -92,14 +95,10 @@
                 <div class="card-body">
                     <div class="carousel">
                         <button class="carousel-control prev" (click)="moveCarousel(-1)">&#10094;</button>
-                        <img
-                          [src]="images[currentIndex]"
-                          [class.animate]="isAnimating"
-                          alt="Carrusel de imágenes"
-                          class="carousel-image"
-                        />
+                        <img [src]="images[currentIndex]" [class.animate]="isAnimating" alt="Carrusel de imágenes"
+                            class="carousel-image" />
                         <button class="carousel-control next" (click)="moveCarousel(1)">&#10095;</button>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,26 +107,20 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header cardSeconday">
                     <h5 class="card-title">Tarjeta 5</h5>
                     <p class="card-text">Contenido de la tarjeta 5, que abarca toda la fila.</p>
                 </div>
                 <div class="card-body">
-                    <dx-data-grid
-  id="gridContainer"
-  [dataSource]="customers"
-  keyExpr="ID"
-  [showBorders]="true"
->
-  <dxi-column *ngFor="let column of columns" [dataField]="column"></dxi-column>
-</dx-data-grid>
+                    <dx-data-grid id="gridContainer" [dataSource]="customers" keyExpr="ID" [showBorders]="true">
+                        <dxi-column *ngFor="let column of columns" [dataField]="column"></dxi-column>
+                    </dx-data-grid>
                 </div>
             </div>
         </div>
     </div>
 
-    
+
 </div>
 
 <!-- NO BORRAR CODIGO -->
-
