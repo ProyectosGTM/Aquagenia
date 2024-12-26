@@ -1,6 +1,8 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Customer, Employees, Service } from './app.service';
 import ArrayStore from 'devextreme/data/array_store';
+import { HttpClient } from '@angular/common/http';
+import { DxDiagramComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-detalle-estacion',
@@ -11,14 +13,51 @@ import ArrayStore from 'devextreme/data/array_store';
 })
 export class DetalleEstacionComponent implements OnInit {
   dataSource: ArrayStore;
+  cards: { title: string; isEditable: boolean; isTitleEditable: boolean; dataSource: any[] }[] = []; // Almacena las cards
 
   employee: Employees[];
+  @ViewChild(DxDiagramComponent, { static: false }) diagram: DxDiagramComponent;
 
-  constructor(service: Service) {
+  constructor(service: Service, private http: HttpClient) {
     this.customers = service.getCustomers();
 
     this.employee = service.getEmployee();
 
+  }
+
+  isDiagramReadOnly: boolean = true;
+  onEditClick() {
+  }
+  
+  toggleTitleEdit(index: number) {
+    this.cards[index].isTitleEditable = !this.cards[index].isTitleEditable;
+    this.cards[index].isEditable = !this.cards[index].isEditable; // Cambia el estado de edición del diagrama
+  }
+  
+
+  // Guarda el estado del diagrama (puedes implementar lógica adicional aquí)
+  saveDiagram(index: number) {
+    console.log(`Diagrama ${index + 1} guardado`, this.cards[index]);
+  }
+
+  addNewCard() {
+    this.cards.push({
+      title: `Nuevo Diagrama ${this.cards.length + 1}`, // Título inicial
+      isEditable: true, // Diagrama editable al crear la card
+      isTitleEditable: true, // Título editable al crear la card
+      dataSource: [], // DataSource vacío
+    });
+  }
+
+  exportDiagram() {
+    const json = this.diagram.instance.export();
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'diagram.json';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   imagess = [
@@ -34,6 +73,14 @@ export class DetalleEstacionComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.http.get('assets/diagram-employees.json').subscribe({
+      next: (data: any) => {
+        this.diagram.instance.import(JSON.stringify(data));
+      },
+      error: (err) => {
+        console.error('Error al cargar el archivo JSON:', err);
+      },
+    });
     
   }
 

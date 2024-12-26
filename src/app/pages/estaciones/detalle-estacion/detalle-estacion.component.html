@@ -2,21 +2,44 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card cardPrincipal">
-                <h3>Estación Meteorológica</h3>
-                <p>Conoce las condiciones climáticas actuales, datos de temperatura, humedad y velocidad del viento.</p>
+                <h3>Estación Chapala</h3>
+                <p>Conoce la información relevante de la estación, además de realizar acciones en ella.</p>
             </div>
         </div>
     </div>
 
-
+    <div class="mb-3">
+        <button class="btn btn-success" (click)="addNewCard()">Nuevo</button>
+      </div>
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header cardSeconday">
-                    <h5 class="card-title">Diagram 1</h5>
-                </div>
+            <div *ngFor="let card of cards; let i = index" class="card mb-4">
+                <div class="card-header cardSeconday d-flex justify-content-between align-items-center">
+                    <div class="title-container">
+                      <input
+                        *ngIf="card.isTitleEditable"
+                        type="text"
+                        class="form-control w-100"
+                        [(ngModel)]="card.title"
+                        placeholder="Título del diagrama"
+                      />
+                      <h4
+                        *ngIf="!card.isTitleEditable"
+                        class="card-title m-0"
+                      >
+                        {{ card.title }}
+                      </h4>
+                    </div>
+                    <div>
+                      <button class="btn btn-primary me-2" (click)="toggleTitleEdit(i)">
+                        {{ card.isTitleEditable ? 'Bloquear' : 'Editar' }}
+                      </button>
+                      <button class="btn btn-secondary" (click)="saveDiagram(i)">Guardar</button>
+                    </div>
+                  </div>
                 <div class="card-body">
-                    <dx-diagram #diagram id="diagram" [simpleView]="true">
+                    <dx-diagram #diagram id="diagram" [simpleView]="true"
+                    [readOnly]="!card.isEditable">
                         <dxo-nodes [dataSource]="dataSource" keyExpr="ID" textExpr="Title" parentKeyExpr="Head_ID">
                             <dxo-auto-layout type="tree"></dxo-auto-layout>
                         </dxo-nodes>
