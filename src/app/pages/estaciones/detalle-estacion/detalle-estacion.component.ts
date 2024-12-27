@@ -12,8 +12,40 @@ import { DxDiagramComponent } from 'devextreme-angular';
   preserveWhitespaces: true,
 })
 export class DetalleEstacionComponent implements OnInit {
+
+  faIcons = [
+    { name: 'Check', class: 'fa fa-check' },
+    { name: 'Edit', class: 'fa fa-edit' },
+    { name: 'Trash', class: 'fa fa-trash' },
+    { name: 'Home', class: 'fa fa-home' },
+    { name: 'User', class: 'fa fa-user' },
+    { name: 'Bell', class: 'fa fa-bell' },
+    { name: 'Star', class: 'fa fa-star' },
+    { name: 'Heart', class: 'fa fa-heart' },
+    { name: 'Search', class: 'fa fa-search' },
+    { name: 'Envelope', class: 'fa fa-envelope' },
+    { name: 'Cog', class: 'fa fa-cog' },
+    { name: 'Camera', class: 'fa fa-camera' },
+    { name: 'Car', class: 'fa fa-car' },
+    { name: 'Book', class: 'fa fa-book' },
+    { name: 'Calendar', class: 'fa fa-calendar' },
+    { name: 'Cloud', class: 'fa fa-cloud' },
+    { name: 'Comment', class: 'fa fa-comment' },
+    { name: 'Download', class: 'fa fa-download' },
+    { name: 'Folder', class: 'fa fa-folder' },
+    { name: 'Gift', class: 'fa fa-gift' },
+  ];
+  
+  
   dataSource: ArrayStore;
-  cards: { title: string; isEditable: boolean; isTitleEditable: boolean; dataSource: any[] }[] = []; // Almacena las cards
+  cards: { 
+    title: string; 
+    isEditable: boolean; 
+    isTitleEditable: boolean; 
+    dataSource: any[]; 
+    selectedIcon: string; 
+  }[] = [];
+  
 
   employee: Employees[];
   @ViewChild(DxDiagramComponent, { static: false }) diagram: DxDiagramComponent;
@@ -46,8 +78,11 @@ export class DetalleEstacionComponent implements OnInit {
       isEditable: true, // Diagrama editable al crear la card
       isTitleEditable: true, // Título editable al crear la card
       dataSource: [], // DataSource vacío
+      selectedIcon: '', // Inicializa sin ícono seleccionado
     });
   }
+  
+  
 
   exportDiagram() {
     const json = this.diagram.instance.export();

@@ -15,21 +15,37 @@
         <div class="col-12">
             <div *ngFor="let card of cards; let i = index" class="card mb-4">
                 <div class="card-header cardSeconday d-flex justify-content-between align-items-center">
-                    <div class="title-container">
-                      <input
-                        *ngIf="card.isTitleEditable"
-                        type="text"
-                        class="form-control w-100"
-                        [(ngModel)]="card.title"
-                        placeholder="Título del diagrama"
-                      />
-                      <h4
-                        *ngIf="!card.isTitleEditable"
-                        class="card-title m-0"
-                      >
-                        {{ card.title }}
-                      </h4>
-                    </div>
+                    <div class="title-container d-flex align-items-center">
+                        <select
+                          *ngIf="card.isTitleEditable"
+                          class="form-select w-50 me-2 icon-select"
+                          [(ngModel)]="card.selectedIcon"
+                        >
+                          <option *ngFor="let icon of faIcons" [value]="icon.class">
+                            {{ icon.class }}
+                          </option>
+                        </select>
+                        <input
+                          *ngIf="card.isTitleEditable"
+                          type="text"
+                          class="form-control w-75 me-2"
+                          [(ngModel)]="card.title"
+                          placeholder="Título del diagrama"
+                        />
+                        <i
+                          *ngIf="!card.isTitleEditable && card.selectedIcon"
+                          [class]="card.selectedIcon"
+                          style="font-size: 24px; margin-right: 10px;"
+                        ></i>
+                        <h4
+                          *ngIf="!card.isTitleEditable"
+                          class="card-title m-0"
+                        >
+                          {{ card.title }}
+                        </h4>
+                      </div>
+                      
+                      
                     <div>
                       <button class="btn btn-primary me-2" (click)="toggleTitleEdit(i)">
                         {{ card.isTitleEditable ? 'Bloquear' : 'Editar' }}
@@ -80,8 +96,8 @@
                 <div class="card-header cardSeconday">
                     <h5 class="card-title">Imagen Principal</h5>
                 </div>
-                <div class="card">
-                    <img style="height: 300px; width: 100%;" src="../../../../assets/images/aquagenia.png" alt="">
+                <div class="card" style="display: flex; align-items: center; justify-content: center;">
+                    <img style="width: 50%; padding: 10px;" src="../../../../assets/images/aquagenia.png" alt="">
                 </div>
             </div>
         </div>
@@ -92,7 +108,7 @@
                 </div>
                 <div class="card-body">
                     <!-- Contenedor del mapa -->
-                    <div id="map" style="height: 285px; width: 100%;"></div>
+                    <div id="map" style="height: 295px; width: 100%;"></div>
                 </div>
             </div>
         </div>
