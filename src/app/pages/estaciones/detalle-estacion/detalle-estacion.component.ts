@@ -115,8 +115,8 @@ export class DetalleEstacionComponent implements OnInit {
   
   @ViewChild('dropzone', { static: true }) dropzone!: ElementRef;
   @ViewChild(DxDiagramComponent, { static: false }) diagram: DxDiagramComponent;
-  @ViewChild('cardContainer') cardContainer!: ElementRef; // Contenedor principal
-  @ViewChildren('cardElement') cardElements!: QueryList<ElementRef>; // Lista de tarjetas
+  @ViewChild('cardContainer') cardContainer!: ElementRef;
+  @ViewChildren('cardElement') cardElements!: QueryList<ElementRef>;
   private offset = { x: 0, y: 0 };
   private draggingIndex: number | null = null;
   droppedItems: any[] = [];
@@ -290,10 +290,7 @@ export class DetalleEstacionComponent implements OnInit {
   }
 
   crearDiagrama() {
-    // Agregar una nueva tarjeta
     this.addNewCard();
-
-    // Espera a que Angular actualice la vista antes de desplazarte
     setTimeout(() => {
       this.scrollToLastCard();
     }, 0);
@@ -303,18 +300,14 @@ export class DetalleEstacionComponent implements OnInit {
     if (this.cardElements && this.cardElements.last) {
       const lastCard = this.cardElements.last.nativeElement;
   
-      // Calcula la posición de la tarjeta y centra en la pantalla
       const offsetTop = lastCard.offsetTop;
       const cardHeight = lastCard.offsetHeight;
       const viewportHeight = window.innerHeight;
   
       const scrollPosition = offsetTop - (viewportHeight / 2) + (cardHeight / 2);
-  
-      // Desplázate suavemente hacia la posición calculada
       window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
   }
-  
   
   moveCarousel(direction: number) {
     if (this.isAnimating) return; 
