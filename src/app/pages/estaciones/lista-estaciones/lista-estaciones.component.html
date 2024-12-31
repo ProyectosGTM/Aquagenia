@@ -19,12 +19,17 @@
               <h5 class="card-title">Operación: {{ operation.name }}</h5>
             </div>
             <div class="card-body">
-              <div class="image-container mb-3">
-                <img *ngIf="operation.imageUrl" [src]="operation.imageUrl" alt="Operation Image" class="img-fluid">
+              <div class="image-container mb-3" style="cursor: pointer;" (click)="centrarEnUbicacion(operation.position)">
+                <img 
+                  *ngIf="operation.imageUrl" 
+                  [src]="operation.imageUrl" 
+                  alt="Operation Image" 
+                  class="img-fluid">
                 <div *ngIf="!operation.imageUrl" class="no-image">
                   No image available
                 </div>
               </div>
+              
               <div class="details">
                 <div class="detail-item d-flex justify-content-between">
                   <span><strong>Det:</strong></span>
@@ -39,10 +44,10 @@
                   <span>{{ operation.date }}</span>
                 </div>
               </div>              
-              <div class="text-center d-flex mt-3">
+              <div class="col-12 text-center d-flex mt-3">
                 <!-- HTML !-->
                 <button class="buttonDetalle" role="button" (click)="irDetalle()">Detalle</button>
-                <button class="buttonMap" role="button" (click)="centrarEnUbicacion(operation.position)">Ubicar</button>
+                <!-- <button class="buttonMap" role="button" (click)="centrarEnUbicacion(operation.position)">Ubicar</button> -->
               </div>
             </div>
           </div>

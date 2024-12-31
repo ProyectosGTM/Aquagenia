@@ -113,6 +113,7 @@ export class ListaEstacionesComponent implements OnInit {
   
 
   centrarEnUbicacion(position: { lat: number; lng: number }) {
+    console.log('Centrando en posición:', position);
     if (this.map) {
       this.showMapZoom = true;
       this.map.setCenter(position);

@@ -1,39 +1,135 @@
-.cardPrincipal {
-    background: linear-gradient(135deg, #c7ac00, #9c8700);
-    color: white;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
+.card-estacion-renovada {
+  background: linear-gradient(135deg, #c7ac00, #9c8700); /* Degradado atractivo */
+  color: white; /* Contraste con el fondo */
+  border: none; /* Sin bordes */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  padding: 10px; /* Reduce el espacio interno */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto; /* Ajusta automáticamente según el contenido */
+  min-height: 150px; /* Forzar una altura mínima razonable */
 }
 
-.cardSeconday{ 
-    background: linear-gradient(135deg, #a0abb9, #777f8a);
-    color: white;
-    padding: 15px 10px 10px 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.card-estacion-renovada .card-body {
+  padding: 5px; /* Reduce aún más el espacio interno */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px; /* Controla el espacio entre elementos */
 }
 
-.cardPrincipal h3 {
-    margin: 0 0 1rem;
+.card-estacion-renovada h1 {
+  font-size: 1.2rem; /* Reduce el tamaño del título */
+  margin: 0; /* Elimina márgenes */
 }
-.cardPrincipal p {
-    line-height: 1.6;
+
+.card-estacion-renovada p {
+  font-size: 0.9rem; /* Texto más compacto */
+  margin: 0; /* Elimina márgenes */
+  line-height: 1.2; /* Reduce el espacio entre líneas */
 }
-.cardPrincipal .btn {
-    padding: 0.7rem 1.5rem;
-    background: white;
-    color: #4caf50;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
+
+.card-estacion-renovada .btn {
+  padding: 0.3rem 0.8rem; /* Botón más pequeño */
+  font-size: 0.8rem; /* Texto del botón reducido */
+  border-radius: 15px; /* Bordes redondeados */
+  margin-top: 5px; /* Espacio reducido encima del botón */
 }
-.cardPrincipal .btn:hover {
-    background: #e0e0e0;
+
+
+
+
+.card-estilizada {
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  overflow: hidden; /* Esquinas redondeadas afectan el contenido */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
 }
+
+// .card-estilizada:hover {
+//   transform: translateY(-5px); 
+//   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); 
+// }
+
+.card-diagram {
+  background-color: #7b858b; /* Fondo del encabezado */
+  color: white; /* Texto blanco */
+  text-align: center; /* Centrar texto */
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1); /* Línea sutil */
+}
+
+.card-estilizada .card-header {
+  background-color: #166c9f; /* Fondo del encabezado */
+  color: white; /* Texto blanco */
+  text-align: center; /* Centrar texto */
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1); /* Línea sutil */
+}
+
+.card-title {
+  margin: 0;
+}
+
+.card-estilizada .card-body {
+  color: #333; /* Texto oscuro */
+  text-align: center; /* Centrar contenido */
+}
+
+
+/* Si hay una sola tarjeta, elimina el espacio */
+.no-space-below {
+  margin-bottom: 0 !important;
+}
+
+/* Si hay múltiples tarjetas, agrega espacio entre ellas */
+.space-below {
+  margin-bottom: 20px; /* Ajusta este valor según el diseño */
+}
+
+/* Asegúrate de no agregar margen a la última tarjeta */
+.card-estilizada:last-child {
+  margin-bottom: 0 !important;
+}
+
+
+.card-spacing-single {
+  margin-bottom: 0px !important; /* Espacio deseado entre tarjetas */
+}
+
+.card-spacing-multiple {
+  margin-bottom: 20px !important; /* Espacio deseado entre tarjetas */
+}
+
+
+
+
+
+.btn-crear-diagrama {
+  background: linear-gradient(135deg, #32cd32, #228b22); /* Degradado verde */
+  color: white;
+  font-size: 1.2rem; /* Tamaño del texto */
+  font-weight: bold;
+  padding: 0.55rem 1.3rem;
+  border: none;
+  border-radius: 50px; /* Forma redondeada */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; /* Animación suave */
+  margin-top: 1rem;
+}
+
+.btn-crear-diagrama:hover {
+  transform: scale(1.05); /* Efecto de zoom al pasar el ratón */
+  background: linear-gradient(135deg, #228b22, #006400); /* Degradado más oscuro */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más fuerte */
+}
+
+.btn-crear-diagrama:active {
+  transform: scale(0.95); /* Efecto al hacer clic */
+}
+
 
 /* Carrusel */
 .carousel {

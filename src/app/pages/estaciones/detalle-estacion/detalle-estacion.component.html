@@ -1,125 +1,147 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card cardPrincipal">
-                <h3>Estación Chapala</h3>
-                <p>Conoce la información relevante de la estación, además de realizar acciones en ella.</p>
-            </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card card-estacion-renovada">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+          <div class="icon-container mb-2">
+            <i class="fa fa-map-marker-alt fa-2x"></i> 
+          </div>
+          <h1 class="card-title mb-1" style="font-weight: bold;">Estación Chapala</h1>
+          <p class="card-text text-center mb-2">
+            Descubre información importante y realiza acciones relacionadas con esta estación.
+          </p>
+          <button class="btn btn-success" *ngIf="this.cards.length === 0" (click)="crearDiagrama()">
+            Crear Diagrama
+          </button>
         </div>
-    </div>
-
-    <div class="mb-3">
-        <button class="btn btn-success" (click)="addNewCard()">Nuevo</button>
       </div>
-    <div class="row">
-        <div class="col-12">
-            <div *ngFor="let card of cards; let i = index" class="card mb-4">
-                <div class="card-header cardSeconday d-flex justify-content-between align-items-center">
-                    <div class="title-container d-flex align-items-center">
-                        <select
-                          *ngIf="card.isTitleEditable"
-                          class="form-select w-50 me-2 icon-select"
-                          [(ngModel)]="card.selectedIcon"
-                        >
-                          <option *ngFor="let icon of faIcons" [value]="icon.class">
-                            {{ icon.class }}
-                          </option>
-                        </select>
-                        <input
-                          *ngIf="card.isTitleEditable"
-                          type="text"
-                          class="form-control w-75 me-2"
-                          [(ngModel)]="card.title"
-                          placeholder="Título del diagrama"
-                        />
-                        <i
-                          *ngIf="!card.isTitleEditable && card.selectedIcon"
-                          [class]="card.selectedIcon"
-                          style="font-size: 24px; margin-right: 10px;"
-                        ></i>
-                        <h4
-                          *ngIf="!card.isTitleEditable"
-                          class="card-title m-0"
-                        >
-                          {{ card.title }}
-                        </h4>
-                      </div>
-                      
-                      
-                    <div>
-                      <button class="btn btn-primary me-2" (click)="toggleTitleEdit(i)">
-                        {{ card.isTitleEditable ? 'Bloquear' : 'Editar' }}
-                      </button>
-                      <button class="btn btn-secondary" (click)="saveDiagram(i)">Guardar</button>
-                    </div>
-                  </div>
-                <div class="card-body">
-                    <dx-diagram #diagram id="diagram" [simpleView]="true"
-                    [readOnly]="!card.isEditable">
-                        <dxo-nodes [dataSource]="dataSource" keyExpr="ID" textExpr="Title" parentKeyExpr="Head_ID">
-                            <dxo-auto-layout type="tree"></dxo-auto-layout>
-                        </dxo-nodes>
-                        <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
-                        <dxo-toolbox visibility="visible" [showSearch]="false" [shapeIconsPerRow]="4" [width]="220">
-                            <dxi-group category="hardware" title="Hardware" [expanded]="false"></dxi-group>
-                            <dxi-group category="employees" title="Employees" [expanded]="false" displayMode="texts"></dxi-group>
-                            <dxi-group category="general" title="General" [expanded]="false"></dxi-group>
-                            <dxi-group category="flowchart" title="Flowchart" [expanded]="false"></dxi-group>
-                            <dxi-group category="containers" title="Containers" [expanded]="false"></dxi-group>
-                            <dxi-group title="Items" [shapes]="['rectangle']" [expanded]="false"></dxi-group>
-                            <dxi-group category="orgChart" title="Organizational Chart" [expanded]="false"></dxi-group>
-                        </dxo-toolbox>
-                        <dxi-custom-shape *ngFor="let image of imagess; let i = index" [category]="'hardware'"
-                            [type]="'shape-' + i" [title]="'Shape ' + i" [backgroundImageUrl]="image"
-                            [backgroundImageLeft]="0.15" [backgroundImageTop]="0" [backgroundImageWidth]="0.7"
-                            [backgroundImageHeight]="0.7" [defaultWidth]="0.75" [defaultHeight]="0.75"
-                            [defaultText]="'Shape ' + i" [allowEditText]="true" [textLeft]="0" [textTop]="0.7"
-                            [textWidth]="1" [textHeight]="0.3">
-                            <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
-                            <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
-                            <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
-                            <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
-                        </dxi-custom-shape>
-                        <dxi-custom-shape *ngFor="let emp of employee" category="employees" [type]="'employee' + emp.ID"
-                            baseType="rectangle" [defaultText]="emp.Full_Name" [allowEditText]="false">
-                        </dxi-custom-shape>
-                    </dx-diagram>
-                </div>
-            </div>
+    </div>
+  </div>
+  
+    <div [@fadeInUp] *ngIf="this.cards.length >= 1">
+      <div class="col-12">
+        <div class="card card-estilizada mb-4" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
+          <div class="card-header">
+            <h3 class="card-title" style="font-weight: bold;">Gestión de Diagramas</h3>
+            <p class="card-text text-center">Administra y edita los diagramas de manera sencilla desde las tarjetas a continuación.</p>
+            <button class="btn btn-success" (click)="crearDiagrama()">Crear Diagrama</button>
+          </div>
         </div>
+      </div>
+    
+      <div class="col-12" #cardContainer>
+        <div
+          *ngFor="let card of cards; let i = index"
+          class="card card-estilizada"
+          style="border-radius: 0px;"
+          #cardElement
+          [ngClass]="{
+            'no-space-below': cards.length === 1,
+            'space-below': cards.length > 1
+          }"
+        >
+          <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #a0abb9 !important;">
+            <div class="title-container d-flex align-items-center">
+              <select
+                *ngIf="card.isTitleEditable"
+                class="form-select w-50 me-2 icon-select"
+                [(ngModel)]="card.selectedIcon"
+              >
+                <option *ngFor="let icon of faIcons" [value]="icon.class">
+                  {{ icon.class }}
+                </option>
+              </select>
+              <input
+                *ngIf="card.isTitleEditable"
+                type="text"
+                class="form-control w-75 me-2"
+                [(ngModel)]="card.title"
+                placeholder="Título del diagrama"
+              />
+              <i
+                *ngIf="!card.isTitleEditable && card.selectedIcon"
+                [class]="card.selectedIcon"
+                style="font-size: 24px; margin-right: 10px;"
+              ></i>
+              <h4 *ngIf="!card.isTitleEditable" class="card-title m-0">
+                {{ card.title }}
+              </h4>
+            </div>
+            <div>
+              <button class="btn btn-primary me-2" (click)="toggleTitleEdit(i)">
+                {{ card.isTitleEditable ? 'Bloquear' : 'Editar' }}
+              </button>
+              <button class="btn btn-secondary" (click)="saveDiagram(i)">Guardar</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <dx-diagram #diagram id="diagram" [simpleView]="true"
+            [readOnly]="!card.isEditable">
+                <dxo-nodes [dataSource]="dataSource" keyExpr="ID" textExpr="Title" parentKeyExpr="Head_ID">
+                    <dxo-auto-layout type="tree"></dxo-auto-layout>
+                </dxo-nodes>
+                <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
+                <dxo-toolbox visibility="visible" [showSearch]="false" [shapeIconsPerRow]="4" [width]="220">
+                    <dxi-group category="hardware" title="Hardware" [expanded]="false"></dxi-group>
+                    <dxi-group category="employees" title="Employees" [expanded]="false" displayMode="texts"></dxi-group>
+                    <dxi-group category="general" title="General" [expanded]="false"></dxi-group>
+                    <dxi-group category="flowchart" title="Flowchart" [expanded]="false"></dxi-group>
+                    <dxi-group category="containers" title="Containers" [expanded]="false"></dxi-group>
+                    <dxi-group title="Items" [shapes]="['rectangle']" [expanded]="false"></dxi-group>
+                    <dxi-group category="orgChart" title="Organizational Chart" [expanded]="false"></dxi-group>
+                </dxo-toolbox>
+                <dxi-custom-shape *ngFor="let image of imagess; let i = index" [category]="'hardware'"
+                    [type]="'shape-' + i" [title]="'Shape ' + i" [backgroundImageUrl]="image"
+                    [backgroundImageLeft]="0.15" [backgroundImageTop]="0" [backgroundImageWidth]="0.7"
+                    [backgroundImageHeight]="0.7" [defaultWidth]="0.75" [defaultHeight]="0.75"
+                    [defaultText]="'Shape ' + i" [allowEditText]="true" [textLeft]="0" [textTop]="0.7"
+                    [textWidth]="1" [textHeight]="0.3">
+                    <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                    <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                    <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                    <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape *ngFor="let emp of employee" category="employees" [type]="'employee' + emp.ID"
+                    baseType="rectangle" [defaultText]="emp.Full_Name" [allowEditText]="false">
+                </dxi-custom-shape>
+            </dx-diagram>
+          </div>
+        </div>
+      </div>
+      <br>
     </div>
 
-    <!-- Fila 1 -->
-    <div class="row mb-3">
+      <div class="row mb-3">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header cardSeconday">
-                    <h5 class="card-title">Imagen Principal</h5>
-                </div>
-                <div class="card" style="display: flex; align-items: center; justify-content: center;">
-                    <img style="width: 50%; padding: 10px;" src="../../../../assets/images/aquagenia.png" alt="">
+          <div class="card card-estilizada">
+            <div class="card-header" style="display: flex; align-items: center; justify-content: center;">
+              <h4 class="card-title mb-1" style="font-weight: bold;"><i class="fa fa-picture-o" aria-hidden="true"></i>  Imagen Principal</h4>
+            </div>
+            <div class="card-body">
+                <div class="carousel">
+                    <img src="../../../../assets/images/aquagenia.png" alt="Carrusel de imágenes"
+                        class="carousel-image" />
                 </div>
             </div>
+          </div>
         </div>
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header cardSeconday">
-                    <h5 class="card-title">Ubicación</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Contenedor del mapa -->
-                    <div id="map" style="height: 295px; width: 100%;"></div>
-                </div>
+          <div class="card card-estilizada">
+            <div class="card-header" style="display: flex; align-items: center; justify-content: center;">
+              <h4 class="card-title mb-1" style="font-weight: bold;"> <i class="fa fa-map-pin" aria-hidden="true"></i>  Ubicación</h4>
             </div>
+            <div class="card-body">
+              <div id="map" style="height: 300px; width: 100%;"></div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Fila 2 -->
     <div class="row mb-1">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header cardSeconday">
-                    <h5 class="card-title">Street View</h5>
+            <div class="card card-estilizada">
+                <div class="card-header" >
+                    <h4 class="card-title mb-1" style="font-weight: bold;"><i class="fa fa-map-marker" aria-hidden="true"></i>  Street View</h4>
                 </div>
                 <div class="card-body">
                     <div id="street-view" style="height: 300px; width: 100%;"></div>
@@ -127,9 +149,9 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header cardSeconday">
-                    <h5 class="card-title">Galería</h5>
+            <div class="card card-estilizada">
+                <div class="card-header" style="display: flex; align-items: center; justify-content: center;">
+                    <h4 class="card-title mb-1" style="font-weight: bold;"><i class="fa fa-file-image-o" aria-hidden="true"></i>  Galería</h4>
                 </div>
                 <div class="card-body">
                     <div class="carousel">
@@ -145,21 +167,33 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header cardSeconday">
-                    <h5 class="card-title">Tarjeta 5</h5>
-                    <p class="card-text">Contenido de la tarjeta 5, que abarca toda la fila.</p>
+            <div class="card card-estilizada">
+                <div class="card-header">
+                    <h4 class="card-title mb-1" style="font-weight: bold;">Últimos 20 registros: </h4>
                 </div>
                 <div class="card-body">
-                    <dx-data-grid id="gridContainer" [dataSource]="customers" keyExpr="ID" [showBorders]="true">
-                        <dxi-column *ngFor="let column of columns" [dataField]="column"></dxi-column>
-                    </dx-data-grid>
+                  <dx-data-grid id="gridContainer" [columnHidingEnabled]="true" [showBorders]="true"
+                    [rowAlternationEnabled]="true" [dataSource]="dataSources" [width]="'100%'">
+                    <dxo-search-panel [visible]="true" [width]="200"></dxo-search-panel>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100, 200]" [showInfo]="true"></dxo-pager>
+                    <dxo-selection mode="multiple"></dxo-selection>
+                    <dxo-group-panel [emptyPanelText]="mensajeAgrupar" [visible]="true"></dxo-group-panel>
+                    <dxo-filter-row [visible]="showFilterRow"></dxo-filter-row>
+                    <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
+                    <dxi-column alignment="center" dataField="gastoInstantaneo"  caption="Gasto Instantáneo" [dataType]="'number'"></dxi-column>
+                    <dxi-column alignment="center" dataField="gastoAcumulado" caption="Gasto Acumulado" [dataType]="'number'"></dxi-column>
+                    <dxi-column alignment="center" dataField="phCarcamo" caption="PH Cárcamo" [dataType]="'number'"></dxi-column>
+                    <dxi-column alignment="center" dataField="phEnvio" caption="PH Envío" [dataType]="'number'"></dxi-column>
+                    <dxi-column alignment="center" dataField="clarificador" caption="Clarificador" [dataType]="'number'"></dxi-column>
+                    <dxi-column alignment="center" dataField="demandaQuimica" caption="Demanda Química" [dataType]="'number'"></dxi-column>
+                    <dxi-column alignment="center" dataField="oxigenoDisuelto" caption="Oxígeno Disuelto" [dataType]="'number'"></dxi-column>
+                    <dxi-column alignment="center" dataField="nitrogenoAmoniacal" caption="Nitrógeno Amoniacal" [dataType]="'number'"></dxi-column>
+                    <dxi-column alignment="center" dataField="cloroResidual" caption="Cloro Residual" [dataType]="'number'"></dxi-column>
+                  </dx-data-grid>
                 </div>
             </div>
         </div>
     </div>
 
-
 </div>
-
-<!-- NO BORRAR CODIGO -->
