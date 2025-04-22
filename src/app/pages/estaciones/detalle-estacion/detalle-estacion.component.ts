@@ -4,6 +4,7 @@ import ArrayStore from 'devextreme/data/array_store';
 import { HttpClient } from '@angular/common/http';
 import { DxDiagramComponent } from 'devextreme-angular';
 import { fadeInUpAnimation } from 'src/app/core/animations/fade-in-up.animation';
+import { EstacionesService } from '../servicios/estaciones.service';
 
 @Component({
   selector: 'app-detalle-estacion',
@@ -122,7 +123,62 @@ export class DetalleEstacionComponent implements OnInit {
   droppedItems: any[] = [];
   dataSource: ArrayStore;
   isDiagramReadOnly: boolean = true;
-  employee: Employees[];
+  employee = [
+    { ID: 1, Full_Name: 'Carlos Ramírez' },
+    { ID: 2, Full_Name: 'Lucía Fernández' },
+    { ID: 3, Full_Name: 'Jorge Hernández' },
+    { ID: 4, Full_Name: 'Ana Torres' },
+    { ID: 5, Full_Name: 'Marcos Díaz' },
+  ];
+  
+  cambiarNombreEmpleado() {
+    setTimeout(() => {
+      const index = this.employee.findIndex(e => e.Full_Name === 'Carlos Ramírez');
+      if (index !== -1) {
+        this.employee[index].Full_Name = 'Rodrigo Silva';
+  
+        const diagram = this.diagram?.instance;
+        if (diagram) {
+          const jsonString = diagram.export(); // Exporta JSON actual
+          const diagramData = JSON.parse(jsonString);
+  
+          // Buscar y actualizar el nodo que tenga ese texto
+          const shapeToEdit = diagramData.shapes.find((shape: any) => shape.text === 'Carlos Ramírez');
+          if (shapeToEdit) {
+            shapeToEdit.text = 'Rodrigo Silva';
+  
+            const nuevoJSON = JSON.stringify(diagramData);
+            diagram.import(nuevoJSON); // Reimportar con cambios
+          }
+        }
+      }
+    }, 10000); // 20 segundos
+  }  
+
+  sincronizarCaudalConDiagrama() {
+    const diagram = this.diagram?.instance;
+    if (!diagram) return;
+  
+    const jsonString = diagram.export();
+    const diagramData = JSON.parse(jsonString);
+  
+    let cambios = false;
+  
+    this.listaParametros.forEach(param => {
+      const shape = diagramData.shapes.find((s: any) => s.text === param.CaudalAnterior);
+      if (shape && shape.text !== param.Caudal) {
+        shape.text = param.Caudal;
+        cambios = true;
+      }
+    });
+  
+    if (cambios) {
+      const nuevoJSON = JSON.stringify(diagramData);
+      diagram.import(nuevoJSON);
+    }
+  }
+  
+  
   cards: { 
     title: string; 
     isEditable: boolean; 
@@ -138,6 +194,13 @@ export class DetalleEstacionComponent implements OnInit {
   isAnimating = false;
   
   ngOnInit(): void {
+    this.obtenerParametros(); // carga inicial
+    this.cambiarNombreEmpleado(); // prueba del cambio manual
+  
+    setInterval(() => {
+      this.obtenerParametros();
+    }, 35000);
+  
     this.http.get('assets/diagram-employees.json').subscribe({
       next: (data: any) => {
         this.diagram.instance.import(JSON.stringify(data));
@@ -147,13 +210,99 @@ export class DetalleEstacionComponent implements OnInit {
       },
     });
   }
+  
 
-  constructor(service: Service, private http: HttpClient) {
+  constructor(
+    service: Service, 
+    private http: HttpClient,
+    private param: EstacionesService
+  ) {
     this.customers = service.getCustomers();
-    this.employee = service.getEmployee();
     this.showFilterRow = true;
     this.showHeaderFilter = true;
   }
+
+  public listaParametros: any;
+  obtenerParametros() {
+    this.param.obtenerParametros().subscribe((response: any[]) => {
+      // Comparar antes de reemplazar
+      if (!this.listaParametros || this.listaParametros.length === 0) {
+        this.listaParametros = response.map(p => ({
+          ...p,
+          CaudalAnterior: p.Caudal
+        }));
+      } else {
+        response.forEach(nuevo => {
+          const actual = this.listaParametros.find(p => p.Id === nuevo.Id);
+          if (actual && actual.Caudal !== nuevo.Caudal) {
+            // Actualizó el caudal
+            actual.CaudalAnterior = actual.Caudal;
+            actual.Caudal = nuevo.Caudal;
+          }
+        });
+      }
+  
+      // Actualizar diagrama si hay cambios
+      this.actualizarCaudalesEnDiagrama();
+    });
+  }
+
+  actualizarCaudalesEnDiagrama() {
+    const diagram = this.diagram?.instance;
+    if (!diagram) return;
+  
+    const json = diagram.export();
+    const data = JSON.parse(json);
+  
+    let actualizado = false;
+  
+    this.listaParametros.forEach(p => {
+      // 1. Actualizar si cambió el valor de Caudal
+      if (p.Caudal !== p.CaudalAnterior) {
+        const shape = data.shapes.find((s: any) => s.text === p.CaudalAnterior);
+        if (shape) {
+          shape.text = p.Caudal;
+          actualizado = true;
+          p.CaudalAnterior = p.Caudal;
+        }
+      }
+  
+      // 2. Agregar nuevo nodo si no existe
+      const yaExiste = data.shapes.some((s: any) => s.id === `param-${p.Id}`);
+      if (!yaExiste) {
+        data.shapes.push({
+          id: `param-${p.Id}`,
+          text: p.Caudal,
+          type: 'rectangle',
+          left: 100 + data.shapes.length * 30,
+          top: 100 + data.shapes.length * 30,
+          width: 1.5,
+          height: 0.75,
+        });
+        p.CaudalAnterior = p.Caudal;
+        actualizado = true;
+      }
+    });
+  
+    if (actualizado) {
+      diagram.import(JSON.stringify(data));
+    }
+  }
+  
+  
+  
+  
+  iniciarSincronizacionCaudal() {
+    setInterval(() => {
+      this.listaParametros.forEach(param => {
+        if (param.Caudal !== param.CaudalAnterior) {
+          this.sincronizarCaudalConDiagrama();
+          param.CaudalAnterior = param.Caudal;
+        }
+      });
+    }, 5000); // Cada 5 segundos
+  }
+  
   
   toggleTitleEdit(index: number) {
     this.cards[index].isTitleEditable = !this.cards[index].isTitleEditable;

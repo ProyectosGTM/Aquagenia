@@ -17,6 +17,8 @@
       </div>
     </div>
   </div>
+
+  {{this.dataSource | json}}
   
     <div [@fadeInUp] *ngIf="this.cards.length >= 1">
       <div class="col-12">
@@ -82,13 +84,13 @@
                 </dxo-nodes>
                 <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
                 <dxo-toolbox visibility="visible" [showSearch]="false" [shapeIconsPerRow]="4" [width]="220">
-                    <dxi-group category="hardware" title="Hardware" [expanded]="false"></dxi-group>
-                    <dxi-group category="employees" title="Employees" [expanded]="false" displayMode="texts"></dxi-group>
-                    <dxi-group category="general" title="General" [expanded]="false"></dxi-group>
+                    <!-- <dxi-group category="hardware" title="Hardware" [expanded]="false"></dxi-group> -->
+                    <dxi-group category="employees" title="Caudal" [expanded]="false" displayMode="texts"></dxi-group>
+                    <!-- <dxi-group category="general" title="General" [expanded]="false"></dxi-group>
                     <dxi-group category="flowchart" title="Flowchart" [expanded]="false"></dxi-group>
                     <dxi-group category="containers" title="Containers" [expanded]="false"></dxi-group>
                     <dxi-group title="Items" [shapes]="['rectangle']" [expanded]="false"></dxi-group>
-                    <dxi-group category="orgChart" title="Organizational Chart" [expanded]="false"></dxi-group>
+                    <dxi-group category="orgChart" title="Organizational Chart" [expanded]="false"></dxi-group> -->
                 </dxo-toolbox>
                 <dxi-custom-shape *ngFor="let image of imagess; let i = index" [category]="'hardware'"
                     [type]="'shape-' + i" [title]="'Shape ' + i" [backgroundImageUrl]="image"
@@ -101,8 +103,8 @@
                     <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
                     <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
                 </dxi-custom-shape>
-                <dxi-custom-shape *ngFor="let emp of employee" category="employees" [type]="'employee' + emp.ID"
-                    baseType="rectangle" [defaultText]="emp.Full_Name" [allowEditText]="false">
+                <dxi-custom-shape *ngFor="let emp of listaParametros" category="employees" [type]="'employee' + emp.Id"
+                    baseType="rectangle" [defaultText]="emp.Caudal" [allowEditText]="false">
                 </dxi-custom-shape>
             </dx-diagram>
           </div>
