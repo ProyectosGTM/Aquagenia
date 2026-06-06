@@ -1,63 +1,103 @@
-<div class="container-fluid">
-  <div class="row">
-    <!-- Barra de búsqueda -->
-    <div class="col-12 mb-4">
-      <div class="search-bar">
-        <input type="text" placeholder="Buscar: N° Determinante" class="form-control">
-        <button class="btn btn-primary ml-2">Buscar</button>
-        <button class="btn btn-secondary ml-2">Todos</button>
-        <button class="btn btn-danger ml-2" (click)="restaurarMapa()" [@fadeInUp] *ngIf="showMapZoom">Restaurar</button>
-      </div>
-    </div>
+<!-- NO MODIFICAR CAMBIOS -->
+<div class="ops-root">
 
-    <!-- Sección de tarjetas -->
-    <div class="col-lg-3 col-md-4 col-sm-12">
-      <div class="content-cards">
-        <div class="operation" *ngFor="let operation of operations">
-          <div class="card card-new-design mb-4">
-            <div class="card-header">
-              <h5 class="card-title">Operación: {{ operation.name }}</h5>
-            </div>
-            <div class="card-body">
-              <div class="image-container mb-3" style="cursor: pointer;" (click)="centrarEnUbicacion(operation.position)">
-                <img 
-                  *ngIf="operation.imageUrl" 
-                  [src]="operation.imageUrl" 
-                  alt="Operation Image" 
-                  class="img-fluid">
-                <div *ngIf="!operation.imageUrl" class="no-image">
-                  No image available
+  <!-- HUD TOP -->
+  <div class="ops-hud">
+    <div class="hud-brand">
+      <span class="hud-dot"></span>
+      <span class="hud-name">Aquagenia · Operaciones</span>
+    </div>
+    <div class="hud-controls">
+      <div class="hud-search-wrap">
+        <i class="ti ti-search"></i>
+        <input type="text" placeholder="Buscar N° Determinante..." [(ngModel)]="searchTerm" />
+      </div>
+      <button class="hud-btn" (click)="mostrarTodos()">
+        <i class="ti ti-list"></i><span>Todos</span>
+      </button>
+      <button class="hud-btn hud-btn-accent" (click)="buscar()">
+        <i class="ti ti-search"></i><span>Buscar</span>
+      </button>
+      <button class="hud-btn hud-btn-danger" *ngIf="showMapZoom" (click)="restaurarMapa()" [@fadeInUp]>
+        <i class="ti ti-map-2"></i><span>Restaurar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="ops-body">
+    <div class="container-fluid h-100 p-0">
+      <div class="row g-0 h-100">
+
+        <!-- MAPA (ocupa todo menos el drawer) -->
+        <div class="col ops-map-col">
+          <div class="map-container" id="map"></div>
+        </div>
+
+        <!-- DRAWER DERECHO -->
+        <div class="col-xl-3 col-lg-4 col-md-4 ops-drawer-col">
+          <div class="drawer-head">
+            <span class="drawer-title">Operaciones</span>
+            <span class="drawer-count">{{ operations.length }} registros</span>
+          </div>
+          <div class="drawer-list">
+            <div class="d-item" *ngFor="let operation of operations"
+                 (click)="centrarEnUbicacion(operation.position)">
+              <div class="d-img">
+                <img *ngIf="operation.imageUrl" [src]="operation.imageUrl" [alt]="operation.name"/>
+                <i *ngIf="!operation.imageUrl" class="ti ti-droplet"></i>
+                <div class="d-img-tag">
+                  <span class="d-name">{{ operation.name }}</span>
+                  <span class="d-status-dot"
+                    [style.background]="operation.active ? '#00c864' : '#e05c5c'"></span>
                 </div>
               </div>
-              
-              <div class="details">
-                <div class="detail-item d-flex justify-content-between">
-                  <span><strong>Det:</strong></span>
-                  <span>{{ operation.det }}</span>
-                </div>
-                <div class="detail-item d-flex justify-content-between">
-                  <span><strong>Empresa:</strong></span>
-                  <span>{{ operation.company }}</span>
-                </div>
-                <div class="detail-item d-flex justify-content-between">
-                  <span><strong>Fecha:</strong></span>
-                  <span>{{ operation.date }}</span>
-                </div>
-              </div>              
-              <div class="col-12 text-center d-flex mt-3">
-                <!-- HTML !-->
-                <button class="buttonDetalle" role="button" (click)="irDetalle()">Detalle</button>
-                <!-- <button class="buttonMap" role="button" (click)="centrarEnUbicacion(operation.position)">Ubicar</button> -->
+              <div class="d-body">
+                <span class="d-chip"><i class="ti ti-hash"></i>{{ operation.det }}</span>
+                <span class="d-chip"><i class="ti ti-building"></i>{{ operation.company }}</span>
+                <span class="d-chip"><i class="ti ti-calendar"></i>{{ operation.date }}</span>
+              </div>
+              <div class="d-foot">
+                <button class="d-btn-det"
+                  (click)="$event.stopPropagation(); irDetalle()">
+                  <i class="ti ti-file-description"></i> Detalle
+                </button>
+                <button class="d-btn-pin"
+                  (click)="$event.stopPropagation(); centrarEnUbicacion(operation.position)">
+                  <i class="ti ti-map-pin"></i>
+                </button>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
+  </div>
 
-    <!-- Sección del mapa -->
-    <div class="col-lg-9 col-md-8 col-sm-12">
-      <div class="map-container" id="map"></div>
+  <!-- TICKER -->
+  <div class="ops-ticker">
+    <div class="ticker-label">En vivo</div>
+    <div class="ticker-scroll">
+      <div class="ticker-track">
+        <div class="ticker-item" *ngFor="let operation of operations">
+          <span class="ticker-op">{{ operation.name }}</span>
+          <span class="ticker-det">{{ operation.det }}</span>
+          <span class="ticker-status"
+            [ngClass]="operation.active ? 'ts-active' : 'ts-idle'">
+            {{ operation.active ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+        <div class="ticker-item" *ngFor="let operation of operations">
+          <span class="ticker-op">{{ operation.name }}</span>
+          <span class="ticker-det">{{ operation.det }}</span>
+          <span class="ticker-status"
+            [ngClass]="operation.active ? 'ts-active' : 'ts-idle'">
+            {{ operation.active ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+      </div>
     </div>
   </div>
+
 </div>

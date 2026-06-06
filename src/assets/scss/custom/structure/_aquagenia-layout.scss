@@ -1,0 +1,402 @@
+//
+// Aquagenia layout overrides
+//
+
+$aquagenia-blue: #166c9f;
+$aquagenia-yellow: #e0e215;
+$aquagenia-yellow-sidebar-title: mix($aquagenia-yellow, #fff, 68%);
+$aquagenia-yellow-sidebar-icon: mix($aquagenia-yellow, #fff, 78%);
+$aquagenia-bg-dark: #071f2e;
+$aquagenia-bg-mid: #0c3550;
+$aquagenia-layout-bg: #0b2a3d;
+$aquagenia-layout-bg-soft: #0e3147;
+$aquagenia-card-bg: #071b25;
+$aquagenia-card-bg-hover: #165a7a;
+$aquagenia-surface: linear-gradient(165deg, #{$aquagenia-bg-dark} 0%, #{$aquagenia-bg-mid} 52%, #{darken($aquagenia-blue, 18%)} 100%);
+$aquagenia-layout-surface: linear-gradient(180deg, #{$aquagenia-layout-bg} 0%, #{$aquagenia-layout-bg-soft} 100%);
+$aquagenia-card-surface: ($aquagenia-card-bg);
+$aquagenia-text: rgba(255, 255, 255, 0.88);
+$aquagenia-text-muted: rgba(255, 255, 255, 0.58);
+$aquagenia-menu-inset: 16px;
+
+@mixin aquagenia-surface {
+  background: $aquagenia-surface !important;
+  border-color: rgba($aquagenia-yellow, 0.28) !important;
+}
+
+// ── Footer siempre al fondo ──
+.main-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $aquagenia-layout-surface;
+}
+
+.page-content {
+  flex: 1 1 auto;
+  padding-bottom: calc(#{$grid-gutter-width} / 2) !important;
+  background: transparent;
+}
+
+.footer {
+  position: relative !important;
+  left: 0 !important;
+  right: 0;
+  bottom: auto !important;
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
+  color: $aquagenia-text-muted !important;
+  box-shadow: none !important;
+  border-top: 2px solid $aquagenia-yellow;
+  @include aquagenia-surface;
+}
+
+// ── Header ──
+#page-topbar {
+  @include aquagenia-surface;
+  border-bottom: 2px solid $aquagenia-yellow !important;
+  box-shadow: 0 4px 18px rgba(7, 31, 46, 0.35) !important;
+
+  .header-item,
+  .noti-icon i {
+    color: $aquagenia-text !important;
+
+    &:hover {
+      color: $aquagenia-yellow !important;
+    }
+  }
+
+  .navbar-brand-box {
+    @include aquagenia-surface;
+    border-right: 1px solid rgba($aquagenia-yellow, 0.22) !important;
+  }
+}
+
+// ── Sidebar ──
+.vertical-menu,
+body[data-sidebar="dark"] .vertical-menu,
+body[data-sidebar="colored"] .vertical-menu,
+.navbar-brand-box,
+body[data-sidebar="dark"] .vertical-menu .navbar-brand-box {
+  @include aquagenia-surface;
+  border-right: 1px solid rgba($aquagenia-yellow, 0.28) !important;
+  box-shadow: 4px 0 18px rgba(7, 31, 46, 0.28) !important;
+  overflow-x: hidden;
+}
+
+body[data-sidebar="dark"] {
+  .vertical-menu-btn {
+    color: $aquagenia-yellow-sidebar-icon !important;
+  }
+
+  #sidebar-menu {
+    ul li {
+      a {
+        color: #fff !important;
+        box-sizing: border-box;
+        max-width: 100%;
+        margin: 0 $aquagenia-menu-inset !important;
+
+        i {
+          color: $aquagenia-yellow-sidebar-icon !important;
+        }
+
+        &:hover,
+        &:hover i {
+          color: $aquagenia-yellow !important;
+        }
+      }
+
+      ul.sub-menu li a {
+        color: #fff !important;
+        margin: 0 $aquagenia-menu-inset !important;
+        padding: 0.4rem 1rem 0.4rem 2.4rem !important;
+        border-radius: 3px;
+
+        &:hover {
+          color: $aquagenia-yellow !important;
+        }
+
+        &.active {
+          background: rgba($aquagenia-blue, 0.28) !important;
+          border-left: 3px solid $aquagenia-yellow;
+          color: $aquagenia-yellow !important;
+        }
+      }
+
+      ul.sub-menu ul.sub-menu li a {
+        padding-left: 3.2rem !important;
+      }
+    }
+
+    .menu-title {
+      color: $aquagenia-yellow-sidebar-title !important;
+      letter-spacing: 1.5px;
+      padding-left: calc(#{$aquagenia-menu-inset} + 4px) !important;
+      padding-right: $aquagenia-menu-inset !important;
+    }
+
+    // Ítems raíz sin submenú: resaltar solo el propio enlace
+    > ul > li.mm-active:not(:has(> ul.sub-menu)) > a {
+      background: rgba($aquagenia-blue, 0.38) !important;
+      border-left: 3px solid $aquagenia-yellow;
+      color: $aquagenia-yellow !important;
+
+      i {
+        color: $aquagenia-yellow !important;
+      }
+    }
+
+    // Ítems con submenú: el padre nunca queda encendido
+    > ul > li.mm-active:has(> ul.sub-menu) > a {
+      background: transparent !important;
+      border-left: none !important;
+      color: #fff !important;
+
+      i {
+        color: $aquagenia-yellow-sidebar-icon !important;
+      }
+    }
+
+    ul.sub-menu li.mm-active > a:not(.active) {
+      background: transparent !important;
+      border-left: none !important;
+      color: #fff !important;
+    }
+  }
+
+  .mm-active {
+    .active,
+    .active i {
+      color: $aquagenia-yellow !important;
+    }
+  }
+
+  // Anular highlight del tema base en padres con hijo activo
+  .mm-active:has(.sub-menu .active) > a {
+    background: transparent !important;
+    border-left: none !important;
+    color: #fff !important;
+
+    i {
+      color: $aquagenia-yellow-sidebar-icon !important;
+    }
+  }
+}
+
+body[data-topbar="dark"] {
+  #page-topbar {
+    .header-item,
+    .noti-icon i {
+      color: $aquagenia-text !important;
+    }
+  }
+}
+
+body[data-layout="horizontal"] {
+  .topnav {
+    @include aquagenia-surface;
+    border-bottom: 2px solid $aquagenia-yellow !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .footer {
+    left: 0 !important;
+  }
+}
+
+body[data-sidebar-size="sm"] {
+  .footer {
+    left: 0 !important;
+  }
+}
+
+// ── Layout y cards (contraste con chrome y colores de marca) ──
+body[data-bs-theme="dark"],
+body[data-bs-theme="light"] {
+  --#{$prefix}body-bg: #{$aquagenia-layout-bg};
+  --#{$prefix}secondary-bg: #{$aquagenia-card-bg};
+  --#{$prefix}tertiary-bg: #{$aquagenia-card-bg-hover};
+  --#{$prefix}border-color: #{rgba($aquagenia-yellow, 0.14)};
+  --#{$prefix}heading-color: #{$aquagenia-text};
+  --#{$prefix}body-color: #{$aquagenia-text-muted};
+}
+
+.page-title-box {
+  h4 {
+    color: $aquagenia-text !important;
+  }
+
+  .breadcrumb-item {
+    color: $aquagenia-text-muted !important;
+
+    &.active {
+      color: rgba($aquagenia-yellow, 0.85) !important;
+    }
+
+    a {
+      color: rgba($aquagenia-blue, 0.95) !important;
+
+      &:hover {
+        color: $aquagenia-yellow !important;
+      }
+    }
+  }
+}
+
+.card {
+  background: $aquagenia-card-surface !important;
+  border: 1px solid rgba($aquagenia-yellow, 0.16) !important;
+  box-shadow:
+    0 8px 24px rgba(7, 31, 46, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  color: $aquagenia-text-muted;
+
+  .card-title,
+  .card-header,
+  h1, h2, h3, h4, h5, h6 {
+    color: $aquagenia-text !important;
+  }
+
+  .card-title-desc,
+  .text-muted {
+    color: $aquagenia-text-muted !important;
+  }
+
+  .card-header {
+    background: rgba($aquagenia-blue, 0.22) !important;
+    border-bottom: 1px solid rgba($aquagenia-yellow, 0.14) !important;
+  }
+
+  .card-footer {
+    background: rgba($aquagenia-bg-dark, 0.35) !important;
+    border-top: 1px solid rgba($aquagenia-yellow, 0.12) !important;
+  }
+}
+
+.card.bg-primary,
+.card.text-white {
+  border-color: rgba($aquagenia-yellow, 0.35) !important;
+}
+
+// ── Vista mapa operaciones: pantalla completa sin scroll de página ──
+.main-content:has(app-lista-estaciones) {
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+
+  .page-content {
+    padding: $header-height 0 0 0 !important;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer {
+    display: none;
+  }
+}
+
+app-lista-estaciones {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+// ── Google Maps InfoWindow (Aquagenia) ──
+.gm-style {
+  .gm-style-iw-c {
+    padding: 0 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 10px 28px rgba(7, 31, 46, 0.55) !important;
+    background: transparent !important;
+  }
+
+  .gm-style-iw-d {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  .gm-style-iw-chr {
+    display: none !important;
+  }
+
+  .gm-style-iw-tc::after {
+    background: linear-gradient(165deg, #{$aquagenia-bg-dark} 0%, #{$aquagenia-bg-mid} 100%) !important;
+  }
+}
+
+.aquagenia-map-tip {
+  font-family: 'Space Grotesk', sans-serif;
+  min-width: 230px;
+  max-width: 280px;
+  background: linear-gradient(165deg, #{$aquagenia-bg-dark} 0%, #{$aquagenia-bg-mid} 100%);
+  border: 1px solid rgba($aquagenia-yellow, 0.35);
+  border-radius: 10px;
+  overflow: hidden;
+  color: $aquagenia-text;
+}
+
+.aquagenia-map-tip__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 2px solid $aquagenia-yellow;
+  background: rgba($aquagenia-bg-dark, 0.95);
+}
+
+.aquagenia-map-tip__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $aquagenia-yellow;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba($aquagenia-yellow, 0.6);
+}
+
+.aquagenia-map-tip__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+
+.aquagenia-map-tip__body {
+  padding: 10px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aquagenia-map-tip__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.aquagenia-map-tip__label {
+  color: $aquagenia-text-muted;
+  flex-shrink: 0;
+}
+
+.aquagenia-map-tip__value {
+  color: $aquagenia-text;
+  font-weight: 500;
+  text-align: right;
+}
+
+.aquagenia-map-tip__value--accent {
+  color: $aquagenia-yellow;
+  font-weight: 600;
+}

@@ -1,113 +1,126 @@
-<div class="account-pages my-5 pt-sm-5">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="text-center">
-          <a href="/" class="mb-5 d-block auth-logo">
-            <img src="assets/images/logo-dark.png" alt="" height="22" class="logo logo-dark">
-            <img src="assets/images/logo-light.png" alt="" height="22" class="logo logo-light">
-          </a>
-        </div>
-      </div>
+<div class="wrap">
+
+  <div class="scan-line"></div>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <svg class="pipes" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <line x1="0" y1="120" x2="360" y2="120" stroke="rgba(0,229,255,0.06)" stroke-width="1"/>
+    <line x1="360" y1="120" x2="360" y2="320" stroke="rgba(0,229,255,0.06)" stroke-width="1"/>
+    <circle cx="360" cy="120" r="5" fill="none" stroke="rgba(0,229,255,0.15)" stroke-width="1"/>
+    <line x1="1920" y1="300" x2="1560" y2="300" stroke="rgba(0,229,255,0.06)" stroke-width="1"/>
+    <line x1="1560" y1="300" x2="1560" y2="700" stroke="rgba(0,229,255,0.06)" stroke-width="1"/>
+    <circle cx="1560" cy="300" r="5" fill="none" stroke="rgba(0,229,255,0.15)" stroke-width="1"/>
+    <line x1="0" y1="800" x2="280" y2="800" stroke="rgba(0,229,255,0.04)" stroke-width="1"/>
+    <line x1="280" y1="800" x2="280" y2="1080" stroke="rgba(0,229,255,0.04)" stroke-width="1"/>
+    <line x1="1920" y1="900" x2="1700" y2="900" stroke="rgba(0,229,255,0.04)" stroke-width="1"/>
+    <line x1="1700" y1="900" x2="1700" y2="1080" stroke="rgba(0,229,255,0.04)" stroke-width="1"/>
+    <circle cx="960" cy="900" r="300" fill="none" stroke="rgba(0,229,255,0.03)" stroke-width="1"/>
+    <circle cx="960" cy="900" r="500" fill="none" stroke="rgba(0,229,255,0.02)" stroke-width="1"/>
+    <text x="40" y="1060" font-family="'Space Grotesk',sans-serif" font-size="18" fill="rgba(0,229,255,0.08)" letter-spacing="6">SISTEMA HIDRÁULICO INTELIGENTE</text>
+    <text x="1500" y="50" font-family="'Space Grotesk',sans-serif" font-size="18" fill="rgba(0,229,255,0.08)" letter-spacing="6">RED ACTIVA</text>
+    <line x1="60" y1="280" x2="60" y2="600" stroke="rgba(0,229,255,0.04)" stroke-width="16"/>
+    <line x1="1860" y1="500" x2="1860" y2="900" stroke="rgba(0,229,255,0.04)" stroke-width="16"/>
+    <circle cx="120" cy="120" r="4" fill="#00e5ff" opacity="0.5">
+      <animate attributeName="cx" from="-10" to="365" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1560" cy="250" r="4" fill="#00e5ff" opacity="0.4">
+      <animate attributeName="cy" from="240" to="705" dur="5s" repeatCount="indefinite"/>
+    </circle>
+  </svg>
+
+  <div class="form-area">
+    <div class="glyph">
+      <i class="ti ti-user-plus"></i>
     </div>
-    <div class="row align-items-center justify-content-center">
-      <div class="col-md-8 col-lg-6 col-xl-5">
-        <div class="card">
 
-          <div class="card-body p-4">
-
-            <div class="text-center mt-2">
-              <h5 class="text-primary">Register Account</h5>
-              <p class="text-muted">Get your free Minible account now.</p>
-            </div>
-            <div class="p-2 mt-4">
-              <form name="signupForm" [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate>
-                @if(successmsg){
-                <ngb-alert type="success" [dismissible]="false">Registeration successfull.
-                </ngb-alert>
-                }
-
-                <div class="mb-3">
-                  <label for="username">Email</label>
-                  <input type="email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" id="email" placeholder="Email" />
-                  @if(submitted && f.email.errors){
-                  <div class="invalid-feedback">
-                    @if(f.email.errors.required){
-                    <div>Email is required</div>}
-                    @if(f.email.errors.email){
-                    <div>Email must be a valid email address</div>}
-                  </div>}
-                </div>
-
-                <div class="mb-3">
-                  <label for="username">Username</label>
-                  <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" id="username" placeholder="Enter username" />
-                  @if(submitted && f.username.errors){
-                  <div class="invalid-feedback">
-                    @if(f.username.errors.required){
-                    <div>Userame is required</div>}
-                  </div>}
-                </div>
-
-                <div class="mb-3">
-                  <label for="userpassword">Password</label>
-                  <!-- <input type="password" class="form-control" id="userpassword" placeholder="Enter password">         -->
-                  <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password" placeholder="Password" />
-                  @if(submitted && f.password.errors){
-                  <div class="invalid-feedback">
-                    @if(f.password.errors.required){
-                    <div>Password is required</div>}
-                  </div>}
-                </div>
-
-                <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="auth-terms-condition-check">
-                  <label class="form-check-label" for="auth-terms-condition-check">I accept <a href="javascript: void(0);" class="text-reset">Terms and Conditions</a></label>
-                </div>
-
-                <div class="mt-3 text-end">
-                  <button class="btn btn-primary w-sm waves-effect waves-light" type="submit">Register</button>
-                </div>
-
-                <div class="mt-4 text-center">
-                  <div class="signin-other-title">
-                    <h5 class="font-size-14 mb-3 title">Sign up using</h5>
-                  </div>
-                  <ul class="list-inline">
-                    <li class="list-inline-item">
-                      <a href="javascript:void()" class="social-list-item bg-primary text-white border-primary">
-                        <i class="mdi mdi-facebook"></i>
-                      </a>
-                    </li>
-                    <li class="list-inline-item">
-                      <a href="javascript:void()" class="social-list-item bg-info text-white border-info">
-                        <i class="mdi mdi-twitter"></i>
-                      </a>
-                    </li>
-                    <li class="list-inline-item">
-                      <a href="javascript:void()" class="social-list-item bg-danger text-white border-danger">
-                        <i class="mdi mdi-google"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="mt-4 text-center">
-                  <p class="text-muted mb-0">Already have an account ? <a href="/account/login" class="fw-medium text-primary"> Login</a></p>
-                </div>
-              </form>
-            </div>
-
-          </div>
-        </div>
-        <div class="mt-5 text-center">
-          <p>© {{year}} Minible. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-        </div>
-
-      </div>
+    <div class="sys-id">
+      <h1>Sistema de gestión hídrica</h1>
+      <h2>AQUA<span>GENIA</span></h2>
     </div>
-    <!-- end row -->
+
+    <div class="panel panel--wide">
+      <div class="status-row">
+        <div class="status-dot">Nuevo operador</div>
+      </div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+        @if(successmsg) {
+          <ngb-alert type="success" [dismissible]="false">Registro completado correctamente.</ngb-alert>
+        }
+
+        @if(error) {
+          <ngb-alert type="danger" [dismissible]="false">{{ error }}</ngb-alert>
+        }
+
+        <div class="fld">
+          <label class="fld-label" for="email">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="usuario@aquagenia.mx"
+            [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+          />
+          @if(submitted && f.email.errors) {
+            <div class="fld-error">
+              @if(f.email.errors.required) { <span>Campo requerido</span> }
+              @if(f.email.errors.email) { <span>Correo inválido</span> }
+            </div>
+          }
+        </div>
+
+        <div class="fld">
+          <label class="fld-label" for="username">Nombre de usuario</label>
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            placeholder="operador_aquagenia"
+            [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+          />
+          @if(submitted && f.username.errors) {
+            <div class="fld-error"><span>Campo requerido</span></div>
+          }
+        </div>
+
+        <div class="fld">
+          <label class="fld-label" for="password">Clave de acceso</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="••••••••••••"
+            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+          />
+          @if(submitted && f.password.errors) {
+            <div class="fld-error"><span>Campo requerido</span></div>
+          }
+        </div>
+
+        <div class="fld-check">
+          <input type="checkbox" id="auth-terms-condition-check">
+          <label for="auth-terms-condition-check">
+            Acepto los <a href="javascript:void(0);">Términos y condiciones</a>
+          </label>
+        </div>
+
+        <button class="submit-btn" type="submit">
+          <i class="ti ti-user-check"></i>
+          <span>Registrar</span>
+        </button>
+
+        <div class="row-link">
+          ¿Ya tienes cuenta? <a href="/account/login">Iniciar sesión</a>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="bottom">© {{ year }} Aquagenia · Todos los derechos reservados</div>
   </div>
-  <!-- end container -->
+
 </div>
-<!-- end page -->

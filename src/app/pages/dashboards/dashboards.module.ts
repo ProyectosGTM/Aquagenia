@@ -9,6 +9,14 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgbDropdownModule, NgbTooltipModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap'
 
 import { SimplebarAngularModule } from 'simplebar-angular';
+import {
+  DxBarGaugeModule,
+  DxChartModule,
+  DxCircularGaugeModule,
+  DxDataGridModule,
+  DxPieChartModule,
+  DxSparklineModule,
+} from 'devextreme-angular';
 
 import { DefaultComponent } from './default/default.component';
 
@@ -24,7 +32,13 @@ import { DefaultComponent } from './default/default.component';
     NgbNavModule,
     NgApexchartsModule,
     SimplebarAngularModule,
-    UIModule
+    UIModule,
+    DxSparklineModule,
+    DxChartModule,
+    DxCircularGaugeModule,
+    DxBarGaugeModule,
+    DxPieChartModule,
+    DxDataGridModule,
   ],
 })
 export class DashboardsModule { }

@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { DefaultComponent } from './dashboards/default/default.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { ChatComponent } from './chat/chat.component';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { DiagramaComponent } from './diagrama/diagrama.component';
 
 const routes: Routes = [
-  // { path: '', redirectTo: 'dashboard' },
-  { path: '', component: DefaultComponent },
+  { path: '', redirectTo: 'dashboards/default', pathMatch: 'full' },
   { path: 'calendar', component: CalendarComponent },
   { path: 'chat', component: ChatComponent },
   { path: 'file-manager',component:FileManagerComponent},
@@ -27,7 +25,12 @@ const routes: Routes = [
   { path: 'maps', loadChildren: () => import('./maps/maps.module').then(m => m.MapsModule) },
   // { path: 'diagrama', component: DiagramaComponent },
   { path: 'diagrama', loadChildren: () => import('./diagrama/diagrama.module').then(m => m.DiagramaModule)},
-  { path: 'estaciones', loadChildren: () => import('./estaciones/estaciones.module').then(m => m.EstacionesModule)}
+  { path: 'estaciones', loadChildren: () => import('./estaciones/estaciones.module').then(m => m.EstacionesModule)},
+  { path: 'modulos', loadChildren: () => import('./modulos/modulos.module').then(m => m.ModulosModule)},
+  { path: 'permisos', loadChildren: () => import('./permisos/permisos.module').then(m => m.PermisosModule)},
+  { path: 'usuarios', loadChildren: () => import('./usuarios/usuarios.module').then(m => m.UsuariosModule)},
+  { path: 'clientes', loadChildren: () => import('./clientes/clientes.module').then(m => m.ClientesModule)},
+  { path: 'roles', loadChildren: () => import('./roles/roles.module').then(m => m.RolesModule)},
 ];
 
 @NgModule({

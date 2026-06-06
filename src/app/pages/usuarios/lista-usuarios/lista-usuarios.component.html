@@ -1,0 +1,63 @@
+<div class="page-root" [@moduleEnter]>
+
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
+
+          <div class="page-header-brand">Aquagenia</div>
+
+          <div class="page-header-body">
+            <span class="page-header-tag">Aquagenia / Usuarios</span>
+            <h1 class="page-header-title">Usuarios del <span>Sistema</span></h1>
+            <div class="page-header-chips">
+              <span class="page-chip"><i class="ti ti-calendar"></i> 05 Jun 2026</span>
+              <span class="page-chip"><i class="ti ti-clock"></i> 01:47 p.m.</span>
+            </div>
+          </div>
+
+          <div class="page-header-side">
+            <button class="page-btn-primary">
+              <i class="ti ti-plus"></i> Agregar
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 p-3">
+    <div class="col-12">
+
+      <div class="grid-toolbar">
+        <button class="grid-btn-contraer">
+          <i class="ti ti-arrows-minimize"></i> Contraer
+        </button>
+        <button class="grid-btn-reiniciar">
+          <i class="ti ti-refresh"></i> Reiniciar
+        </button>
+      </div>
+
+      <dx-data-grid id="gridContainer" [columnHidingEnabled]="true" [showBorders]="true"
+  [showColumnLines]="true" [showRowLines]="true" [rowAlternationEnabled]="true" [width]="'100%'">
+
+  <dxo-search-panel [visible]="true" [width]="200" placeholder="Buscar..."></dxo-search-panel>
+  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20]" [showInfo]="true"></dxo-pager>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+  <dxi-column caption="Acciones" alignment="center" [width]="150"></dxi-column>
+  <dxi-column dataField="FotoPerfil" caption="Imagen" [width]="200" alignment="center"></dxi-column>
+  <dxi-column dataField="NombreCompleto" caption="Nombre" alignment="center" dataType="string"></dxi-column>
+  <dxi-column dataField="Telefono" caption="Teléfono" alignment="center" dataType="string"></dxi-column>
+  <dxi-column dataField="UserName" caption="Correo Electrónico" alignment="center" dataType="string"></dxi-column>
+  <dxi-column dataField="RolNombre" caption="Rol" alignment="center" dataType="string"></dxi-column>
+  <dxi-column dataField="estatus" caption="Estatus" alignment="center" dataType="string"></dxi-column>
+
+</dx-data-grid>
+    </div>
+  </div>
+
+</div>

@@ -160,3 +160,384 @@ body[data-bs-theme=dark] {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+//Estilos generales de modulos
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+
+$aquagenia-blue: #166c9f;
+$aquagenia-yellow: #e0e215;
+$aquagenia-bg-dark: #04141f;
+$aquagenia-bg-mid: #0c3550;
+$aquagenia-layout-bg: #0b2a3d;
+$aquagenia-layout-bg-soft: #0e3147;
+$aquagenia-card-bg: #071b25;
+$aquagenia-text: rgba(255, 255, 255, 0.88);
+$aquagenia-text-muted: rgba(255, 255, 255, 0.45);
+
+* {
+    box-sizing: border-box;
+}
+
+.page-root {
+    font-family: 'Space Grotesk', sans-serif;
+    background: $aquagenia-bg-dark;
+    color: $aquagenia-text;
+    min-height: 100%;
+}
+
+// ── HEADER ──
+.page-header {
+    background: $aquagenia-bg-dark;
+    border-bottom: 1px solid rgba($aquagenia-blue, 0.2);
+}
+
+.page-header-inner {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    align-items: stretch;
+    min-height: 100px;
+}
+
+// BARRA AMARILLA
+.page-header-brand {
+    background: $aquagenia-yellow;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: $aquagenia-bg-dark;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+// CUERPO CENTRAL
+.page-header-body {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+
+.page-header-tag {
+    font-size: 10px;
+    color: $aquagenia-text-muted;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.page-header-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -0.5px;
+
+    span {
+        color: $aquagenia-yellow;
+    }
+}
+
+.page-header-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.page-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: $aquagenia-text-muted;
+    background: rgba($aquagenia-blue, 0.12);
+    border: 1px solid rgba($aquagenia-blue, 0.2);
+    padding: 3px 10px;
+    border-radius: 3px;
+
+    i {
+        font-size: 11px;
+    }
+}
+
+// PANEL DERECHO
+.page-header-side {
+    background: $aquagenia-bg-mid;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 170px;
+}
+
+.page-header-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: $aquagenia-text-muted;
+    letter-spacing: 0.3px;
+}
+
+.page-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00c864;
+    animation: blink 2s infinite;
+    flex-shrink: 0;
+}
+
+.page-btn-primary {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 0;
+    background: $aquagenia-yellow;
+    color: $aquagenia-bg-dark;
+    border: none;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    transition: background .15s;
+
+    &:hover {
+        background: darken($aquagenia-yellow, 8%);
+    }
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.2;
+    }
+}
+
+.page-header-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+// ── BOTONES GENÉRICOS ──
+.page-btn-primary {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 0;
+    background: $aquagenia-yellow;
+    color: $aquagenia-bg-dark;
+    border: none;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    transition: background .15s;
+    white-space: nowrap;
+
+    &:hover {
+        background: darken($aquagenia-yellow, 8%);
+    }
+}
+
+.page-btn-ghost {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 0;
+    background: transparent;
+    color: $aquagenia-text-muted;
+    border: 1px solid rgba($aquagenia-blue, 0.3);
+    border-radius: 5px;
+    font-size: 11px;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+
+    &:hover {
+        color: $aquagenia-yellow;
+        border-color: rgba($aquagenia-yellow, 0.35);
+    }
+}
+
+.page-btn-danger {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 0;
+    background: rgba(220, 60, 60, 0.1);
+    color: #e05c5c;
+    border: 1px solid rgba(220, 60, 60, 0.2);
+    border-radius: 5px;
+    font-size: 11px;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+
+    &:hover {
+        background: rgba(220, 60, 60, 0.2);
+    }
+}
+
+// ── RESPONSIVE ──
+@media (max-width: 992px) {
+    .page-header-inner {
+        grid-template-columns: 52px 1fr auto;
+    }
+
+    .page-header-side {
+        min-width: 140px;
+    }
+
+    .page-header-title {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header-inner {
+        grid-template-columns: 44px 1fr;
+        grid-template-rows: auto auto;
+    }
+
+    .page-header-brand {
+        grid-row: 1 / 3;
+        font-size: 9px;
+        letter-spacing: 2px;
+    }
+
+    .page-header-body {
+        padding: 14px 16px 8px;
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .page-header-side {
+        grid-column: 2;
+        grid-row: 2;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba($aquagenia-bg-mid, 0.5);
+        border-top: 1px solid rgba($aquagenia-blue, 0.15);
+        padding: 10px 16px;
+        min-width: unset;
+        width: 100%;
+    }
+
+    .page-header-actions {
+        flex-direction: row;
+        width: auto;
+        gap: 6px;
+
+        .page-btn-primary,
+        .page-btn-ghost,
+        .page-btn-danger {
+            width: auto;
+            padding: 6px 12px;
+        }
+    }
+
+    .page-header-title {
+        font-size: 18px;
+    }
+
+    .page-header-tag {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header-title {
+        font-size: 15px;
+    }
+
+    .page-header-chips {
+        display: none;
+    }
+
+    .page-header-brand {
+        width: 36px;
+        font-size: 8px;
+    }
+}
+
+.grid-btn-contraer {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    background: $aquagenia-blue;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+  
+    i { font-size: 13px; }
+  
+    &:hover { background: darken($aquagenia-blue, 8%); }
+  }
+  
+  .grid-btn-reiniciar {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    background: #e05c5c;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+    margin-left: 5px;
+  
+    i {
+      font-size: 13px;
+      transition: transform .3s;
+    }
+  
+    &:hover {
+      background: darken(#e05c5c, 8%);
+      i { transform: rotate(180deg); }
+    }
+  }
