@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { moduleEnterAnimation } from 'src/app/core/animations/module-enter.animation';
 import {
   transactions, lineColumAreaChart, revenueColumnChart,
   customerRadialBarChart, orderRadialBarChart, growthColumnChart
@@ -25,7 +26,8 @@ export interface RadialItem {
 @Component({
   selector: 'app-default',
   templateUrl: './default.component.html',
-  styleUrls: ['./default.component.scss']
+  styleUrls: ['./default.component.scss'],
+  animations: [moduleEnterAnimation]
 })
 export class DefaultComponent implements OnInit {
 

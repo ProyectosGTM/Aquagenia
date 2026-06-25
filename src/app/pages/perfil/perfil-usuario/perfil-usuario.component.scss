@@ -1,0 +1,301 @@
+$aquagenia-blue: #166c9f;
+$aquagenia-yellow: #e0e215;
+$aquagenia-bg-dark: #04141f;
+$aquagenia-bg-mid: #0c3550;
+$aquagenia-card-bg: #071b25;
+$aquagenia-text: rgba(255, 255, 255, 0.88);
+$aquagenia-text-muted: rgba(255, 255, 255, 0.45);
+
+@import '../perfil-shared';
+@import '../cuenta-layout';
+
+.cuenta-page {
+  .page-header-title {
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+  }
+
+  .page-header-status {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    color: #6ee7b7;
+
+    .page-status-dot {
+      width: 10px;
+      height: 10px;
+    }
+  }
+}
+
+.cuenta-card-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  align-items: stretch;
+  min-height: clamp(320px, 42vh, 460px);
+}
+
+.cuenta-aside {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 32px);
+  border-right: 1px solid rgba($aquagenia-blue, 0.22);
+  background:
+    linear-gradient(180deg, rgba($aquagenia-bg-dark, 0.55) 0%, rgba($aquagenia-bg-mid, 0.35) 100%);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, $aquagenia-yellow, $aquagenia-blue);
+  }
+}
+
+.cuenta-aside-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  gap: clamp(16px, 2.5vw, 24px);
+}
+
+.cuenta-aside-avatar {
+  position: relative;
+  width: fit-content;
+
+  img {
+    width: clamp(108px, 11vw, 132px);
+    height: clamp(108px, 11vw, 132px);
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid rgba($aquagenia-yellow, 0.55);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+    display: block;
+  }
+}
+
+.cuenta-aside-status {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #6ee7b7;
+  background: rgba($aquagenia-bg-dark, 0.95);
+  border: 1px solid rgba(#6ee7b7, 0.4);
+  white-space: nowrap;
+
+  i {
+    font-size: 10px;
+  }
+}
+
+.cuenta-aside-info {
+  width: 100%;
+
+  .cuenta-aside-rol {
+    margin: 0 0 8px;
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    font-weight: 600;
+    color: $aquagenia-yellow;
+    line-height: 1.2;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+}
+
+.cuenta-main {
+  padding: clamp(18px, 2.5vw, 28px) clamp(18px, 2.8vw, 30px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cuenta-main-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(16px, 2vw, 22px);
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba($aquagenia-blue, 0.18);
+
+  h3 {
+    margin: 0 0 6px;
+    font-size: clamp(18px, 2vw, 22px);
+    font-weight: 600;
+    color: #fff;
+  }
+
+  p {
+    margin: 0;
+    font-size: clamp(11px, 1.2vw, 13px);
+    color: $aquagenia-text-muted;
+  }
+}
+
+.cuenta-main-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: $aquagenia-text;
+  background: rgba($aquagenia-blue, 0.2);
+  border: 1px solid rgba($aquagenia-blue, 0.3);
+  white-space: nowrap;
+
+  i {
+    color: $aquagenia-yellow;
+  }
+}
+
+.cuenta-fields {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 1.5vw, 16px);
+  align-content: center;
+}
+
+.cuenta-field {
+  padding: clamp(14px, 1.8vw, 18px);
+  border-radius: 8px;
+  background: rgba($aquagenia-bg-dark, 0.5);
+  border: 1px solid rgba($aquagenia-blue, 0.2);
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  min-height: clamp(78px, 10vw, 92px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &:hover {
+    border-color: rgba($aquagenia-yellow, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  strong {
+    display: block;
+    font-size: clamp(12px, 1.3vw, 15px);
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.45;
+    word-break: break-word;
+  }
+}
+
+.cuenta-field-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+
+  i {
+    width: clamp(26px, 2.8vw, 32px);
+    height: clamp(26px, 2.8vw, 32px);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($aquagenia-blue, 0.25);
+    color: $aquagenia-yellow;
+    font-size: clamp(12px, 1.3vw, 15px);
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: clamp(11px, 1.2vw, 13px);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: $aquagenia-yellow;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 1199px) {
+  .cuenta-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 991px) {
+  .cuenta-card-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .cuenta-aside {
+    border-right: none;
+    border-bottom: 1px solid rgba($aquagenia-blue, 0.22);
+    min-height: clamp(240px, 32vh, 320px);
+  }
+
+  .cuenta-aside-inner {
+    max-width: 360px;
+  }
+
+  .cuenta-main {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .cuenta-main {
+    padding: 18px 16px;
+  }
+
+  .cuenta-aside {
+    padding: 28px 16px;
+    min-height: 260px;
+  }
+
+  .cuenta-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .cuenta-main-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cuenta-card-foot {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 479px) {
+  .cuenta-aside-inner {
+    max-width: 100%;
+  }
+
+  .cuenta-aside-info h2 {
+    font-size: 1.2rem;
+  }
+}

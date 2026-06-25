@@ -1,0 +1,46 @@
+$aquagenia-blue: #166c9f;
+$aquagenia-yellow: #e0e215;
+$aquagenia-bg-dark: #04141f;
+$aquagenia-bg-mid: #0c3550;
+$aquagenia-text: rgba(255, 255, 255, 0.88);
+$aquagenia-text-muted: rgba(255, 255, 255, 0.45);
+
+.cuenta-root {
+  min-height: 100%;
+  background: $aquagenia-bg-dark;
+  font-family: 'Space Grotesk', sans-serif;
+  color: $aquagenia-text;
+}
+
+.cuenta-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 32px;
+  border-bottom: 1px solid rgba($aquagenia-blue, 0.15);
+  background: rgba($aquagenia-bg-mid, 0.35);
+}
+
+.cuenta-crumb {
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  color: $aquagenia-text-muted;
+  text-transform: uppercase;
+}
+
+.cuenta-eyebrow {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: $aquagenia-yellow;
+}
+
+@media (max-width: 767px) {
+  .cuenta-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 18px;
+  }
+}

@@ -1,0 +1,115 @@
+<div class="page-root cuenta-page" [@moduleEnter]>
+
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
+
+          <div class="page-header-brand">Aquagenia</div>
+
+          <div class="page-header-body">
+            <span class="page-header-tag">Cuenta / Seguridad</span>
+            <h1 class="page-header-title">Cambiar <span>Contraseña</span></h1>
+            <div class="page-header-chips">
+              <button type="button" class="cuenta-back" (click)="cancelar()">
+                <i class="ti ti-arrow-left"></i> Volver al perfil
+              </button>
+            </div>
+          </div>
+
+          <div class="page-header-side">
+            <span class="page-header-status">
+              <i class="ti ti-shield-lock"></i> Protección activa
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cuenta-body">
+    <article class="cuenta-card cuenta-card--pwd">
+
+      <header class="cuenta-pwd-head">
+        <div class="cuenta-pwd-head-icon"><i class="ti ti-key"></i></div>
+        <div>
+          <h2>Actualización de credenciales</h2>
+          <p>Completa los campos para validar el cambio en tu cuenta.</p>
+        </div>
+      </header>
+
+      <form class="cuenta-pwd-form" [formGroup]="form" (ngSubmit)="confirmar()">
+
+        <div class="cuenta-pwd-grid">
+          <div class="cuenta-pwd-field" [class.cuenta-pwd-field--error]="form.get('contrasenaActual')?.invalid && form.get('contrasenaActual')?.touched">
+            <label for="contrasenaActual"><i class="ti ti-lock"></i> Contraseña actual</label>
+            <div class="cuenta-pwd-input">
+              <input id="contrasenaActual" [type]="mostrarActual ? 'text' : 'password'" formControlName="contrasenaActual" placeholder="Escribe tu contraseña actual" autocomplete="current-password" />
+              <button type="button" (click)="mostrarActual = !mostrarActual" aria-label="Mostrar contraseña">
+                <i class="ti" [ngClass]="mostrarActual ? 'ti-eye-off' : 'ti-eye'"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="cuenta-pwd-field" [class.cuenta-pwd-field--error]="form.get('contrasenaNueva')?.invalid && form.get('contrasenaNueva')?.touched && !contrasenaSegura">
+            <label for="contrasenaNueva"><i class="ti ti-lock-bolt"></i> Nueva contraseña</label>
+            <div class="cuenta-pwd-input">
+              <input
+                id="contrasenaNueva"
+                [type]="mostrarNueva ? 'text' : 'password'"
+                formControlName="contrasenaNueva"
+                placeholder="Crea tu nueva contraseña"
+                autocomplete="new-password"
+                (focus)="nuevaEnFoco = true"
+                (blur)="nuevaEnFoco = false"
+              />
+              <button type="button" (click)="mostrarNueva = !mostrarNueva" aria-label="Mostrar contraseña">
+                <i class="ti" [ngClass]="mostrarNueva ? 'ti-eye-off' : 'ti-eye'"></i>
+              </button>
+            </div>
+
+            <div class="cuenta-pwd-feedback cuenta-pwd-feedback--reglas" *ngIf="mostrarReglasNueva">
+              <ul class="cuenta-pwd-reglas" *ngIf="!contrasenaSegura">
+                <li *ngFor="let regla of reglasPendientes; trackBy: trackRegla" @pwdRegla>{{ regla.texto }}</li>
+              </ul>
+              <span class="cuenta-pwd-segura" *ngIf="contrasenaSegura" @pwdMensaje>
+                <i class="ti ti-circle-check"></i> Contraseña Segura
+              </span>
+            </div>
+          </div>
+
+          <div class="cuenta-pwd-field" [class.cuenta-pwd-field--error]="confirmacionNoCoincide" [class.cuenta-pwd-field--ok]="confirmacionCoincide">
+            <label for="confirmarContrasena"><i class="ti ti-shield-check"></i> Confirmar nueva contraseña</label>
+            <div class="cuenta-pwd-input">
+              <input id="confirmarContrasena" [type]="mostrarConfirmar ? 'text' : 'password'" formControlName="confirmarContrasena" placeholder="Repite la nueva contraseña" autocomplete="new-password" />
+              <button type="button" (click)="mostrarConfirmar = !mostrarConfirmar" aria-label="Mostrar contraseña">
+                <i class="ti" [ngClass]="mostrarConfirmar ? 'ti-eye-off' : 'ti-eye'"></i>
+              </button>
+            </div>
+
+            <div class="cuenta-pwd-feedback cuenta-pwd-feedback--confirm" *ngIf="mostrarValidacionConfirmar">
+              <span class="cuenta-pwd-error" *ngIf="confirmacionNoCoincide" @pwdMensaje>Las Contraseñas No Coinciden</span>
+              <span class="cuenta-pwd-ok" *ngIf="confirmacionCoincide" @pwdMensaje>
+                <i class="ti ti-circle-check"></i> Las Contraseñas Coinciden
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <footer class="cuenta-card-foot">
+          <p><i class="ti ti-alert-circle"></i> Tras confirmar, inicia sesión nuevamente en todos tus dispositivos.</p>
+          <div class="cuenta-card-actions">
+            <button type="button" class="cuenta-btn cuenta-btn--ghost" (click)="cancelar()">Cancelar</button>
+            <button type="submit" class="cuenta-btn cuenta-btn--primary" [disabled]="enviando">
+              {{ enviando ? 'Guardando...' : 'Confirmar' }}
+            </button>
+          </div>
+        </footer>
+
+      </form>
+
+    </article>
+  </div>
+
+</div>

@@ -1,0 +1,124 @@
+<div class="page-root cuenta-page" [@moduleEnter]>
+
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
+
+          <div class="page-header-brand">Aquagenia</div>
+
+          <div class="page-header-body">
+            <span class="page-header-tag">Cuenta / Mi perfil</span>
+            <h1 class="page-header-title">Perfil de <span>Usuario</span></h1>
+            <div class="page-header-chips">
+              <span class="page-chip"><i class="ti ti-shield-check"></i> Sesión segura</span>
+              <span class="page-chip"><i class="ti ti-clock"></i> {{ usuario.ultimoAcceso }}</span>
+            </div>
+          </div>
+
+          <div class="page-header-side">
+            <span class="page-header-status">
+              <span class="page-status-dot"></span>
+              {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cuenta-body">
+    <article class="cuenta-card">
+
+      <div class="cuenta-card-grid">
+
+        <aside class="cuenta-aside">
+          <div class="cuenta-aside-inner">
+            <div class="cuenta-aside-avatar">
+              <img [src]="usuario.avatarUrl" [alt]="usuario.nombre" />
+              <span class="cuenta-aside-status"><i class="ti ti-circle-filled"></i> Activo</span>
+            </div>
+
+            <div class="cuenta-aside-info">
+              <p class="cuenta-aside-rol">{{ usuario.rol }}</p>
+              <h2>{{ usuario.nombre }}</h2>
+            </div>
+          </div>
+        </aside>
+
+        <main class="cuenta-main">
+          <header class="cuenta-main-head">
+            <div>
+              <h3>Datos generales</h3>
+              <p>Información operativa vinculada a tu cuenta</p>
+            </div>
+            <span class="cuenta-main-tag"><i class="ti ti-database"></i> 6 registros</span>
+          </header>
+
+          <div class="cuenta-fields">
+            <div class="cuenta-field">
+              <div class="cuenta-field-top">
+                <i class="ti ti-phone"></i>
+                <span>Teléfono</span>
+              </div>
+              <strong>{{ usuario.telefono }}</strong>
+            </div>
+            <div class="cuenta-field">
+              <div class="cuenta-field-top">
+                <i class="ti ti-building"></i>
+                <span>Empresa</span>
+              </div>
+              <strong>{{ usuario.empresa }}</strong>
+            </div>
+            <div class="cuenta-field">
+              <div class="cuenta-field-top">
+                <i class="ti ti-device-mobile"></i>
+                <span>Teléfono secundario</span>
+              </div>
+              <strong>{{ usuario.telefonoSecundario }}</strong>
+            </div>
+            <div class="cuenta-field">
+              <div class="cuenta-field-top">
+                <i class="ti ti-mail"></i>
+                <span>Correo electrónico</span>
+              </div>
+              <strong>{{ usuario.correo }}</strong>
+            </div>
+            <div class="cuenta-field">
+              <div class="cuenta-field-top">
+                <i class="ti ti-id"></i>
+                <span>Identificador</span>
+              </div>
+              <strong>{{ usuario.identificador }}</strong>
+            </div>
+            <div class="cuenta-field">
+              <div class="cuenta-field-top">
+                <i class="ti ti-calendar-time"></i>
+                <span>Último acceso</span>
+              </div>
+              <strong>{{ usuario.ultimoAcceso }}</strong>
+            </div>
+          </div>
+        </main>
+
+      </div>
+
+      <footer class="cuenta-card-foot">
+        <p><i class="ti ti-info-circle"></i> Gestiona tu acceso y credenciales desde este panel.</p>
+        <div class="cuenta-card-actions">
+          <button type="button" class="cuenta-btn cuenta-btn--primary" (click)="irCambiarContrasena()">
+            <i class="ti ti-key"></i>
+            Cambiar contraseña
+          </button>
+          <button type="button" class="cuenta-btn cuenta-btn--ghost" (click)="cerrarSesion()">
+            <i class="ti ti-logout"></i>
+            Cerrar sesión
+          </button>
+        </div>
+      </footer>
+
+    </article>
+  </div>
+
+</div>

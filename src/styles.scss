@@ -188,6 +188,10 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
     min-height: 100%;
 }
 
+.module-enter-root {
+    min-height: 100%;
+}
+
 // ── HEADER ──
 .page-header {
     background: $aquagenia-bg-dark;

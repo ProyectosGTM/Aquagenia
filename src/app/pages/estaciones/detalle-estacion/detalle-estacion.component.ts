@@ -1,9 +1,11 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Router } from '@angular/router';
 import { Customer, Employees, Service } from './app.service';
 import ArrayStore from 'devextreme/data/array_store';
 import { HttpClient } from '@angular/common/http';
 import { DxDiagramComponent } from 'devextreme-angular';
 import { fadeInUpAnimation } from 'src/app/core/animations/fade-in-up.animation';
+import { moduleEnterAnimation } from 'src/app/core/animations/module-enter.animation';
 import { EstacionesService } from '../servicios/estaciones.service';
 
 @Component({
@@ -11,7 +13,7 @@ import { EstacionesService } from '../servicios/estaciones.service';
   templateUrl: './detalle-estacion.component.html',
   styleUrls: ['./detalle-estacion.component.scss'],
   providers: [Service],
-  animations: [fadeInUpAnimation],
+  animations: [fadeInUpAnimation, moduleEnterAnimation],
   preserveWhitespaces: true,
 })
 export class DetalleEstacionComponent implements OnInit {
@@ -213,9 +215,10 @@ export class DetalleEstacionComponent implements OnInit {
   
 
   constructor(
-    service: Service, 
+    service: Service,
     private http: HttpClient,
-    private param: EstacionesService
+    private param: EstacionesService,
+    private router: Router
   ) {
     this.customers = service.getCustomers();
     this.showFilterRow = true;
@@ -438,26 +441,49 @@ export class DetalleEstacionComponent implements OnInit {
     );
   }
 
-  crearDiagrama() {
-    this.addNewCard();
-    setTimeout(() => {
-      this.scrollToLastCard();
-    }, 0);
+  irAlMapa(): void {
+    this.router.navigate(['/estaciones/lista-estaciones']);
   }
 
-  scrollToLastCard() {
-    if (this.cardElements && this.cardElements.last) {
-      const lastCard = this.cardElements.last.nativeElement;
-  
-      const offsetTop = lastCard.offsetTop;
-      const cardHeight = lastCard.offsetHeight;
-      const viewportHeight = window.innerHeight;
-  
-      const scrollPosition = offsetTop - (viewportHeight / 2) + (cardHeight / 2);
-      window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+  crearDiagrama() {
+    const eraVacio = this.cards.length === 0;
+    this.addNewCard();
+    setTimeout(() => this.scrollToLastCard(eraVacio), eraVacio ? 120 : 0);
+  }
+
+  scrollToLastCard(esperarSeccion = false) {
+    const intentarScroll = (intentos = 0) => {
+      const target = this.cardElements?.last?.nativeElement as HTMLElement | undefined;
+
+      if (!target && intentos < 8) {
+        setTimeout(() => intentarScroll(intentos + 1), 50);
+        return;
+      }
+
+      if (!target) {
+        return;
+      }
+
+      const offset = 88;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    };
+
+    if (esperarSeccion) {
+      setTimeout(() => intentarScroll(), 80);
+      return;
     }
+
+    intentarScroll();
   }
   
+  get gallerySideImages(): { index: number; src: string }[] {
+    return this.images
+      .map((src, index) => ({ index, src }))
+      .filter((item) => item.index !== this.currentIndex)
+      .slice(0, 2);
+  }
+
   moveCarousel(direction: number) {
     if (this.isAnimating) return; 
     this.isAnimating = true;

@@ -1,242 +1,277 @@
-<div class="est-root">
+<div class="page-root estacion-page module-enter-root" [@moduleEnter]>
 
-  <!-- HERO -->
-  <div class="row g-0 mb-3">
+  <div class="row g-0">
     <div class="col-12">
-      <div class="est-hero">
-        <div class="est-hero-left">
-          <div class="est-hero-icon"><i class="ti ti-droplet"></i></div>
-          <div>
-            <h1 class="est-hero-title">Estación Chapala</h1>
-            <span class="est-hero-sub">Monitoreo en tiempo real</span>
-          </div>
-        </div>
-        <button class="est-btn-primary" *ngIf="this.cards.length === 0" (click)="crearDiagrama()">
-          <i class="ti ti-plus"></i> Crear diagrama
-        </button>
-      </div>
-    </div>
-  </div>
+      <div class="page-header">
+        <div class="page-header-inner">
 
-  <!-- MÉTRICAS -->
-  <div class="row g-2 mb-3">
-    <div class="col-xl-3 col-md-4 col-sm-6 col-12">
-      <div class="est-metric-card">
-        <div class="est-metric-icon" style="background:rgba(22,108,159,0.15);color:#166c9f">
-          <i class="ti ti-ripple"></i>
-        </div>
-        <div class="est-metric-data">
-          <div class="est-metric-val">{{ dataSources[0]?.gastoInstantaneo ?? '--' }}</div>
-          <div class="est-metric-lbl">Gasto Instantáneo</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-3 col-md-4 col-sm-6 col-12">
-      <div class="est-metric-card">
-        <div class="est-metric-icon" style="background:rgba(224,226,21,0.12);color:#b0b200">
-          <i class="ti ti-sum"></i>
-        </div>
-        <div class="est-metric-data">
-          <div class="est-metric-val">{{ dataSources[0]?.gastoAcumulado ?? '--' }}</div>
-          <div class="est-metric-lbl">Gasto Acumulado</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-3 col-md-4 col-sm-6 col-12">
-      <div class="est-metric-card">
-        <div class="est-metric-icon" style="background:rgba(0,200,100,0.12);color:#00a855">
-          <i class="ti ti-test-pipe"></i>
-        </div>
-        <div class="est-metric-data">
-          <div class="est-metric-val">{{ dataSources[0]?.phCarcamo ?? '--' }}</div>
-          <div class="est-metric-lbl">PH Cárcamo</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-3 col-md-4 col-sm-6 col-12">
-      <div class="est-metric-card">
-        <div class="est-metric-icon" style="background:rgba(80,140,255,0.12);color:#3a7bd5">
-          <i class="ti ti-droplet-half-2"></i>
-        </div>
-        <div class="est-metric-data">
-          <div class="est-metric-val">{{ dataSources[0]?.oxigenoDisuelto ?? '--' }}</div>
-          <div class="est-metric-lbl">Oxígeno Disuelto</div>
-        </div>
-      </div>
-    </div>
-  </div>
+          <div class="page-header-brand">Aquagenia</div>
 
-  <!-- DIAGRAMAS -->
-  <div [@fadeInUp] *ngIf="this.cards.length >= 1">
-    <div class="row g-0 mb-3">
-      <div class="col-12">
-        <div class="est-section-header">
-          <div class="est-section-title">
-            <i class="ti ti-topology-star"></i>
-            <span>Gestión de diagramas</span>
-          </div>
-          <button class="est-btn-primary" (click)="crearDiagrama()">
-            <i class="ti ti-plus"></i> Nuevo diagrama
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="row g-3 mb-3">
-      <div class="col-12" *ngFor="let card of cards; let i = index" #cardElement>
-        <div class="est-diagram-card" #cardContainer>
-          <div class="est-diagram-header">
-            <div class="est-diagram-title-wrap">
-              <select *ngIf="card.isTitleEditable"
-                class="est-select me-2"
-                [(ngModel)]="card.selectedIcon">
-                <option *ngFor="let icon of faIcons" [value]="icon.class">{{ icon.class }}</option>
-              </select>
-              <input *ngIf="card.isTitleEditable"
-                type="text"
-                class="est-input"
-                [(ngModel)]="card.title"
-                placeholder="Título del diagrama" />
-              <i *ngIf="!card.isTitleEditable && card.selectedIcon"
-                [class]="card.selectedIcon"
-                style="font-size:20px;margin-right:8px"></i>
-              <span *ngIf="!card.isTitleEditable" class="est-diagram-name">{{ card.title }}</span>
+          <div class="page-header-body">
+            <span class="page-header-tag">Estaciones / Detalle</span>
+            <h1 class="page-header-title">Estación <span>Chapala</span></h1>
+            <div class="page-header-chips">
+              <span class="page-chip"><i class="ti ti-hash"></i> ID #1403</span>
+              <span class="page-chip"><i class="ti ti-activity"></i> Monitoreo en tiempo real</span>
             </div>
-            <div class="est-diagram-actions">
-              <button class="est-btn-ghost" (click)="toggleTitleEdit(i)">
-                <i class="ti" [ngClass]="card.isTitleEditable ? 'ti-lock' : 'ti-edit'"></i>
-                {{ card.isTitleEditable ? 'Bloquear' : 'Editar' }}
+          </div>
+
+          <div class="page-header-side">
+            <span class="page-header-status">
+              <span class="page-status-dot"></span>
+              Operativa
+            </span>
+            <div class="page-header-actions estacion-header-actions">
+              <button type="button" class="estacion-btn estacion-btn--back" (click)="irAlMapa()">
+                <i class="ti ti-arrow-left"></i> Regresar
               </button>
-              <button class="est-btn-primary" (click)="saveDiagram(i)">
-                <i class="ti ti-device-floppy"></i> Guardar
+              <button type="button" class="estacion-btn estacion-btn--create" *ngIf="cards.length === 0" (click)="crearDiagrama()">
+                <i class="ti ti-plus"></i> Crear diagrama
               </button>
             </div>
           </div>
-          <div class="est-diagram-body">
-            <dx-diagram #diagram id="diagram" [simpleView]="true" [readOnly]="!card.isEditable">
-              <dxo-nodes [dataSource]="dataSource" keyExpr="ID" textExpr="Title" parentKeyExpr="Head_ID">
-                <dxo-auto-layout type="tree"></dxo-auto-layout>
-              </dxo-nodes>
-              <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
-              <dxo-toolbox visibility="visible" [showSearch]="false" [shapeIconsPerRow]="4" [width]="220">
-                <dxi-group category="employees" title="Caudal" [expanded]="false" displayMode="texts"></dxi-group>
-              </dxo-toolbox>
-              <dxi-custom-shape *ngFor="let image of imagess; let i = index"
-                [category]="'hardware'" [type]="'shape-' + i" [title]="'Shape ' + i"
-                [backgroundImageUrl]="image"
-                [backgroundImageLeft]="0.15" [backgroundImageTop]="0"
-                [backgroundImageWidth]="0.7" [backgroundImageHeight]="0.7"
-                [defaultWidth]="0.75" [defaultHeight]="0.75"
-                [defaultText]="'Shape ' + i" [allowEditText]="true"
-                [textLeft]="0" [textTop]="0.7" [textWidth]="1" [textHeight]="0.3">
-                <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
-                <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
-                <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
-                <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
-              </dxi-custom-shape>
-              <dxi-custom-shape *ngFor="let emp of listaParametros"
-                category="employees" [type]="'employee' + emp.Id"
-                baseType="rectangle" [defaultText]="emp.Caudal" [allowEditText]="false">
-              </dxi-custom-shape>
-            </dx-diagram>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="estacion-body">
+    <article class="estacion-shell">
+
+      <div class="estacion-main">
+
+        <!-- KPIs -->
+        <section class="estacion-section">
+          <header class="estacion-section-head">
+            <div>
+              <h3>Indicadores en vivo</h3>
+              <p>Parámetros operativos actuales de la estación</p>
+            </div>
+          </header>
+          <div class="row g-2">
+            <div class="col-xl-3 col-md-6 col-6">
+              <div class="estacion-kpi estacion-kpi--blue">
+                <div class="estacion-kpi-icon"><i class="ti ti-ripple"></i></div>
+                <div class="estacion-kpi-body">
+                  <span>Gasto Instantáneo</span>
+                  <strong>{{ dataSources[0]?.gastoInstantaneo ?? '--' }}</strong>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6 col-6">
+              <div class="estacion-kpi estacion-kpi--yellow">
+                <div class="estacion-kpi-icon"><i class="ti ti-sum"></i></div>
+                <div class="estacion-kpi-body">
+                  <span>Gasto Acumulado</span>
+                  <strong>{{ dataSources[0]?.gastoAcumulado ?? '--' }}</strong>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6 col-6">
+              <div class="estacion-kpi estacion-kpi--green">
+                <div class="estacion-kpi-icon"><i class="ti ti-test-pipe"></i></div>
+                <div class="estacion-kpi-body">
+                  <span>PH Cárcamo</span>
+                  <strong>{{ dataSources[0]?.phCarcamo ?? '--' }}</strong>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6 col-6">
+              <div class="estacion-kpi estacion-kpi--cyan">
+                <div class="estacion-kpi-icon"><i class="ti ti-droplet-half-2"></i></div>
+                <div class="estacion-kpi-body">
+                  <span>Oxígeno Disuelto</span>
+                  <strong>{{ dataSources[0]?.oxigenoDisuelto ?? '--' }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MAPA + STREET -->
+        <section class="estacion-section">
+          <header class="estacion-section-head">
+            <div>
+              <h3>Ubicación y entorno</h3>
+              <p>Mapa operativo y street view de la estación</p>
+            </div>
+            <span class="estacion-section-tag"><i class="ti ti-map-pin"></i> Geolocalización</span>
+          </header>
+          <div class="row g-3 estacion-map-row">
+            <div class="col-lg-8 col-12">
+              <div id="map" class="estacion-map estacion-map--main"></div>
+            </div>
+            <div class="col-lg-4 col-12">
+              <div id="street-view" class="estacion-map estacion-map--street"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- GALERÍA -->
+        <section class="estacion-section">
+          <header class="estacion-section-head">
+            <div>
+              <h3>Galería fotográfica</h3>
+              <p>Registro visual de la estación</p>
+            </div>
+            <span class="estacion-section-tag"><i class="ti ti-photo"></i> {{ images.length }} fotos</span>
+          </header>
+          <div class="row g-2 estacion-gallery-row align-items-stretch">
+            <div class="col-6">
+              <div class="estacion-carousel estacion-carousel--main">
+                <button type="button" class="estacion-carousel-btn" (click)="moveCarousel(-1)" aria-label="Anterior">
+                  <i class="ti ti-chevron-left"></i>
+                </button>
+                <img [src]="images[currentIndex]" [class.animate]="isAnimating" alt="Galería" />
+                <button type="button" class="estacion-carousel-btn" (click)="moveCarousel(1)" aria-label="Siguiente">
+                  <i class="ti ti-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="row g-2 h-100 estacion-gallery-side">
+                <div class="col-6" *ngFor="let item of gallerySideImages">
+                  <button
+                    type="button"
+                    class="estacion-gallery-thumb"
+                    [class.estacion-gallery-thumb--active]="item.index === currentIndex"
+                    (click)="currentIndex = item.index">
+                    <img [src]="item.src" [alt]="'Imagen ' + (item.index + 1)" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HISTORIAL -->
+        <section class="estacion-section">
+          <header class="estacion-section-head">
+            <div>
+              <h3>Historial de lecturas</h3>
+              <p>Últimos 20 registros de la estación</p>
+            </div>
+            <span class="estacion-section-tag"><i class="ti ti-table"></i> Datos</span>
+          </header>
+          <div class="estacion-grid-wrap">
+            <dx-data-grid
+              id="gridContainer"
+              [columnHidingEnabled]="true"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              [dataSource]="dataSources"
+              [width]="'100%'">
+              <dxo-search-panel [visible]="true" [width]="200"></dxo-search-panel>
+              <dxo-paging [pageSize]="20"></dxo-paging>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20,50,100,200]" [showInfo]="true"></dxo-pager>
+              <dxo-selection mode="multiple"></dxo-selection>
+              <dxo-group-panel [emptyPanelText]="mensajeAgrupar" [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="showFilterRow"></dxo-filter-row>
+              <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
+              <dxi-column alignment="center" dataField="gastoInstantaneo"   caption="Gasto Instantáneo"   dataType="number"></dxi-column>
+              <dxi-column alignment="center" dataField="gastoAcumulado"     caption="Gasto Acumulado"     dataType="number"></dxi-column>
+              <dxi-column alignment="center" dataField="phCarcamo"          caption="PH Cárcamo"          dataType="number"></dxi-column>
+              <dxi-column alignment="center" dataField="phEnvio"            caption="PH Envío"            dataType="number"></dxi-column>
+              <dxi-column alignment="center" dataField="clarificador"       caption="Clarificador"        dataType="number"></dxi-column>
+              <dxi-column alignment="center" dataField="demandaQuimica"     caption="Demanda Química"     dataType="number"></dxi-column>
+              <dxi-column alignment="center" dataField="oxigenoDisuelto"    caption="Oxígeno Disuelto"    dataType="number"></dxi-column>
+              <dxi-column alignment="center" dataField="nitrogenoAmoniacal" caption="Nitrógeno Amoniacal" dataType="number"></dxi-column>
+              <dxi-column alignment="center" dataField="cloroResidual"      caption="Cloro Residual"      dataType="number"></dxi-column>
+            </dx-data-grid>
+          </div>
+        </section>
+
+        <!-- DIAGRAMAS (debajo del historial) -->
+        <section class="estacion-section estacion-section--last" #diagramasSection [@fadeInUp] *ngIf="cards.length >= 1">
+          <header class="estacion-section-head">
+            <div>
+              <h3>Gestión de diagramas</h3>
+              <p>Configura y guarda los diagramas de proceso</p>
+            </div>
+            <button type="button" class="estacion-btn estacion-btn--create estacion-btn--sm" (click)="crearDiagrama()">
+              <i class="ti ti-plus"></i> Nuevo diagrama
+            </button>
+          </header>
+
+          <div class="estacion-diagram" *ngFor="let card of cards; let i = index" #cardElement>
+            <div class="estacion-diagram-toolbar">
+              <div class="estacion-diagram-title">
+                <select *ngIf="card.isTitleEditable"
+                  class="estacion-input estacion-input--inline me-2"
+                  [(ngModel)]="card.selectedIcon">
+                  <option *ngFor="let icon of faIcons" [value]="icon.class">{{ icon.class }}</option>
+                </select>
+                <input *ngIf="card.isTitleEditable"
+                  type="text"
+                  class="estacion-input estacion-input--inline"
+                  [(ngModel)]="card.title"
+                  placeholder="Título del diagrama" />
+                <i *ngIf="!card.isTitleEditable && card.selectedIcon" [class]="card.selectedIcon" class="estacion-diagram-icon"></i>
+                <span *ngIf="!card.isTitleEditable">{{ card.title }}</span>
+              </div>
+              <div class="estacion-diagram-actions">
+                <button type="button" class="estacion-btn estacion-btn--ghost estacion-btn--sm" (click)="toggleTitleEdit(i)">
+                  <i class="ti" [ngClass]="card.isTitleEditable ? 'ti-lock' : 'ti-edit'"></i>
+                  {{ card.isTitleEditable ? 'Bloquear' : 'Editar' }}
+                </button>
+                <button type="button" class="estacion-btn estacion-btn--create estacion-btn--sm" (click)="saveDiagram(i)">
+                  <i class="ti ti-device-floppy"></i> Guardar
+                </button>
+              </div>
+            </div>
+            <div class="estacion-diagram-body" #cardContainer>
+              <dx-diagram #diagram id="diagram" [simpleView]="true" [readOnly]="!card.isEditable">
+                <dxo-nodes [dataSource]="dataSource" keyExpr="ID" textExpr="Title" parentKeyExpr="Head_ID">
+                  <dxo-auto-layout type="tree"></dxo-auto-layout>
+                </dxo-nodes>
+                <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
+                <dxo-toolbox visibility="visible" [showSearch]="false" [shapeIconsPerRow]="4" [width]="220">
+                  <dxi-group category="employees" title="Caudal" [expanded]="false" displayMode="texts"></dxi-group>
+                </dxo-toolbox>
+                <dxi-custom-shape *ngFor="let image of imagess; let i = index"
+                  [category]="'hardware'" [type]="'shape-' + i" [title]="'Shape ' + i"
+                  [backgroundImageUrl]="image"
+                  [backgroundImageLeft]="0.15" [backgroundImageTop]="0"
+                  [backgroundImageWidth]="0.7" [backgroundImageHeight]="0.7"
+                  [defaultWidth]="0.75" [defaultHeight]="0.75"
+                  [defaultText]="'Shape ' + i" [allowEditText]="true"
+                  [textLeft]="0" [textTop]="0.7" [textWidth]="1" [textHeight]="0.3">
+                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
+                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
+                </dxi-custom-shape>
+                <dxi-custom-shape *ngFor="let emp of listaParametros"
+                  category="employees" [type]="'employee' + emp.Id"
+                  baseType="rectangle" [defaultText]="emp.Caudal" [allowEditText]="false">
+                </dxi-custom-shape>
+              </dx-diagram>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <footer class="estacion-shell-foot">
+        <div class="row g-2 align-items-center w-100 m-0">
+          <div class="col-lg col-12">
+            <p class="mb-0"><i class="ti ti-info-circle"></i> Panel de monitoreo operativo de la estación Chapala.</p>
+          </div>
+          <div class="col-lg-auto col-12">
+            <div class="estacion-shell-actions">
+              <button type="button" class="estacion-btn estacion-btn--back" (click)="irAlMapa()">
+                <i class="ti ti-arrow-left"></i> Regresar al mapa
+              </button>
+              <button type="button" class="estacion-btn estacion-btn--create" *ngIf="cards.length === 0" (click)="crearDiagrama()">
+                <i class="ti ti-plus"></i> Crear diagrama
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </footer>
 
-  <!-- IMAGEN + MAPA -->
-  <div class="row g-3 mb-3">
-    <div class="col-lg-6 col-12">
-      <div class="est-panel">
-        <div class="est-panel-header">
-          <i class="ti ti-photo"></i><span>Imagen principal</span>
-        </div>
-        <div class="est-panel-body est-img-wrap">
-          <img src="../../../../assets/images/aquagenia.png" alt="Estación" class="est-main-img" />
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6 col-12">
-      <div class="est-panel">
-        <div class="est-panel-header">
-          <i class="ti ti-map-pin"></i><span>Ubicación</span>
-        </div>
-        <div class="est-panel-body p-0">
-          <div id="map" class="est-map"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STREET VIEW + GALERÍA -->
-  <div class="row g-3 mb-3">
-    <div class="col-lg-6 col-12">
-      <div class="est-panel">
-        <div class="est-panel-header">
-          <i class="ti ti-map-2"></i><span>Street view</span>
-        </div>
-        <div class="est-panel-body p-0">
-          <div id="street-view" class="est-map"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6 col-12">
-      <div class="est-panel">
-        <div class="est-panel-header">
-          <i class="ti ti-photo-scan"></i><span>Galería</span>
-        </div>
-        <div class="est-panel-body">
-          <div class="est-carousel">
-            <button class="est-carousel-btn" (click)="moveCarousel(-1)">
-              <i class="ti ti-chevron-left"></i>
-            </button>
-            <img [src]="images[currentIndex]" [class.animate]="isAnimating"
-              alt="Galería" class="est-carousel-img" />
-            <button class="est-carousel-btn" (click)="moveCarousel(1)">
-              <i class="ti ti-chevron-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TABLA -->
-  <div class="row g-0 mb-3">
-    <div class="col-12">
-      <div class="est-panel">
-        <div class="est-panel-header">
-          <i class="ti ti-table"></i><span>Últimos 20 registros</span>
-        </div>
-        <div class="est-panel-body">
-          <dx-data-grid
-            id="gridContainer"
-            [columnHidingEnabled]="true"
-            [showBorders]="true"
-            [rowAlternationEnabled]="true"
-            [dataSource]="dataSources"
-            [width]="'100%'">
-            <dxo-search-panel [visible]="true" [width]="200"></dxo-search-panel>
-            <dxo-paging [pageSize]="20"></dxo-paging>
-            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20,50,100,200]" [showInfo]="true"></dxo-pager>
-            <dxo-selection mode="multiple"></dxo-selection>
-            <dxo-group-panel [emptyPanelText]="mensajeAgrupar" [visible]="true"></dxo-group-panel>
-            <dxo-filter-row [visible]="showFilterRow"></dxo-filter-row>
-            <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
-            <dxi-column alignment="center" dataField="gastoInstantaneo"   caption="Gasto Instantáneo"   dataType="number"></dxi-column>
-            <dxi-column alignment="center" dataField="gastoAcumulado"     caption="Gasto Acumulado"     dataType="number"></dxi-column>
-            <dxi-column alignment="center" dataField="phCarcamo"          caption="PH Cárcamo"          dataType="number"></dxi-column>
-            <dxi-column alignment="center" dataField="phEnvio"            caption="PH Envío"            dataType="number"></dxi-column>
-            <dxi-column alignment="center" dataField="clarificador"       caption="Clarificador"        dataType="number"></dxi-column>
-            <dxi-column alignment="center" dataField="demandaQuimica"     caption="Demanda Química"     dataType="number"></dxi-column>
-            <dxi-column alignment="center" dataField="oxigenoDisuelto"    caption="Oxígeno Disuelto"    dataType="number"></dxi-column>
-            <dxi-column alignment="center" dataField="nitrogenoAmoniacal" caption="Nitrógeno Amoniacal" dataType="number"></dxi-column>
-            <dxi-column alignment="center" dataField="cloroResidual"      caption="Cloro Residual"      dataType="number"></dxi-column>
-          </dx-data-grid>
-        </div>
-      </div>
-    </div>
+    </article>
   </div>
 
 </div>

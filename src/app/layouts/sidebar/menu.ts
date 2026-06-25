@@ -10,10 +10,10 @@ export const MENU: MenuItem[] = [
         id: 2,
         label: 'MENUITEMS.DASHBOARDS.TEXT',
         icon: 'uil-home-alt',
-        badge: {
+        /* badge: {
             variant: 'primary',
-            text: '01', //'MENUITEMS.DASHBOARDS.BADGE',
-        },
+            text: '01',
+        }, */
         link: '/',
     },
     // {
@@ -622,13 +622,19 @@ export const MENU: MenuItem[] = [
         },
     {
         id: 115,
-        label: 'MENUITEMS.PRUEBACOMPONENTCERRAR.TEXT',
+        label: 'Sesión',
         isTitle: true
+    },
+    {
+        id: 119,
+        label: 'Perfil de Usuario',
+        icon: 'uil-user-circle',
+        link: '/perfil/mi-cuenta',
     },
     {
         id: 116,
         label: 'MENUITEMS.PRUEBACUATROSESION.TEXT',
-        icon: 'uil-list-ul',
+        icon: 'uil-sign-out-alt',
         link: '/account/login',
     },
 ];

@@ -1,16 +1,19 @@
 // NO MODIFICAR CAMBIOS
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { fadeInUpAnimation } from 'src/app/core/animations/fade-in-up.animation';
+import { moduleEnterAnimation } from 'src/app/core/animations/module-enter.animation';
 import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-lista-estaciones',
   templateUrl: './lista-estaciones.component.html',
   styleUrls: ['./lista-estaciones.component.scss'],
-  animations: [fadeInUpAnimation]
+  animations: [fadeInUpAnimation, moduleEnterAnimation]
 })
-export class ListaEstacionesComponent implements OnInit {
+export class ListaEstacionesComponent implements OnInit, AfterViewInit {
+  @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLElement>;
+
   center = { lat: 23.6345, lng: -102.5528 };
   zoom = 5;
   searchTerm = '';
@@ -18,6 +21,8 @@ export class ListaEstacionesComponent implements OnInit {
   map!: google.maps.Map;
   private markers: google.maps.Marker[] = [];
   private activeInfoWindow: google.maps.InfoWindow | null = null;
+  private mapInitialized = false;
+  private static googleMapsScriptLoading = false;
 
   allOperations = [
     {
@@ -54,9 +59,12 @@ export class ListaEstacionesComponent implements OnInit {
   constructor(private route: Router) {}
 
   ngOnInit(): void {
-    this.loadGoogleMaps();
-    this.initializeTooltips();
     this.showMapZoom = false;
+  }
+
+  ngAfterViewInit(): void {
+    this.initializeTooltips();
+    setTimeout(() => this.loadGoogleMaps(), 0);
   }
 
   irDetalle() {
@@ -80,13 +88,20 @@ export class ListaEstacionesComponent implements OnInit {
 
   loadGoogleMaps() {
     const init = () => {
-      this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      const mapElement = this.mapContainer?.nativeElement;
+
+      if (!mapElement || this.mapInitialized) {
+        return;
+      }
+
+      this.map = new google.maps.Map(mapElement, {
         center: this.center,
         zoom: this.zoom
       });
 
+      this.mapInitialized = true;
       this.updateMapMarkers();
-      setTimeout(() => google.maps.event.trigger(this.map, 'resize'), 0);
+      setTimeout(() => google.maps.event.trigger(this.map, 'resize'), 100);
     };
 
     if (typeof google !== 'undefined' && google.maps) {
@@ -95,9 +110,16 @@ export class ListaEstacionesComponent implements OnInit {
     }
 
     (window as any).initMap = init;
+
+    if (ListaEstacionesComponent.googleMapsScriptLoading) {
+      return;
+    }
+
+    ListaEstacionesComponent.googleMapsScriptLoading = true;
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&callback=initMap`;
     script.defer = true;
+    script.async = true;
     document.head.appendChild(script);
   }
 
@@ -187,17 +209,11 @@ export class ListaEstacionesComponent implements OnInit {
   
 
   centrarEnUbicacion(position: { lat: number; lng: number }) {
-    console.log('Centrando en posición:', position);
     if (this.map) {
       this.showMapZoom = true;
       this.map.setCenter(position);
       this.map.setZoom(15);
     }
-  }
-  
-
-  ngAfterViewInit() {
-    this.initializeTooltips();
   }
 
   initializeTooltips() {
