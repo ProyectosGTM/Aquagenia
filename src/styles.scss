@@ -196,6 +196,7 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
 .page-header {
     background: $aquagenia-bg-dark;
     border-bottom: 1px solid rgba($aquagenia-blue, 0.2);
+    overflow: visible;
 }
 
 .page-header-inner {
@@ -286,6 +287,7 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
     justify-content: center;
     gap: 10px;
     min-width: 170px;
+    overflow: visible;
 }
 
 .page-header-status {
@@ -308,24 +310,140 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
 
 .page-btn-primary {
     width: 100%;
+    position: relative;
+    overflow: visible;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    padding: 7px 0;
-    background: $aquagenia-yellow;
+    gap: 7px;
+    padding: 10px 0;
+    background: linear-gradient(
+        145deg,
+        darken($aquagenia-yellow, 10%) 0%,
+        $aquagenia-yellow 45%,
+        darken($aquagenia-yellow, 8%) 100%
+    );
+    background-size: 220% 220%;
     color: $aquagenia-bg-dark;
-    border: none;
-    border-radius: 5px;
-    font-size: 11px;
+    border: 2px solid rgba($aquagenia-bg-dark, 0.45);
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 600;
     font-family: 'Space Grotesk', sans-serif;
     cursor: pointer;
-    transition: background .15s;
+    white-space: nowrap;
+    outline: 2px solid rgba($aquagenia-bg-dark, 0.35);
+    outline-offset: 3px;
+    animation:
+        btn-bg-breathe 3s ease-in-out infinite,
+        btn-pop 1.6s ease-in-out infinite,
+        btn-shadow-wave 1.8s ease-out infinite,
+        btn-outline-pulse 1.8s ease-in-out infinite;
+
+    i {
+        font-size: 16px;
+        position: relative;
+        z-index: 2;
+        animation: btn-plus-bounce 1.1s ease-in-out infinite;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -6px;
+        border-radius: 10px;
+        pointer-events: none;
+        z-index: -1;
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.55);
+        animation: btn-shadow-ring 1.8s ease-out infinite;
+    }
 
     &:hover {
-        background: darken($aquagenia-yellow, 8%);
+        filter: brightness(1.04);
+        animation-duration: 1.2s, 1.2s, 1.2s, 1.2s;
+
+        &::after {
+            animation-duration: 1.2s;
+        }
+
+        i {
+            animation-duration: 0.85s;
+        }
     }
+
+    &:active {
+        transform: scale(0.99);
+        filter: none;
+        animation: none;
+        outline: none;
+
+        &::after {
+            animation: none;
+            opacity: 0;
+        }
+    }
+}
+
+@keyframes btn-bg-breathe {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes btn-pop {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.02) translateY(-2px); }
+}
+
+@keyframes btn-shadow-wave {
+    0% {
+        box-shadow:
+            0 6px 16px rgba(0, 0, 0, 0.45),
+            0 0 0 0 rgba(0, 0, 0, 0.55);
+    }
+
+    50% {
+        box-shadow:
+            0 10px 26px rgba(0, 0, 0, 0.55),
+            0 0 0 7px rgba(0, 0, 0, 0.28),
+            0 0 0 14px rgba(0, 0, 0, 0.1);
+    }
+
+    100% {
+        box-shadow:
+            0 6px 16px rgba(0, 0, 0, 0.45),
+            0 0 0 12px rgba(0, 0, 0, 0);
+    }
+}
+
+@keyframes btn-outline-pulse {
+    0%, 100% {
+        outline-color: rgba($aquagenia-bg-dark, 0.35);
+        outline-offset: 3px;
+    }
+
+    50% {
+        outline-color: rgba($aquagenia-bg-dark, 0.55);
+        outline-offset: 5px;
+    }
+}
+
+@keyframes btn-shadow-ring {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.6);
+    }
+
+    100% {
+        transform: scale(1.04);
+        opacity: 0;
+        box-shadow: 0 0 0 18px rgba(0, 0, 0, 0);
+    }
+}
+
+@keyframes btn-plus-bounce {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(0deg); }
 }
 
 @keyframes blink {
@@ -348,29 +466,6 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
 }
 
 // ── BOTONES GENÉRICOS ──
-.page-btn-primary {
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    padding: 7px 0;
-    background: $aquagenia-yellow;
-    color: $aquagenia-bg-dark;
-    border: none;
-    border-radius: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: 'Space Grotesk', sans-serif;
-    cursor: pointer;
-    transition: background .15s;
-    white-space: nowrap;
-
-    &:hover {
-        background: darken($aquagenia-yellow, 8%);
-    }
-}
-
 .page-btn-ghost {
     width: 100%;
     display: inline-flex;
@@ -499,49 +594,84 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
     }
 }
 
+.grid-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
 .grid-btn-contraer {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 6px 14px;
+    gap: 7px;
+    padding: 9px 18px;
     background: $aquagenia-blue;
     color: #fff;
     border: none;
-    border-radius: 6px;
-    font-size: 11px;
+    border-radius: 7px;
+    font-size: 13px;
     font-weight: 600;
     font-family: 'Space Grotesk', sans-serif;
     cursor: pointer;
-    transition: all .15s;
-  
-    i { font-size: 13px; }
-  
-    &:hover { background: darken($aquagenia-blue, 8%); }
-  }
-  
-  .grid-btn-reiniciar {
+    transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+    box-shadow: 0 2px 10px rgba($aquagenia-blue, 0.25);
+
+    i { font-size: 15px; }
+
+    &:hover {
+        background: darken($aquagenia-blue, 8%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba($aquagenia-blue, 0.35);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.grid-btn-reiniciar {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 6px 14px;
+    gap: 7px;
+    padding: 9px 18px;
     background: #e05c5c;
     color: #fff;
     border: none;
-    border-radius: 6px;
-    font-size: 11px;
+    border-radius: 7px;
+    font-size: 13px;
     font-weight: 600;
     font-family: 'Space Grotesk', sans-serif;
     cursor: pointer;
-    transition: all .15s;
-    margin-left: 5px;
-  
+    transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+    box-shadow: 0 2px 10px rgba(#e05c5c, 0.25);
+
     i {
-      font-size: 13px;
-      transition: transform .3s;
+        font-size: 15px;
+        transition: transform .35s ease;
     }
-  
+
     &:hover {
-      background: darken(#e05c5c, 8%);
-      i { transform: rotate(180deg); }
+        background: darken(#e05c5c, 8%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(#e05c5c, 0.35);
+
+        i { transform: rotate(180deg); }
     }
-  }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Panel de agrupación DevExtreme — más visible
+.dx-datagrid-group-panel {
+    min-height: 46px;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+}
+
+// Editor de diagramas — simulación hídrica (estilos globales por tamaño)
+@import 'app/pages/estaciones/detalle-estacion/diagram-editor/diagram-editor-water.scss';

@@ -1,0 +1,476 @@
+<div class="diagram-editor" [class.diagram-editor--locked]="locked">
+
+  <!-- Barra superior del editor -->
+  <div class="diagram-editor-bar">
+    <button type="button" class="diagram-editor-bar-btn" (click)="togglePalette()" [attr.aria-expanded]="paletteOpen">
+      <i class="ti" [ngClass]="paletteOpen ? 'ti-layout-sidebar-left-collapse' : 'ti-layout-sidebar-left-expand'"></i>
+      <span class="d-none d-sm-inline">Componentes</span>
+    </button>
+    <div class="diagram-editor-bar-hint" *ngIf="!locked">
+      <i class="ti ti-hand-move"></i>
+      Arrastra al lienzo · Mueve y redimensiona · Supr para eliminar
+    </div>
+    <div class="diagram-editor-bar-hint diagram-editor-bar-hint--locked" *ngIf="locked">
+      <i class="ti ti-lock"></i> Modo lectura
+    </div>
+    <div class="diagram-editor-bar-actions" *ngIf="selectedElement && !locked">
+      <button type="button" class="diagram-editor-bar-btn" (click)="duplicateSelected()" title="Duplicar">
+        <i class="ti ti-copy"></i>
+      </button>
+      <button type="button" class="diagram-editor-bar-btn diagram-editor-bar-btn--danger" (click)="deleteSelected()" title="Eliminar">
+        <i class="ti ti-trash"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="diagram-editor-workspace">
+
+    <!-- Paleta lateral -->
+    <aside class="diagram-palette" [class.diagram-palette--closed]="!paletteOpen">
+      <div class="diagram-palette-head">
+        <h4><i class="ti ti-box"></i> Componentes</h4>
+        <p>Arrastra al lienzo blanco</p>
+      </div>
+
+      <div class="diagram-palette-scroll">
+        <div class="diagram-palette-group" *ngFor="let cat of categories" [class.diagram-palette-group--water]="cat === 'hidraulica'">
+          <button type="button" class="diagram-palette-group-head" (click)="toggleCategory(cat)">
+            <span>{{ categoryLabel[cat] }}</span>
+            <i class="ti" [ngClass]="activeCategory === cat || activeCategory === null ? 'ti-chevron-down' : 'ti-chevron-right'"></i>
+          </button>
+          <div class="diagram-palette-items" *ngIf="activeCategory === cat || activeCategory === null">
+            <div
+              class="diagram-palette-item"
+              *ngFor="let item of itemsByCategory(cat)"
+              draggable="true"
+              (dragstart)="onPaletteDragStart($event, item)"
+              [class.diagram-palette-item--disabled]="locked">
+              <span class="diagram-palette-item-icon"><i [class]="item.icon"></i></span>
+              <span class="diagram-palette-item-label">{{ item.label }}</span>
+              <i class="ti ti-grip-vertical diagram-palette-item-grip"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Iconos / imágenes -->
+        <div class="diagram-palette-group" *ngIf="paletteImages.length">
+          <button type="button" class="diagram-palette-group-head" (click)="toggleCategory('iconos')">
+            <span>{{ categoryLabel['iconos'] }}</span>
+            <i class="ti ti-chevron-down"></i>
+          </button>
+          <div class="diagram-palette-items diagram-palette-items--icons">
+            <div
+              class="diagram-palette-icon"
+              *ngFor="let item of iconPaletteItems()"
+              draggable="true"
+              (dragstart)="onPaletteDragStart($event, item)"
+              [class.diagram-palette-item--disabled]="locked"
+              [title]="item.label">
+              <img [src]="item.imageUrl" [alt]="item.label" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Sensores en vivo -->
+        <div class="diagram-palette-group" *ngIf="listaParametros?.length">
+          <div class="diagram-palette-group-head diagram-palette-group-head--static">
+            <span>Sensores en vivo</span>
+          </div>
+          <div class="diagram-palette-live">
+            <div
+              class="diagram-palette-live-item"
+              *ngFor="let param of listaParametros"
+              draggable="true"
+              (dragstart)="onLiveSensorDragStart($event, param)"
+              [class.diagram-palette-item--disabled]="locked">
+              <i class="ti ti-activity"></i>
+              <div>
+                <strong>Caudal #{{ param.Id }}</strong>
+                <span>{{ param.Caudal }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Lienzo blanco -->
+    <div class="diagram-canvas-wrap">
+      <div
+        class="diagram-canvas"
+        #canvasRef
+        (click)="onCanvasClick($event)"
+        (dragover)="onCanvasDragOver($event)"
+        (drop)="onCanvasDrop($event)">
+
+        <div class="diagram-canvas-grid" aria-hidden="true"></div>
+
+        <div class="diagram-canvas-empty" *ngIf="!elements.length">
+          <div class="diagram-canvas-empty-inner">
+            <i class="ti ti-drag-drop"></i>
+            <h5>Lienzo en blanco</h5>
+            <p>Arrastra componentes desde el panel izquierdo para diseñar tu diagrama de proceso.</p>
+          </div>
+        </div>
+
+        <div
+          class="diagram-el"
+          *ngFor="let el of elements; trackBy: trackById"
+          [class.diagram-el--selected]="selectedId === el.id"
+          [class.diagram-el--locked]="locked"
+          [class.diagram-el--background]="isBackgroundElement(el)"
+          [class.diagram-el--water]="isWaterType(el.type)"
+          [style.left.%]="el.x"
+          [style.top.%]="el.y"
+          [style.width.%]="el.width"
+          [style.height.%]="el.height"
+          [style.zIndex]="el.zIndex"
+          (pointerdown)="onElementPointerDown($event, el)"
+          (click)="selectElement(el.id, $event)">
+
+          <!-- Imagen -->
+          <div class="diagram-el-image" *ngIf="el.type === 'image'">
+            <img [src]="el.imageUrl" [alt]="el.content" draggable="false" />
+          </div>
+
+          <!-- Título -->
+          <div class="diagram-el-heading" *ngIf="el.type === 'heading'">
+            <input
+              type="text"
+              [(ngModel)]="el.content"
+              (ngModelChange)="onElementContentChange(el)"
+              [readonly]="locked"
+              placeholder="Título" />
+          </div>
+
+          <!-- Texto -->
+          <div class="diagram-el-text" *ngIf="el.type === 'text'">
+            <textarea
+              [(ngModel)]="el.content"
+              (ngModelChange)="onElementContentChange(el)"
+              [readonly]="locked"
+              rows="2"
+              placeholder="Texto"></textarea>
+          </div>
+
+          <!-- Badge -->
+          <div class="diagram-el-badge" *ngIf="el.type === 'badge'">
+            <input
+              type="text"
+              [(ngModel)]="el.content"
+              (ngModelChange)="onElementContentChange(el)"
+              [readonly]="locked"
+              placeholder="Etiqueta" />
+          </div>
+
+          <!-- Input -->
+          <div class="diagram-el-field" *ngIf="el.type === 'input'">
+            <label>Campo</label>
+            <input
+              type="text"
+              [(ngModel)]="el.content"
+              (ngModelChange)="onElementContentChange(el)"
+              [readonly]="locked"
+              placeholder="Valor" />
+          </div>
+
+          <!-- Textarea -->
+          <div class="diagram-el-field diagram-el-field--area" *ngIf="el.type === 'textarea'">
+            <label>Notas</label>
+            <textarea
+              [(ngModel)]="el.content"
+              (ngModelChange)="onElementContentChange(el)"
+              [readonly]="locked"
+              placeholder="Escribe aquí..."></textarea>
+          </div>
+
+          <!-- Shape / bloque -->
+          <div class="diagram-el-shape" *ngIf="el.type === 'shape'">
+            <input
+              type="text"
+              [(ngModel)]="el.content"
+              (ngModelChange)="onElementContentChange(el)"
+              [readonly]="locked"
+              placeholder="Etapa" />
+          </div>
+
+          <!-- Caudal en vivo -->
+          <div class="diagram-el-caudal" *ngIf="el.type === 'caudal'">
+            <span class="diagram-el-caudal-label"><i class="ti ti-gauge"></i> Caudal</span>
+            <strong>{{ getCaudalValue(el) }}</strong>
+            <span class="diagram-el-caudal-pulse"></span>
+          </div>
+
+          <!-- ── Simulación hídrica (nuevo) ── -->
+
+          <!-- Tubería horizontal -->
+          <div class="water-pipe water-pipe--h" *ngIf="el.type === 'pipe-h'">
+            <div class="water-pipe-shell">
+              <div class="water-pipe-flow water-pipe-flow--h" [ngClass]="'water-pipe-flow--' + getFlowClass(el)"></div>
+              <div class="water-pipe-shine water-pipe-shine--h"></div>
+            </div>
+            <span class="water-pipe-joint water-pipe-joint--l"></span>
+            <span class="water-pipe-joint water-pipe-joint--r"></span>
+          </div>
+
+          <!-- Tubería vertical -->
+          <div class="water-pipe water-pipe--v" *ngIf="el.type === 'pipe-v'">
+            <div class="water-pipe-shell">
+              <div class="water-pipe-flow water-pipe-flow--v" [ngClass]="'water-pipe-flow--' + getFlowClass(el)"></div>
+              <div class="water-pipe-shine water-pipe-shine--v"></div>
+            </div>
+            <span class="water-pipe-joint water-pipe-joint--t"></span>
+            <span class="water-pipe-joint water-pipe-joint--b"></span>
+          </div>
+
+          <!-- Codo (SVG — mismo flujo que tuberías rectas) -->
+          <div class="water-elbow" *ngIf="el.type === 'pipe-elbow'" [ngClass]="'water-elbow--' + getElbowOrientation(el)">
+            <svg class="water-elbow-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient [attr.id]="'elbowMetal_' + el.id" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#94a3b8" />
+                  <stop offset="40%" stop-color="#64748b" />
+                  <stop offset="55%" stop-color="#334155" />
+                  <stop offset="100%" stop-color="#94a3b8" />
+                </linearGradient>
+                <linearGradient [attr.id]="'elbowFlow_' + el.id" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#7dd3fc" />
+                  <stop offset="50%" stop-color="#0ea5e9" />
+                  <stop offset="100%" stop-color="#0369a1" />
+                </linearGradient>
+              </defs>
+              <path
+                class="water-elbow-shell"
+                [attr.d]="getElbowPath(el)"
+                fill="none"
+                [attr.stroke]="'url(#elbowMetal_' + el.id + ')'"
+                stroke-width="22"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path
+                class="water-elbow-channel"
+                [attr.d]="getElbowPath(el)"
+                fill="none"
+                stroke="#1e293b"
+                stroke-width="14"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path
+                class="water-elbow-flow-path"
+                [attr.d]="getElbowPath(el)"
+                fill="none"
+                [attr.stroke]="'url(#elbowFlow_' + el.id + ')'"
+                stroke-width="9"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-dasharray="8 10"
+                [ngClass]="'water-elbow-flow--' + getFlowClass(el)" />
+              <path
+                class="water-elbow-shine"
+                [attr.d]="getElbowPath(el)"
+                fill="none"
+                stroke="rgba(255,255,255,0.35)"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            <span class="water-elbow-joint"></span>
+            <ng-container [ngSwitch]="getElbowOrientation(el)">
+              <ng-container *ngSwitchCase="'se'">
+                <span class="water-pipe-joint water-elbow-end water-elbow-end--l"></span>
+                <span class="water-pipe-joint water-elbow-end water-elbow-end--b"></span>
+              </ng-container>
+              <ng-container *ngSwitchCase="'sw'">
+                <span class="water-pipe-joint water-elbow-end water-elbow-end--r"></span>
+                <span class="water-pipe-joint water-elbow-end water-elbow-end--b"></span>
+              </ng-container>
+              <ng-container *ngSwitchCase="'ne'">
+                <span class="water-pipe-joint water-elbow-end water-elbow-end--l"></span>
+                <span class="water-pipe-joint water-elbow-end water-elbow-end--t"></span>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <span class="water-pipe-joint water-elbow-end water-elbow-end--r"></span>
+                <span class="water-pipe-joint water-elbow-end water-elbow-end--t"></span>
+              </ng-container>
+            </ng-container>
+          </div>
+
+          <!-- Llave de paso -->
+          <div class="water-valve" *ngIf="el.type === 'valve'" [class.water-valve--closed]="el.variant === 'closed'">
+            <div class="water-valve-pipe water-valve-pipe--l">
+              <div class="water-pipe-flow water-pipe-flow--h" [class.water-pipe-flow--stopped]="el.variant === 'closed'"></div>
+            </div>
+            <div class="water-valve-body">
+              <div class="water-valve-stem"></div>
+              <div class="water-valve-wheel"></div>
+            </div>
+            <div class="water-valve-pipe water-valve-pipe--r">
+              <div class="water-pipe-flow water-pipe-flow--h" [class.water-pipe-flow--stopped]="el.variant === 'closed'"></div>
+            </div>
+            <span class="water-valve-label">{{ el.content }}</span>
+          </div>
+
+          <!-- Bomba -->
+          <div class="water-bomba" *ngIf="el.type === 'bomba'" [class.water-bomba--off]="el.variant === 'off'">
+            <div class="water-bomba-housing">
+              <div class="water-bomba-impeller"></div>
+              <div class="water-bomba-inlet"></div>
+              <div class="water-bomba-outlet"></div>
+            </div>
+            <span class="water-bomba-label">{{ el.content }}</span>
+            <span class="water-bomba-status">{{ el.variant === 'off' ? 'OFF' : 'ON' }}</span>
+          </div>
+
+          <!-- Flecha de flujo -->
+          <div class="water-flujo" *ngIf="el.type === 'flujo'" [ngClass]="'water-flujo--' + (el.variant || 'right')">
+            <span class="water-flujo-arrow" *ngFor="let _ of [1,2,3]"></span>
+          </div>
+
+          <!-- Pozo de agua -->
+          <div class="water-pozo" *ngIf="el.type === 'pozo'">
+            <div class="water-pozo-sky"></div>
+            <div class="water-pozo-earth">
+              <div class="water-pozo-ring"></div>
+              <div class="water-pozo-water" [style.height.%]="getFillLevel(el)">
+                <div class="water-pozo-wave water-pozo-wave--1"></div>
+                <div class="water-pozo-wave water-pozo-wave--2"></div>
+              </div>
+              <div class="water-pozo-depth"></div>
+            </div>
+            <span class="water-scene-label">{{ el.content }}</span>
+            <span class="water-scene-level">{{ getFillLevel(el) }}%</span>
+          </div>
+
+          <!-- Cárcamo -->
+          <div class="water-carcamo" *ngIf="el.type === 'carcamo'">
+            <div class="water-carcamo-ground"></div>
+            <div class="water-carcamo-chamber">
+              <div class="water-carcamo-water" [style.height.%]="getFillLevel(el)">
+                <div class="water-carcamo-ripple"></div>
+              </div>
+              <div class="water-carcamo-pipe-in"></div>
+              <div class="water-carcamo-pipe-out"></div>
+            </div>
+            <span class="water-scene-label">{{ el.content }}</span>
+          </div>
+
+          <!-- Estanque -->
+          <div class="water-estanque" *ngIf="el.type === 'estanque'">
+            <div class="water-estanque-tank">
+              <div class="water-estanque-fill" [style.height.%]="getFillLevel(el)">
+                <div class="water-estanque-surface"></div>
+              </div>
+              <div class="water-estanque-scale">
+                <span *ngFor="let tick of [100,75,50,25,0]">{{ tick }}</span>
+              </div>
+            </div>
+            <span class="water-scene-label">{{ el.content }}</span>
+          </div>
+
+          <!-- Reservorio -->
+          <div class="water-reservorio" *ngIf="el.type === 'reservorio'">
+            <div class="water-reservorio-shore"></div>
+            <div class="water-reservorio-body" [style.--fill]="getFillLevel(el) + '%'">
+              <div class="water-reservorio-wave water-reservorio-wave--1"></div>
+              <div class="water-reservorio-wave water-reservorio-wave--2"></div>
+              <div class="water-reservorio-wave water-reservorio-wave--3"></div>
+            </div>
+            <div class="water-reservorio-dam"></div>
+            <span class="water-scene-label">{{ el.content }}</span>
+          </div>
+
+          <!-- Handles de redimensionado -->
+          <ng-container *ngIf="selectedId === el.id && !locked">
+            <span class="diagram-resize diagram-resize--nw" (pointerdown)="onResizePointerDown($event, el, 'nw')"></span>
+            <span class="diagram-resize diagram-resize--ne" (pointerdown)="onResizePointerDown($event, el, 'ne')"></span>
+            <span class="diagram-resize diagram-resize--sw" (pointerdown)="onResizePointerDown($event, el, 'sw')"></span>
+            <span class="diagram-resize diagram-resize--se" (pointerdown)="onResizePointerDown($event, el, 'se')"></span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel de propiedades -->
+    <aside class="diagram-props" *ngIf="selectedElement && !locked">
+      <h4><i class="ti ti-adjustments"></i> Propiedades</h4>
+      <div class="diagram-props-body">
+        <label class="diagram-props-field">
+          <span>Tipo</span>
+          <strong>{{ selectedElement.type }}</strong>
+        </label>
+        <label class="diagram-props-field" *ngIf="selectedElement.type !== 'image' && selectedElement.type !== 'caudal' && !isWaterType(selectedElement.type)">
+          <span>Contenido</span>
+          <input type="text" [(ngModel)]="selectedElement.content" (ngModelChange)="onElementContentChange(selectedElement)" />
+        </label>
+        <label class="diagram-props-field" *ngIf="selectedElement.type === 'caudal' && listaParametros?.length">
+          <span>Sensor</span>
+          <select [(ngModel)]="selectedElement.paramId" (ngModelChange)="onElementContentChange(selectedElement)">
+            <option *ngFor="let p of listaParametros" [ngValue]="p.Id">Caudal #{{ p.Id }} — {{ p.Caudal }}</option>
+          </select>
+        </label>
+
+        <!-- Propiedades simulación hídrica -->
+        <ng-container *ngIf="isWaterType(selectedElement.type)">
+          <label class="diagram-props-field" *ngIf="selectedElement.type === 'valve'">
+            <span>Estado llave</span>
+            <select [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)">
+              <option value="open">Abierta</option>
+              <option value="closed">Cerrada</option>
+            </select>
+          </label>
+          <label class="diagram-props-field" *ngIf="selectedElement.type === 'bomba'">
+            <span>Estado bomba</span>
+            <select [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)">
+              <option value="on">Encendida</option>
+              <option value="off">Apagada</option>
+            </select>
+          </label>
+          <label class="diagram-props-field" *ngIf="selectedElement.type === 'pipe-h' || selectedElement.type === 'pipe-v'">
+            <span>Velocidad flujo</span>
+            <select [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)">
+              <option value="slow">Lenta</option>
+              <option value="normal">Normal</option>
+              <option value="fast">Rápida</option>
+            </select>
+          </label>
+          <label class="diagram-props-field" *ngIf="selectedElement.type === 'pipe-elbow'">
+            <span>Orientación codo</span>
+            <select [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)">
+              <option value="se">↘ SE</option>
+              <option value="sw">↙ SW</option>
+              <option value="ne">↗ NE</option>
+              <option value="nw">↖ NW</option>
+            </select>
+          </label>
+          <label class="diagram-props-field" *ngIf="selectedElement.type === 'pipe-elbow'">
+            <span>Velocidad flujo</span>
+            <select [(ngModel)]="selectedElement.content" (ngModelChange)="onWaterVariantChange(selectedElement)">
+              <option value="slow">Lenta</option>
+              <option value="normal">Normal</option>
+              <option value="fast">Rápida</option>
+            </select>
+          </label>
+          <label class="diagram-props-field" *ngIf="selectedElement.type === 'flujo'">
+            <span>Dirección</span>
+            <select [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)">
+              <option value="right">Derecha</option>
+              <option value="left">Izquierda</option>
+              <option value="down">Abajo</option>
+              <option value="up">Arriba</option>
+            </select>
+          </label>
+          <label class="diagram-props-field" *ngIf="selectedElement.type === 'pozo' || selectedElement.type === 'carcamo' || selectedElement.type === 'estanque' || selectedElement.type === 'reservorio'">
+            <span>Nivel de agua (%)</span>
+            <input type="range" min="10" max="95" [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)" />
+            <strong class="diagram-props-level">{{ getFillLevel(selectedElement) }}%</strong>
+          </label>
+          <label class="diagram-props-field" *ngIf="selectedElement.type !== 'pipe-h' && selectedElement.type !== 'pipe-v' && selectedElement.type !== 'pipe-elbow' && selectedElement.type !== 'flujo'">
+            <span>Etiqueta</span>
+            <input type="text" [(ngModel)]="selectedElement.content" (ngModelChange)="onElementContentChange(selectedElement)" />
+          </label>
+        </ng-container>
+      </div>
+    </aside>
+
+  </div>
+</div>

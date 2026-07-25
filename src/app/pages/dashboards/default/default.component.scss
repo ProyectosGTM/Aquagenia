@@ -1,8 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap');
 
 $yellow: #e0e215;
+$blue:   #166c9f;
 $dark:   #071f2e;
 $bg:     #080e1a;
+$text:   rgba(255,255,255,0.88);
+$muted:  rgba(255,255,255,0.45);
 
 * { box-sizing: border-box; }
 
@@ -332,15 +335,6 @@ $bg:     #080e1a;
 
 
 
-
-//estilos para las metricas
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap');
-
-$blue:   #166c9f;
-$yellow: #e0e215;
-$dark:   #04141f;
-$text:   rgba(255,255,255,0.88);
-$muted:  rgba(255,255,255,0.45);
 
 // ── MÉTRICAS ──
 .metric-card {

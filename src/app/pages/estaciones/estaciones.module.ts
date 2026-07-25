@@ -5,15 +5,16 @@ import { EstacionesRoutingModule } from './estaciones-routing.module';
 import { ListaEstacionesComponent } from './lista-estaciones/lista-estaciones.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DetalleEstacionComponent } from './detalle-estacion/detalle-estacion.component';
+import { DiagramEditorComponent } from './detalle-estacion/diagram-editor/diagram-editor.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DxDataGridModule, DxDiagramModule } from 'devextreme-angular';
+import { DxDataGridModule } from 'devextreme-angular';
 
 
 @NgModule({
-  declarations: [ListaEstacionesComponent, DetalleEstacionComponent],
+  declarations: [ListaEstacionesComponent, DetalleEstacionComponent, DiagramEditorComponent],
   imports: [
     FormsModule,
     CommonModule,
@@ -21,7 +22,6 @@ import { DxDataGridModule, DxDiagramModule } from 'devextreme-angular';
     EstacionesRoutingModule,
     GoogleMapsModule,
     DxDataGridModule,
-    DxDiagramModule,
 
     MatCardModule,
     DragDropModule

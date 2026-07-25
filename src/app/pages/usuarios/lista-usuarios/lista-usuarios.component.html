@@ -11,8 +11,7 @@
             <span class="page-header-tag">Aquagenia / Usuarios</span>
             <h1 class="page-header-title">Usuarios del <span>Sistema</span></h1>
             <div class="page-header-chips">
-              <span class="page-chip"><i class="ti ti-calendar"></i> 05 Jun 2026</span>
-              <span class="page-chip"><i class="ti ti-clock"></i> 01:47 p.m.</span>
+              <app-page-header-datetime></app-page-header-datetime>
             </div>
           </div>
 
@@ -31,16 +30,18 @@
     <div class="col-12">
 
       <div class="grid-toolbar">
-        <button class="grid-btn-contraer">
+        <button type="button" class="grid-btn-contraer" (click)="toggleExpandGroups()">
           <i class="ti ti-arrows-minimize"></i> Contraer
         </button>
-        <button class="grid-btn-reiniciar">
+        <button type="button" class="grid-btn-reiniciar" (click)="limpiarCampos()">
           <i class="ti ti-refresh"></i> Reiniciar
         </button>
       </div>
 
       <dx-data-grid id="gridContainer" [columnHidingEnabled]="true" [showBorders]="true"
   [showColumnLines]="true" [showRowLines]="true" [rowAlternationEnabled]="true" [width]="'100%'">
+
+  <dxo-grouping [autoExpandAll]="autoExpandAllGroups"></dxo-grouping>
 
   <dxo-search-panel [visible]="true" [width]="200" placeholder="Buscar..."></dxo-search-panel>
   <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20]" [showInfo]="true"></dxo-pager>

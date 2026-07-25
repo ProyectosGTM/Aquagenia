@@ -35,6 +35,8 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
 }
 
 .estacion-shell {
+  display: flex;
+  flex-direction: column;
   border: 1px solid rgba($aquagenia-blue, 0.3);
   border-radius: 8px;
   background:
@@ -144,6 +146,8 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
 
 // ── MAIN ──
 .estacion-main {
+  flex: 0 1 auto;
+  min-height: 0;
   padding: clamp(18px, 2.5vw, 28px) clamp(18px, 2.8vw, 30px);
 }
 
@@ -343,10 +347,6 @@ $estacion-street-height-md: clamp(200px, 40vw, 280px);
   color: #fff;
 }
 
-.estacion-diagram-icon {
-  font-size: 18px;
-}
-
 .estacion-diagram-actions {
   display: flex;
   align-items: center;
@@ -354,10 +354,12 @@ $estacion-street-height-md: clamp(200px, 40vw, 280px);
   flex-wrap: wrap;
 }
 
-.estacion-diagram-body {
-  padding: 10px;
+$estacion-diagram-height: clamp(380px, 52vh, 560px);
 
-  ::ng-deep #diagram { height: 130px; }
+.estacion-diagram-body {
+  min-height: $estacion-diagram-height;
+  padding: 0;
+  overflow: hidden;
 }
 
 .estacion-grid-wrap {
@@ -368,6 +370,8 @@ $estacion-street-height-md: clamp(200px, 40vw, 280px);
 
 // ── FOOTER ──
 .estacion-shell-foot {
+  flex-shrink: 0;
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;

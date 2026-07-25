@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { moduleEnterAnimation } from 'src/app/core/animations/module-enter.animation';
+import { GridToolbarBase } from 'src/app/core/helpers/grid-toolbar.base';
 
 @Component({
   selector: 'app-lista-clientes',
@@ -7,7 +8,7 @@ import { moduleEnterAnimation } from 'src/app/core/animations/module-enter.anima
   styleUrl: './lista-clientes.component.scss',
   animations: [moduleEnterAnimation]
 })
-export class ListaClientesComponent {
+export class ListaClientesComponent extends GridToolbarBase {
   listaClientes = [
     { id: 1, nombre: 'Aguas del Norte SA', rfc: 'ADN850101ABC', estatus: 'Activo' },
     { id: 2, nombre: 'Sistema Hidráulico Central', rfc: 'SHC920315XYZ', estatus: 'Activo' },

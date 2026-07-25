@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 
 import { PagetitleComponent } from './pagetitle/pagetitle.component';
 import { LoaderComponent } from './loader/loader.component';
+import { PageHeaderDatetimeComponent } from './page-header-datetime/page-header-datetime.component';
 
 @NgModule({
-  declarations: [PagetitleComponent, LoaderComponent],
+  declarations: [PagetitleComponent, LoaderComponent, PageHeaderDatetimeComponent],
   imports: [
     CommonModule,
     FormsModule
   ],
-  exports: [PagetitleComponent, LoaderComponent]
+  exports: [PagetitleComponent, LoaderComponent, PageHeaderDatetimeComponent]
 })
 export class UIModule { }

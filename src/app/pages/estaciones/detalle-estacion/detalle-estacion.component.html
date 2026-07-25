@@ -155,6 +155,14 @@
             <span class="estacion-section-tag"><i class="ti ti-table"></i> Datos</span>
           </header>
           <div class="estacion-grid-wrap">
+            <div class="grid-toolbar">
+              <button type="button" class="grid-btn-contraer" (click)="toggleExpandGroups()">
+                <i class="ti ti-arrows-minimize"></i> Contraer
+              </button>
+              <button type="button" class="grid-btn-reiniciar" (click)="limpiarCampos()">
+                <i class="ti ti-refresh"></i> Reiniciar
+              </button>
+            </div>
             <dx-data-grid
               id="gridContainer"
               [columnHidingEnabled]="true"
@@ -162,6 +170,8 @@
               [rowAlternationEnabled]="true"
               [dataSource]="dataSources"
               [width]="'100%'">
+
+              <dxo-grouping [autoExpandAll]="autoExpandAllGroups"></dxo-grouping>
               <dxo-search-panel [visible]="true" [width]="200"></dxo-search-panel>
               <dxo-paging [pageSize]="20"></dxo-paging>
               <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20,50,100,200]" [showInfo]="true"></dxo-pager>
@@ -197,17 +207,11 @@
           <div class="estacion-diagram" *ngFor="let card of cards; let i = index" #cardElement>
             <div class="estacion-diagram-toolbar">
               <div class="estacion-diagram-title">
-                <select *ngIf="card.isTitleEditable"
-                  class="estacion-input estacion-input--inline me-2"
-                  [(ngModel)]="card.selectedIcon">
-                  <option *ngFor="let icon of faIcons" [value]="icon.class">{{ icon.class }}</option>
-                </select>
                 <input *ngIf="card.isTitleEditable"
                   type="text"
                   class="estacion-input estacion-input--inline"
                   [(ngModel)]="card.title"
                   placeholder="Título del diagrama" />
-                <i *ngIf="!card.isTitleEditable && card.selectedIcon" [class]="card.selectedIcon" class="estacion-diagram-icon"></i>
                 <span *ngIf="!card.isTitleEditable">{{ card.title }}</span>
               </div>
               <div class="estacion-diagram-actions">
@@ -220,33 +224,14 @@
                 </button>
               </div>
             </div>
-            <div class="estacion-diagram-body" #cardContainer>
-              <dx-diagram #diagram id="diagram" [simpleView]="true" [readOnly]="!card.isEditable">
-                <dxo-nodes [dataSource]="dataSource" keyExpr="ID" textExpr="Title" parentKeyExpr="Head_ID">
-                  <dxo-auto-layout type="tree"></dxo-auto-layout>
-                </dxo-nodes>
-                <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
-                <dxo-toolbox visibility="visible" [showSearch]="false" [shapeIconsPerRow]="4" [width]="220">
-                  <dxi-group category="employees" title="Caudal" [expanded]="false" displayMode="texts"></dxi-group>
-                </dxo-toolbox>
-                <dxi-custom-shape *ngFor="let image of imagess; let i = index"
-                  [category]="'hardware'" [type]="'shape-' + i" [title]="'Shape ' + i"
-                  [backgroundImageUrl]="image"
-                  [backgroundImageLeft]="0.15" [backgroundImageTop]="0"
-                  [backgroundImageWidth]="0.7" [backgroundImageHeight]="0.7"
-                  [defaultWidth]="0.75" [defaultHeight]="0.75"
-                  [defaultText]="'Shape ' + i" [allowEditText]="true"
-                  [textLeft]="0" [textTop]="0.7" [textWidth]="1" [textHeight]="0.3">
-                  <dxi-connection-point [x]="0.5" [y]="0"></dxi-connection-point>
-                  <dxi-connection-point [x]="0.9" [y]="0.5"></dxi-connection-point>
-                  <dxi-connection-point [x]="0.5" [y]="1"></dxi-connection-point>
-                  <dxi-connection-point [x]="0.1" [y]="0.5"></dxi-connection-point>
-                </dxi-custom-shape>
-                <dxi-custom-shape *ngFor="let emp of listaParametros"
-                  category="employees" [type]="'employee' + emp.Id"
-                  baseType="rectangle" [defaultText]="emp.Caudal" [allowEditText]="false">
-                </dxi-custom-shape>
-              </dx-diagram>
+            <div class="estacion-diagram-body">
+              <app-diagram-editor
+                [elements]="card.elements"
+                [locked]="!card.isEditable"
+                [listaParametros]="listaParametros"
+                [paletteImages]="paletteImages"
+                (elementsChange)="onElementsChange(i, $event)">
+              </app-diagram-editor>
             </div>
           </div>
         </section>

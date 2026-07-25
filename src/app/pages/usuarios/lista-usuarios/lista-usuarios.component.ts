@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { moduleEnterAnimation } from 'src/app/core/animations/module-enter.animation';
+import { GridToolbarBase } from 'src/app/core/helpers/grid-toolbar.base';
 
 @Component({
   selector: 'app-lista-usuarios',
@@ -7,7 +8,7 @@ import { moduleEnterAnimation } from 'src/app/core/animations/module-enter.anima
   styleUrl: './lista-usuarios.component.scss',
   animations: [moduleEnterAnimation]
 })
-export class ListaUsuariosComponent {
+export class ListaUsuariosComponent extends GridToolbarBase {
   listaUsuarios = [
     { id: 1, nombre: 'Ana García', correo: 'ana.garcia@aquagenia.com', rol: 'Administrador', estatus: 'Activo' },
     { id: 2, nombre: 'Carlos Ruiz', correo: 'carlos.ruiz@aquagenia.com', rol: 'Operador', estatus: 'Activo' },
