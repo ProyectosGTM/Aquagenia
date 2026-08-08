@@ -1,0 +1,39 @@
+$aquagenia-blue: #166c9f;
+$aquagenia-text: rgba(255, 255, 255, 0.88);
+$aquagenia-text-muted: rgba(255, 255, 255, 0.45);
+
+.historial-lecturas-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  p {
+    margin: 0;
+    font-size: 12px;
+    color: $aquagenia-text-muted;
+  }
+}
+
+.historial-lecturas-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: $aquagenia-text-muted;
+  white-space: nowrap;
+}
+
+.historial-lecturas-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba($aquagenia-blue, 0.25);
+}

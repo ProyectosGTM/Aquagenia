@@ -709,3 +709,624 @@ $pipe-inner: #334155;
   0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0.8; }
   100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
 }
+
+// ── Mejoras pozo (corte con bomba) ──
+.water-pozo-casing {
+  position: absolute;
+  top: 8%;
+  left: 28%;
+  right: 28%;
+  bottom: 0;
+  border: 2px solid #57534e;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.15), transparent 40%, rgba(0,0,0,0.12));
+  z-index: 1;
+  pointer-events: none;
+}
+
+.water-pozo-shaft {
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 58%;
+  background: linear-gradient(90deg, #94a3b8, #475569, #94a3b8);
+  z-index: 3;
+  border-radius: 2px;
+}
+
+.water-pozo-pump {
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22%;
+  height: 12%;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #38bdf8, #0369a1);
+  border: 1px solid #0c4a6e;
+  z-index: 4;
+  box-shadow: 0 0 8px rgba(14, 165, 233, 0.45);
+}
+
+.water-pozo-riser {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8%;
+  height: 18%;
+  background: linear-gradient(90deg, #94a3b8, #64748b, #94a3b8);
+  z-index: 4;
+  border-radius: 2px;
+}
+
+// ── Tee ──
+.water-tee {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  pointer-events: none;
+
+  &-h {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 28%;
+    transform: translateY(-50%);
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 35%, #334155 50%, #64748b 65%, #94a3b8 100%);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  &-v {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    bottom: 0;
+    width: 28%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #94a3b8 0%, #64748b 35%, #334155 50%, #64748b 65%, #94a3b8 100%);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  &-joint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 34%;
+    height: 34%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e2e8f0, #64748b 60%, #334155);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.35);
+    z-index: 2;
+  }
+}
+
+// ── Cisterna horizontal ──
+.water-cisterna {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &-shell {
+    position: relative;
+    width: 92%;
+    height: 70%;
+    border-radius: 999px;
+    border: 3px solid #64748b;
+    background: linear-gradient(180deg, #f1f5f9 0%, #cbd5e1 45%, #94a3b8 100%);
+    overflow: hidden;
+    box-shadow: inset 0 -6px 12px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  &-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #7dd3fc 0%, #0ea5e9 50%, #0369a1 100%);
+    transition: width 0.5s ease;
+    overflow: hidden;
+  }
+
+  &-surface {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background: rgba(255,255,255,0.45);
+  }
+
+  &-legs {
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -18%;
+    display: flex;
+    justify-content: space-between;
+    span {
+      width: 10%;
+      height: 14px;
+      background: #57534e;
+      border-radius: 2px;
+    }
+  }
+
+  &-hatch {
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16%;
+    height: 22%;
+    border-radius: 4px;
+    background: #475569;
+    border: 1px solid #1e293b;
+  }
+}
+
+// ── Bomba mejorada ──
+.water-bomba-base {
+  position: absolute;
+  bottom: 8%;
+  left: 18%;
+  right: 18%;
+  height: 10%;
+  background: #475569;
+  border-radius: 3px;
+}
+
+.water-bomba-hub {
+  position: absolute;
+  inset: 38%;
+  border-radius: 50%;
+  background: #1e293b;
+  z-index: 2;
+}
+
+.water-bomba-motor {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28%;
+  height: 18%;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #94a3b8, #475569);
+  border: 1px solid #334155;
+}
+
+// ── Caudalímetro ──
+.water-flowmeter {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+
+  &-flange {
+    width: 10%;
+    height: 70%;
+    background: linear-gradient(90deg, #94a3b8, #64748b);
+    border-radius: 3px;
+    border: 1px solid #475569;
+    &--l { margin-right: -2%; }
+    &--r { margin-left: -2%; }
+  }
+
+  &-body {
+    flex: 1;
+    height: 78%;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #38bdf8, #0369a1);
+    border: 2px solid #0c4a6e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 3px 10px rgba(0,0,0,0.2);
+  }
+
+  &-display {
+    text-align: center;
+    color: #fff;
+    small {
+      display: block;
+      font-size: 8px;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+    }
+    strong {
+      font-size: clamp(11px, 1.5vw, 15px);
+      font-weight: 800;
+    }
+  }
+}
+
+// ── Manómetro ──
+.water-manometer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+
+  &-dial {
+    width: 78%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #f8fafc, #cbd5e1 70%, #64748b);
+    border: 3px solid #475569;
+    position: relative;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  &-needle {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    width: 2px;
+    height: 38%;
+    background: #ef4444;
+    transform-origin: bottom center;
+    border-radius: 2px;
+  }
+
+  &-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10%;
+    height: 10%;
+    min-width: 6px;
+    min-height: 6px;
+    border-radius: 50%;
+    background: #1e293b;
+  }
+
+  &-stem {
+    width: 12%;
+    height: 14%;
+    background: #64748b;
+    border-radius: 0 0 3px 3px;
+  }
+
+  &-label {
+    font-size: 8px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+  }
+}
+
+// ── PLC ──
+.water-plc {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  &-door {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(160deg, #1e3a5f, #0b2a3d);
+    border: 2px solid #166c9f;
+    padding: 8%;
+    position: relative;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+
+  &-led {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #475569;
+    margin-right: 4px;
+    &--on {
+      background: #e0e215;
+      box-shadow: 0 0 6px rgba(224, 226, 21, 0.7);
+    }
+  }
+
+  &-screen {
+    margin-top: 10%;
+    height: 36%;
+    border-radius: 3px;
+    background: #04141f;
+    border: 1px solid rgba(22,108,159,0.5);
+    color: #7dd3fc;
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-vents {
+    position: absolute;
+    bottom: 8%;
+    left: 12%;
+    right: 12%;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    i {
+      display: block;
+      height: 2px;
+      background: rgba(255,255,255,0.12);
+    }
+  }
+}
+
+// ── Widgets SCADA ──
+.scada-panel {
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(22,108,159,0.35);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+
+  &-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+    color: #334155;
+    strong { color: #166c9f; font-size: 13px; }
+    &--muted {
+      font-size: 9px;
+      color: #94a3b8;
+      em { font-style: normal; color: #64748b; }
+    }
+  }
+}
+
+.scada-valor {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #0c3550, #04141f);
+  border: 1px solid rgba(224,226,21,0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px;
+
+  span {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.45);
+  }
+  strong {
+    font-size: clamp(14px, 2vw, 20px);
+    color: #e0e215;
+    font-weight: 800;
+  }
+}
+
+.scada-nivel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+
+  &-track {
+    flex: 1;
+    width: 55%;
+    border-radius: 8px;
+    border: 2px solid #166c9f;
+    background: #e2e8f0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &-fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, #7dd3fc, #0369a1);
+    transition: height 0.4s ease;
+  }
+
+  strong { font-size: 11px; color: #166c9f; }
+  small { font-size: 8px; color: #64748b; text-transform: uppercase; }
+}
+
+.scada-gauge {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.95);
+  border-radius: 10px;
+  border: 1px solid rgba(22,108,159,0.3);
+  padding: 4px;
+
+  &-svg { width: 90%; height: auto; }
+  &-text {
+    font-size: 11px;
+    font-weight: 800;
+    fill: #166c9f;
+  }
+  small {
+    font-size: 9px;
+    color: #64748b;
+    text-transform: uppercase;
+  }
+}
+
+.scada-chart {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid rgba(22,108,159,0.28);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    strong { color: #0f172a; }
+    span { color: #94a3b8; }
+  }
+
+  &-svg {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+  }
+
+  footer {
+    font-size: 9px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #166c9f;
+      display: inline-block;
+    }
+  }
+}
+
+.scada-table {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid rgba(22,108,159,0.28);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+
+  header {
+    padding: 6px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: #166c9f;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+    th, td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: #64748b;
+      font-weight: 700;
+    }
+    td { color: #334155; }
+  }
+}
+
+// ── Paleta: instrumentación y visualización ──
+.diagram-palette-group--inst {
+  .diagram-palette-group-head {
+    background: rgba(#e0e215, 0.12);
+    color: #f5f5a0;
+    border: 1px solid rgba(#e0e215, 0.35);
+  }
+  .diagram-palette-item {
+    border-color: rgba(#e0e215, 0.28);
+    &:hover {
+      border-color: rgba(#e0e215, 0.6);
+      background: rgba(#e0e215, 0.08);
+    }
+  }
+  .diagram-palette-item-icon {
+    background: rgba(#e0e215, 0.18);
+    i { color: #e0e215; }
+  }
+}
+
+.diagram-palette-group--viz {
+  .diagram-palette-group-head {
+    background: rgba(#38bdf8, 0.12);
+    color: #7dd3fc;
+    border: 1px solid rgba(#38bdf8, 0.35);
+  }
+  .diagram-palette-item {
+    border-color: rgba(#38bdf8, 0.28);
+    &:hover {
+      border-color: rgba(#38bdf8, 0.55);
+      background: rgba(#38bdf8, 0.1);
+    }
+  }
+  .diagram-palette-item-icon {
+    background: rgba(#38bdf8, 0.2);
+    i { color: #7dd3fc; }
+  }
+}
+
+.water-manometer-scale {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background:
+    conic-gradient(from 180deg, #64748b 0deg 2deg, transparent 2deg 18deg,
+      #64748b 18deg 20deg, transparent 20deg 36deg,
+      #64748b 36deg 38deg, transparent 38deg 54deg,
+      #64748b 54deg 56deg, transparent 56deg 72deg,
+      #64748b 72deg 74deg, transparent 74deg 90deg,
+      #64748b 90deg 92deg, transparent 92deg 108deg,
+      #64748b 108deg 110deg, transparent 110deg 126deg,
+      #64748b 126deg 128deg, transparent 128deg 144deg,
+      #64748b 144deg 146deg, transparent 146deg 162deg,
+      #64748b 162deg 164deg, transparent 164deg 180deg);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.water-tee-h .water-pipe-flow,
+.water-tee-v .water-pipe-flow {
+  position: absolute;
+  inset: 18% 0;
+  opacity: 0.85;
+}
+
+.water-tee-v .water-pipe-flow {
+  inset: 0 18%;
+}

@@ -1,0 +1,132 @@
+<div class="card card-radial">
+  <div class="dash-root">
+    @if (isOpen && activeIndex !== null) {
+      <div class="radial-caption" [style.--accent]="items[activeIndex].color">
+        <strong>{{ items[activeIndex].label }}</strong>
+        <span>Selecciona una opción</span>
+      </div>
+    }
+
+    <div class="radial-wrapper">
+      <div class="radial-container">
+        <svg class="radial-svg" [class.open]="isOpen" viewBox="-300 -300 600 600" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="radialHubShadow" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.65)"/>
+            </filter>
+            <filter id="radialHubGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="rgba(224,226,21,0.6)"/>
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.5)"/>
+            </filter>
+            <radialGradient id="hubCoreGrad" cx="50%" cy="40%" r="65%">
+              <stop offset="0%" stop-color="#152536"/>
+              <stop offset="100%" stop-color="#060a12"/>
+            </radialGradient>
+            <linearGradient id="wedgeSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.16)"/>
+              <stop offset="40%" stop-color="rgba(255,255,255,0)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0.3)"/>
+            </linearGradient>
+          </defs>
+
+          <circle cx="0" cy="0" r="178" class="halo-ring halo-ring--outer"/>
+          <circle cx="0" cy="0" r="172" class="halo-ring halo-ring--mid"/>
+
+          <circle cx="0" cy="0" r="60" class="inner-ring" fill="url(#hubCoreGrad)"/>
+          <circle cx="0" cy="0" r="54" class="inner-ring-2"/>
+          <circle cx="0" cy="0" r="48" class="inner-ring-3"/>
+
+          <g class="sub-arc" [class.sub-arc-visible]="isOpen && activeIndex !== null">
+            <ng-container *ngIf="isOpen && activeIndex !== null">
+              <g *ngFor="let sub of getSubItems(activeIndex); let j = index"
+                 class="sub-wedge"
+                 [style.--i]="j"
+                 [style.--accent]="items[activeIndex].color"
+                 (click)="selectSub(j); $event.stopPropagation()">
+                <path
+                  [attr.d]="getSubSectorPath(activeIndex, j)"
+                  class="sub-wedge-path"
+                  [attr.fill]="items[activeIndex].bgSelected"
+                  [attr.stroke]="items[activeIndex].color"
+                  stroke-width="1.8"
+                  [attr.style]="'filter: drop-shadow(0 0 6px ' + items[activeIndex].color + ') drop-shadow(0 0 14px ' + items[activeIndex].color + '88)'"/>
+                <path
+                  [attr.d]="getSubSectorPath(activeIndex, j)"
+                  class="sub-wedge-sheen"
+                  fill="url(#wedgeSheen)"
+                  pointer-events="none"/>
+
+                <g class="sector-content" [attr.transform]="subContentTransform(activeIndex, j)">
+                  <circle
+                    cx="0" cy="-8" r="11.5"
+                    [attr.fill]="items[activeIndex].color"
+                    filter="url(#radialHubShadow)"
+                    class="sub-icon-circle"
+                    stroke="rgba(255,255,255,0.65)"
+                    stroke-width="1.2"/>
+                  <foreignObject x="-8" y="-16" width="16" height="16" class="sector-icon-fo">
+                    <div xmlns="http://www.w3.org/1999/xhtml" class="fa-icon-wrap fa-icon-sm">
+                      <i [class]="'fa ' + sub.icon"></i>
+                    </div>
+                  </foreignObject>
+                  <foreignObject x="-30" y="5" width="60" height="14" class="label-fo">
+                    <div xmlns="http://www.w3.org/1999/xhtml" class="radial-label radial-label--sub">
+                      {{ sub.label }}
+                    </div>
+                  </foreignObject>
+                </g>
+              </g>
+            </ng-container>
+          </g>
+
+          <g *ngFor="let item of items; let i = index" class="sector-group"
+             [class.sector-selected]="activeIndex === i"
+             [class.sector-interactive]="isOpen"
+             [style.--accent]="item.color"
+             (click)="isOpen && selectItem(i); $event.stopPropagation()">
+            <path [attr.d]="getSectorPath(i)" class="sector-path"
+              [attr.fill]="activeIndex === i ? item.bgSelected : item.bg"
+              [attr.stroke]="activeIndex === i ? item.color : 'rgba(255,255,255,0.28)'"
+              [attr.stroke-width]="activeIndex === i ? 2.6 : 1.15"
+              [attr.style]="activeIndex === i
+                ? ('filter: drop-shadow(0 0 7px ' + item.color + ') drop-shadow(0 0 16px ' + item.color + '99)')
+                : null"/>
+            <path [attr.d]="getSectorPath(i)" class="sector-sheen"
+              fill="url(#wedgeSheen)" pointer-events="none"/>
+
+            <g class="sector-content" [attr.transform]="contentTransform(i)">
+              <!-- Ícono arriba, texto abajo; centro óptico del bloque en el mid del wedge -->
+              <circle
+                cx="0" cy="-11"
+                [attr.r]="activeIndex === i ? iconRSelected : iconR"
+                [attr.fill]="item.color"
+                [attr.filter]="activeIndex === i ? 'url(#radialHubGlow)' : 'url(#radialHubShadow)'"
+                class="sector-icon-circle"
+                stroke="rgba(255,255,255,0.55)"
+                stroke-width="1.25"/>
+              <foreignObject x="-10" y="-21" width="20" height="20" class="sector-icon-fo">
+                <div xmlns="http://www.w3.org/1999/xhtml" class="fa-icon-wrap">
+                  <i [class]="'fa ' + item.icon"></i>
+                </div>
+              </foreignObject>
+              <foreignObject x="-32" y="4" width="64" height="14" class="label-fo sector-label-fo">
+                <div
+                  xmlns="http://www.w3.org/1999/xhtml"
+                  class="radial-label radial-label--main"
+                  [class.radial-label--active]="activeIndex === i"
+                  [style.color]="activeIndex === i ? item.color : '#ffffff'">
+                  {{ item.label }}
+                </div>
+              </foreignObject>
+            </g>
+          </g>
+        </svg>
+
+        <button type="button" class="radial-center" (click)="toggleMenu()" [attr.aria-expanded]="isOpen">
+          <span class="radial-center-glow"></span>
+          <i class="fa" [ngClass]="isOpen ? 'fa-times' : 'fa-th'"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

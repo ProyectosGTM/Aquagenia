@@ -3,18 +3,14 @@ import { MenuItem } from './menu.model';
 export const MENU: MenuItem[] = [
     {
         id: 1,
-        label: 'MENUITEMS.MENU.TEXT',
+        label: 'Inicio',
         isTitle: true
     },
     {
         id: 2,
         label: 'MENUITEMS.DASHBOARDS.TEXT',
         icon: 'uil-home-alt',
-        /* badge: {
-            variant: 'primary',
-            text: '01',
-        }, */
-        link: '/',
+        link: '/tablero',
     },
     // {
     //     id: 3,
@@ -22,7 +18,7 @@ export const MENU: MenuItem[] = [
     // },
     // {
     //     id: 4,
-    //     label: 'MENUITEMS.APPS.TEXT',
+    //     label: 'MENUITEMS.APPS.TEXT', 
     //     isTitle: true
     // },
     // {
@@ -602,6 +598,25 @@ export const MENU: MenuItem[] = [
         isTitle: true
     },
     {
+        id: 120,
+        label: 'Alarmas',
+        icon: 'uil-bell',
+        subItems: [
+            {
+                id: 121,
+                label: 'Histórico',
+                link: '/alarmas/lista-alarmas',
+                parentId: 120,
+            },
+            {
+                id: 122,
+                label: 'Contactos',
+                link: '/alarmas/contactos-alarmas',
+                parentId: 120,
+            },
+        ],
+    },
+    {
         id: 104,
         label: 'Monitoreo',
         icon: 'uil-share-alt',
@@ -635,7 +650,7 @@ export const MENU: MenuItem[] = [
         id: 116,
         label: 'MENUITEMS.PRUEBACUATROSESION.TEXT',
         icon: 'uil-sign-out-alt',
-        link: '/account/login',
+        action: 'logout',
     },
 ];
 

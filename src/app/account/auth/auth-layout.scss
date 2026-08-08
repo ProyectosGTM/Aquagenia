@@ -233,7 +233,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1rem;
   position: relative;
   flex-shrink: 0;
   opacity: 0;
@@ -267,7 +267,7 @@ body {
 
 .sys-id {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0.85rem;
   opacity: 0;
   animation: authSlideUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
 

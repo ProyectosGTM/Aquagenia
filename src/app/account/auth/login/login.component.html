@@ -49,36 +49,44 @@
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-        @if(error) {
-          <ngb-alert type="danger" [dismissible]="false">{{ error }}</ngb-alert>
-        }
-
         <div class="fld">
-          <label class="fld-label" for="email">Identificador</label>
+          <label class="fld-label" for="userName">Identificador</label>
           <input
-            type="email"
-            id="email"
-            formControlName="email"
+            type="text"
+            id="userName"
+            formControlName="userName"
             placeholder="usuario@aquagenia.mx"
-            [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+            autocomplete="username"
+            [ngClass]="{ 'is-invalid': submitted && f.userName.errors }"
           />
-          @if(submitted && f.email.errors) {
+          @if(submitted && f.userName.errors) {
             <div class="fld-error">
-              @if(f.email.errors.required) { <span>Campo requerido</span> }
-              @if(f.email.errors.email) { <span>Correo inválido</span> }
+              @if(f.userName.errors.required) { <span>Campo requerido</span> }
             </div>
           }
         </div>
 
         <div class="fld">
-          <label class="fld-label" for="password">Clave de acceso</label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            placeholder="••••••••••••"
-            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
-          />
+          <label class="fld-label" for="password">Contraseña</label>
+          <div class="fld-input-wrap">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              placeholder="••••••••••••"
+              autocomplete="current-password"
+              [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+            />
+            <button
+              type="button"
+              class="pwd-toggle"
+              (mousedown)="$event.preventDefault()"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <i class="ti" [ngClass]="showPassword ? 'ti-eye-off' : 'ti-eye'"></i>
+            </button>
+          </div>
           @if(submitted && f.password.errors) {
             <div class="fld-error"><span>Campo requerido</span></div>
           }
@@ -88,9 +96,9 @@
           <a href="/account/reset-password">Recuperar acceso</a>
         </div>
 
-        <button class="submit-btn" type="submit">
+        <button class="submit-btn" type="submit" [disabled]="loading">
           <i class="ti ti-login"></i>
-          <span>Autenticar</span>
+          <span>{{ loading ? 'Autenticando…' : 'Autenticar' }}</span>
         </button>
 
       </form>

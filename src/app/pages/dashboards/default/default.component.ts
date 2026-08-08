@@ -51,9 +51,9 @@ export class DefaultComponent implements OnInit {
       label: 'Tableros', icon: 'fa-th-large', color: '#3b82f6',
       bg: '#0f1e30', bgSelected: '#1a2f4a', route: '/tableros',
       subItems: [
-        { label: 'General',   icon: 'fa-home',       route: '/tableros/general'   },
-        { label: 'Resumen',   icon: 'fa-list',        route: '/tableros/resumen'   },
-        { label: 'Analytics', icon: 'fa-line-chart',  route: '/tableros/analytics' },
+        { label: 'General',   icon: 'fa-home',       route: '/tableros/lista-tableros'   },
+        { label: 'Detalle',   icon: 'fa-list',        route: '/tableros/detalle-tableros/chapala' },
+        { label: 'Analytics', icon: 'fa-line-chart',  route: '/tableros/lista-tableros' },
       ]
     },
     {

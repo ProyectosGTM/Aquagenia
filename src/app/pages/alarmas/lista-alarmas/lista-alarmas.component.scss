@@ -1,0 +1,195 @@
+$aquagenia-blue: #166c9f;
+$aquagenia-yellow: #e0e215;
+$aquagenia-bg-dark: #04141f;
+$aquagenia-card-bg: #071b25;
+$aquagenia-layout-bg-soft: #0e3147;
+$aquagenia-text: rgba(255, 255, 255, 0.88);
+$aquagenia-text-muted: rgba(255, 255, 255, 0.45);
+
+.alarmas-body {
+  padding: 18px 20px 32px;
+}
+
+.alarmas-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  background: $aquagenia-card-bg;
+  border: 1px solid rgba($aquagenia-blue, 0.28);
+  border-radius: 12px;
+}
+
+.alarmas-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 160px;
+
+  label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $aquagenia-text-muted;
+  }
+}
+
+.alarmas-link-btn {
+  background: transparent;
+  border: 1px solid rgba($aquagenia-yellow, 0.45);
+  color: $aquagenia-yellow;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sev-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba($aquagenia-blue, 0.4);
+  background: rgba($aquagenia-blue, 0.18);
+  color: lighten($aquagenia-blue, 20%);
+
+  &[data-sev='4'], &[data-sev='5'] {
+    border-color: rgba($aquagenia-yellow, 0.5);
+    background: rgba($aquagenia-yellow, 0.12);
+    color: $aquagenia-yellow;
+  }
+
+  &[data-sev='5'] {
+    background: rgba($aquagenia-yellow, 0.22);
+  }
+}
+
+.wizard-steps {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+
+  span {
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba($aquagenia-blue, 0.35);
+    color: $aquagenia-text-muted;
+
+    &.active {
+      color: $aquagenia-bg-dark;
+      background: $aquagenia-yellow;
+      border-color: $aquagenia-yellow;
+      font-weight: 700;
+    }
+  }
+}
+
+.wizard-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  span {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $aquagenia-text-muted;
+  }
+}
+
+.form-row-switches {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.form-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: $aquagenia-text;
+}
+
+.form-hint {
+  margin: 0;
+  font-size: 12px;
+  color: $aquagenia-text-muted;
+}
+
+.wizard-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba($aquagenia-blue, 0.4);
+  background: rgba($aquagenia-blue, 0.15);
+  color: $aquagenia-text;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &--ghost:hover {
+    border-color: rgba($aquagenia-yellow, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.detalle-dl {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px 12px;
+  margin: 0;
+  font-size: 13px;
+
+  dt { color: $aquagenia-text-muted; }
+  dd { margin: 0; color: $aquagenia-text; }
+}
+
+::ng-deep .alarmas-page {
+  .dx-datagrid {
+    background: transparent;
+    color: $aquagenia-text;
+  }
+  .dx-datagrid-headers {
+    background: $aquagenia-layout-bg-soft;
+    color: #fff;
+  }
+  .dx-datagrid-rowsview .dx-row {
+    background: $aquagenia-card-bg;
+  }
+  .dx-datagrid-rowsview .dx-row-alt > td {
+    background: rgba($aquagenia-blue, 0.08);
+  }
+}
+
+::ng-deep .alarmas-filters .dx-texteditor,
+::ng-deep .dx-popup-content .dx-texteditor {
+  background: $aquagenia-bg-dark;
+  border-color: rgba($aquagenia-blue, 0.4);
+  color: $aquagenia-text;
+}

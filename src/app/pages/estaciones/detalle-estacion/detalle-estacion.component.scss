@@ -354,6 +354,11 @@ $estacion-street-height-md: clamp(200px, 40vw, 280px);
   flex-wrap: wrap;
 }
 
+.estacion-save-hint {
+  font-size: 11px;
+  color: $aquagenia-yellow;
+}
+
 $estacion-diagram-height: clamp(380px, 52vh, 560px);
 
 .estacion-diagram-body {

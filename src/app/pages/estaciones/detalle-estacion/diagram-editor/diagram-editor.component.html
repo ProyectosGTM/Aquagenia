@@ -29,11 +29,15 @@
     <aside class="diagram-palette" [class.diagram-palette--closed]="!paletteOpen">
       <div class="diagram-palette-head">
         <h4><i class="ti ti-box"></i> Componentes</h4>
-        <p>Arrastra al lienzo blanco</p>
+        <p>Agua · instrumentación · visualización</p>
       </div>
 
       <div class="diagram-palette-scroll">
-        <div class="diagram-palette-group" *ngFor="let cat of categories" [class.diagram-palette-group--water]="cat === 'hidraulica'">
+        <div class="diagram-palette-group"
+             *ngFor="let cat of categories"
+             [class.diagram-palette-group--water]="cat === 'hidraulica'"
+             [class.diagram-palette-group--inst]="cat === 'instrumentacion'"
+             [class.diagram-palette-group--viz]="cat === 'visualizacion'">
           <button type="button" class="diagram-palette-group-head" (click)="toggleCategory(cat)">
             <span>{{ categoryLabel[cat] }}</span>
             <i class="ti" [ngClass]="activeCategory === cat || activeCategory === null ? 'ti-chevron-down' : 'ti-chevron-right'"></i>
@@ -107,9 +111,9 @@
 
         <div class="diagram-canvas-empty" *ngIf="!elements.length">
           <div class="diagram-canvas-empty-inner">
-            <i class="ti ti-drag-drop"></i>
-            <h5>Lienzo en blanco</h5>
-            <p>Arrastra componentes desde el panel izquierdo para diseñar tu diagrama de proceso.</p>
+            <i class="ti ti-droplet"></i>
+            <h5>Sinóptico hidráulico</h5>
+            <p>Arrastra tuberías, tanques, sensores y widgets desde el panel para armar el flujo de agua.</p>
           </div>
         </div>
 
@@ -201,182 +205,522 @@
             <span class="diagram-el-caudal-pulse"></span>
           </div>
 
+          <!-- Sensores / medidor vinculados a variable -->
+          <div class="diagram-el-sensor" *ngIf="el.type === 'sensor-nivel' || el.type === 'sensor-ph' || el.type === 'sensor-cloro' || el.type === 'sensor-oxigeno' || el.type === 'medidor'">
+            <span class="diagram-el-sensor-label">
+              <i class="ti"
+                [class.ti-ruler-measure]="el.type === 'sensor-nivel'"
+                [class.ti-test-pipe]="el.type === 'sensor-ph'"
+                [class.ti-flask]="el.type === 'sensor-cloro'"
+                [class.ti-droplet-half-2]="el.type === 'sensor-oxigeno'"
+                [class.ti-chart-dots]="el.type === 'medidor'"></i>
+              {{ getBoundLabel(el) }}
+            </span>
+            <strong>{{ getBoundValue(el) }}</strong>
+            <span class="diagram-el-sensor-link" *ngIf="el.bindField"><i class="ti ti-link"></i></span>
+          </div>
+
+          <!-- Overlay valor vivo sobre tanques/pozos si tienen bindField -->
+          <div class="diagram-el-live-badge" *ngIf="el.bindField && (el.type === 'estanque' || el.type === 'pozo' || el.type === 'carcamo' || el.type === 'reservorio' || el.type === 'cisterna')">
+            {{ getBoundLabel(el) }}: {{ getBoundValue(el) }}
+          </div>
+
           <!-- ── Simulación hídrica (nuevo) ── -->
 
-          <!-- Tubería horizontal -->
-          <div class="water-pipe water-pipe--h" *ngIf="el.type === 'pipe-h'">
-            <div class="water-pipe-shell">
-              <div class="water-pipe-flow water-pipe-flow--h" [ngClass]="'water-pipe-flow--' + getFlowClass(el)"></div>
-              <div class="water-pipe-shine water-pipe-shine--h"></div>
+          <!-- Tubería horizontal (acero industrial) -->
+          <div class="steel-pipe steel-pipe--h" *ngIf="el.type === 'pipe-h'">
+            <div class="steel-pipe-shadow"></div>
+            <div class="steel-pipe-flange steel-pipe-flange--l"><span></span><span></span><span></span><span></span></div>
+            <div class="steel-pipe-barrel">
+              <div class="steel-pipe-rim steel-pipe-rim--a"></div>
+              <div class="steel-pipe-rim steel-pipe-rim--b"></div>
+              <div class="steel-pipe-metal"></div>
+              <div class="steel-pipe-bore">
+                <div class="steel-pipe-liquid steel-pipe-liquid--h" [ngClass]="'steel-pipe-liquid--' + getFlowClass(el)"></div>
+              </div>
+              <div class="steel-pipe-gloss"></div>
+              <div class="steel-pipe-edge steel-pipe-edge--top"></div>
+              <div class="steel-pipe-edge steel-pipe-edge--bot"></div>
             </div>
-            <span class="water-pipe-joint water-pipe-joint--l"></span>
-            <span class="water-pipe-joint water-pipe-joint--r"></span>
+            <div class="steel-pipe-flange steel-pipe-flange--r"><span></span><span></span><span></span><span></span></div>
           </div>
 
-          <!-- Tubería vertical -->
-          <div class="water-pipe water-pipe--v" *ngIf="el.type === 'pipe-v'">
-            <div class="water-pipe-shell">
-              <div class="water-pipe-flow water-pipe-flow--v" [ngClass]="'water-pipe-flow--' + getFlowClass(el)"></div>
-              <div class="water-pipe-shine water-pipe-shine--v"></div>
+          <!-- Tubería vertical (acero industrial) -->
+          <div class="steel-pipe steel-pipe--v" *ngIf="el.type === 'pipe-v'">
+            <div class="steel-pipe-shadow"></div>
+            <div class="steel-pipe-flange steel-pipe-flange--t"><span></span><span></span><span></span><span></span></div>
+            <div class="steel-pipe-barrel">
+              <div class="steel-pipe-rim steel-pipe-rim--a"></div>
+              <div class="steel-pipe-rim steel-pipe-rim--b"></div>
+              <div class="steel-pipe-metal"></div>
+              <div class="steel-pipe-bore">
+                <div class="steel-pipe-liquid steel-pipe-liquid--v" [ngClass]="'steel-pipe-liquid--' + getFlowClass(el)"></div>
+              </div>
+              <div class="steel-pipe-gloss"></div>
+              <div class="steel-pipe-edge steel-pipe-edge--left"></div>
+              <div class="steel-pipe-edge steel-pipe-edge--right"></div>
             </div>
-            <span class="water-pipe-joint water-pipe-joint--t"></span>
-            <span class="water-pipe-joint water-pipe-joint--b"></span>
+            <div class="steel-pipe-flange steel-pipe-flange--b"><span></span><span></span><span></span><span></span></div>
           </div>
 
-          <!-- Codo (SVG — mismo flujo que tuberías rectas) -->
-          <div class="water-elbow" *ngIf="el.type === 'pipe-elbow'" [ngClass]="'water-elbow--' + getElbowOrientation(el)">
-            <svg class="water-elbow-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <!-- Codo acero -->
+          <div class="steel-elbow" *ngIf="el.type === 'pipe-elbow'" [ngClass]="'steel-elbow--' + getElbowOrientation(el)">
+            <svg class="steel-elbow-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               <defs>
-                <linearGradient [attr.id]="'elbowMetal_' + el.id" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#94a3b8" />
-                  <stop offset="40%" stop-color="#64748b" />
-                  <stop offset="55%" stop-color="#334155" />
-                  <stop offset="100%" stop-color="#94a3b8" />
+                <linearGradient [attr.id]="'stlMetal_' + el.id" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#f4f4f5" />
+                  <stop offset="18%" stop-color="#a1a1aa" />
+                  <stop offset="45%" stop-color="#52525b" />
+                  <stop offset="62%" stop-color="#27272a" />
+                  <stop offset="82%" stop-color="#71717a" />
+                  <stop offset="100%" stop-color="#d4d4d8" />
                 </linearGradient>
-                <linearGradient [attr.id]="'elbowFlow_' + el.id" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#7dd3fc" />
-                  <stop offset="50%" stop-color="#0ea5e9" />
-                  <stop offset="100%" stop-color="#0369a1" />
+                <linearGradient [attr.id]="'stlWater_' + el.id" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#bae6fd" stop-opacity="0.2" />
+                  <stop offset="35%" stop-color="#38bdf8" />
+                  <stop offset="65%" stop-color="#0284c7" />
+                  <stop offset="100%" stop-color="#bae6fd" stop-opacity="0.25" />
                 </linearGradient>
+                <filter [attr.id]="'stlGlow_' + el.id">
+                  <feGaussianBlur stdDeviation="1.2" result="b"/>
+                  <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
               </defs>
-              <path
-                class="water-elbow-shell"
-                [attr.d]="getElbowPath(el)"
-                fill="none"
-                [attr.stroke]="'url(#elbowMetal_' + el.id + ')'"
-                stroke-width="22"
-                stroke-linecap="round"
-                stroke-linejoin="round" />
-              <path
-                class="water-elbow-channel"
-                [attr.d]="getElbowPath(el)"
-                fill="none"
-                stroke="#1e293b"
-                stroke-width="14"
-                stroke-linecap="round"
-                stroke-linejoin="round" />
-              <path
-                class="water-elbow-flow-path"
-                [attr.d]="getElbowPath(el)"
-                fill="none"
-                [attr.stroke]="'url(#elbowFlow_' + el.id + ')'"
-                stroke-width="9"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-dasharray="8 10"
-                [ngClass]="'water-elbow-flow--' + getFlowClass(el)" />
-              <path
-                class="water-elbow-shine"
-                [attr.d]="getElbowPath(el)"
-                fill="none"
-                stroke="rgba(255,255,255,0.35)"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round" />
+              <path [attr.d]="getElbowPath(el)" fill="none" stroke="#3f3f46" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+              <path [attr.d]="getElbowPath(el)" fill="none" [attr.stroke]="'url(#stlMetal_' + el.id + ')'" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+              <path [attr.d]="getElbowPath(el)" fill="none" stroke="#18181b" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+              <path class="steel-elbow-flow" [attr.d]="getElbowPath(el)" fill="none"
+                [attr.stroke]="'url(#stlWater_' + el.id + ')'" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"
+                stroke-dasharray="18 14" [attr.filter]="'url(#stlGlow_' + el.id + ')'"
+                [ngClass]="'steel-elbow-flow--' + getFlowClass(el)"/>
+              <path [attr.d]="getElbowPath(el)" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
             </svg>
-            <span class="water-elbow-joint"></span>
+            <span class="steel-elbow-clamp"></span>
             <ng-container [ngSwitch]="getElbowOrientation(el)">
               <ng-container *ngSwitchCase="'se'">
-                <span class="water-pipe-joint water-elbow-end water-elbow-end--l"></span>
-                <span class="water-pipe-joint water-elbow-end water-elbow-end--b"></span>
+                <span class="steel-pipe-flange steel-elbow-end steel-elbow-end--l"><span></span><span></span><span></span><span></span></span>
+                <span class="steel-pipe-flange steel-elbow-end steel-elbow-end--b"><span></span><span></span><span></span><span></span></span>
               </ng-container>
               <ng-container *ngSwitchCase="'sw'">
-                <span class="water-pipe-joint water-elbow-end water-elbow-end--r"></span>
-                <span class="water-pipe-joint water-elbow-end water-elbow-end--b"></span>
+                <span class="steel-pipe-flange steel-elbow-end steel-elbow-end--r"><span></span><span></span><span></span><span></span></span>
+                <span class="steel-pipe-flange steel-elbow-end steel-elbow-end--b"><span></span><span></span><span></span><span></span></span>
               </ng-container>
               <ng-container *ngSwitchCase="'ne'">
-                <span class="water-pipe-joint water-elbow-end water-elbow-end--l"></span>
-                <span class="water-pipe-joint water-elbow-end water-elbow-end--t"></span>
+                <span class="steel-pipe-flange steel-elbow-end steel-elbow-end--l"><span></span><span></span><span></span><span></span></span>
+                <span class="steel-pipe-flange steel-elbow-end steel-elbow-end--t"><span></span><span></span><span></span><span></span></span>
               </ng-container>
               <ng-container *ngSwitchDefault>
-                <span class="water-pipe-joint water-elbow-end water-elbow-end--r"></span>
-                <span class="water-pipe-joint water-elbow-end water-elbow-end--t"></span>
+                <span class="steel-pipe-flange steel-elbow-end steel-elbow-end--r"><span></span><span></span><span></span><span></span></span>
+                <span class="steel-pipe-flange steel-elbow-end steel-elbow-end--t"><span></span><span></span><span></span><span></span></span>
               </ng-container>
             </ng-container>
           </div>
 
-          <!-- Llave de paso -->
-          <div class="water-valve" *ngIf="el.type === 'valve'" [class.water-valve--closed]="el.variant === 'closed'">
-            <div class="water-valve-pipe water-valve-pipe--l">
-              <div class="water-pipe-flow water-pipe-flow--h" [class.water-pipe-flow--stopped]="el.variant === 'closed'"></div>
-            </div>
-            <div class="water-valve-body">
-              <div class="water-valve-stem"></div>
-              <div class="water-valve-wheel"></div>
-            </div>
-            <div class="water-valve-pipe water-valve-pipe--r">
-              <div class="water-pipe-flow water-pipe-flow--h" [class.water-pipe-flow--stopped]="el.variant === 'closed'"></div>
-            </div>
-            <span class="water-valve-label">{{ el.content }}</span>
+          <!-- Válvula industrial SVG (sin tocar tuberías rectas del editor) -->
+          <div class="eq-svg eq-valve" *ngIf="el.type === 'valve'" [class.eq-valve--closed]="el.variant === 'closed'">
+            <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'vlM_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f3f4f6"/><stop offset="45%" stop-color="#6b7280"/>
+                  <stop offset="55%" stop-color="#1f2937"/><stop offset="100%" stop-color="#d1d5db"/>
+                </linearGradient>
+              </defs>
+              <rect x="4" y="42" width="42" height="20" rx="3" [attr.fill]="'url(#vlM_' + el.id + ')'" stroke="#111"/>
+              <rect x="114" y="42" width="42" height="20" rx="3" [attr.fill]="'url(#vlM_' + el.id + ')'" stroke="#111"/>
+              <rect x="0" y="36" width="10" height="32" rx="1" fill="#9ca3af" stroke="#111"/>
+              <rect x="150" y="36" width="10" height="32" rx="1" fill="#9ca3af" stroke="#111"/>
+              <rect x="58" y="34" width="44" height="36" rx="4" fill="#6b7280" stroke="#111" stroke-width="1.5"/>
+              <circle cx="66" cy="42" r="2" fill="#1f2937"/><circle cx="94" cy="42" r="2" fill="#1f2937"/>
+              <circle cx="66" cy="62" r="2" fill="#1f2937"/><circle cx="94" cy="62" r="2" fill="#1f2937"/>
+              <rect x="76" y="18" width="8" height="20" fill="#9ca3af" stroke="#111"/>
+              <g class="eq-valve-wheel" [attr.transform]="el.variant === 'closed' ? 'rotate(45 80 18)' : ''">
+                <circle cx="80" cy="18" r="14" fill="none" stroke="#374151" stroke-width="5"/>
+                <circle cx="80" cy="18" r="14" fill="#9ca3af" opacity="0.35"/>
+                <line x1="66" y1="18" x2="94" y2="18" stroke="#1f2937" stroke-width="3"/>
+                <line x1="80" y1="4" x2="80" y2="32" stroke="#1f2937" stroke-width="3"/>
+                <circle cx="80" cy="18" r="4" fill="#1f2937"/>
+              </g>
+              <rect *ngIf="el.variant !== 'closed'" x="48" y="48" width="20" height="8" rx="2" fill="#0ea5e9" opacity="0.55"/>
+              <rect *ngIf="el.variant !== 'closed'" x="92" y="48" width="20" height="8" rx="2" fill="#0ea5e9" opacity="0.55"/>
+            </svg>
+            <span class="eq-tag">{{ el.content }}</span>
           </div>
 
-          <!-- Bomba -->
-          <div class="water-bomba" *ngIf="el.type === 'bomba'" [class.water-bomba--off]="el.variant === 'off'">
-            <div class="water-bomba-housing">
-              <div class="water-bomba-impeller"></div>
-              <div class="water-bomba-inlet"></div>
-              <div class="water-bomba-outlet"></div>
-            </div>
-            <span class="water-bomba-label">{{ el.content }}</span>
-            <span class="water-bomba-status">{{ el.variant === 'off' ? 'OFF' : 'ON' }}</span>
+          <!-- Bomba centrífuga — ilustración SVG -->
+          <div class="eq-svg eq-pump" *ngIf="el.type === 'bomba'" [class.eq-pump--off]="el.variant === 'off'">
+            <svg viewBox="0 0 220 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <linearGradient [attr.id]="'pmBase_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#9ca3af"/><stop offset="100%" stop-color="#374151"/>
+                </linearGradient>
+                <linearGradient [attr.id]="'pmMotor_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f3f4f6"/><stop offset="35%" stop-color="#9ca3af"/>
+                  <stop offset="55%" stop-color="#4b5563"/><stop offset="100%" stop-color="#d1d5db"/>
+                </linearGradient>
+                <linearGradient [attr.id]="'pmVolute_' + el.id" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#e5e7eb"/><stop offset="40%" stop-color="#6b7280"/>
+                  <stop offset="100%" stop-color="#1f2937"/>
+                </linearGradient>
+                <radialGradient [attr.id]="'pmEye_' + el.id" cx="40%" cy="35%" r="60%">
+                  <stop offset="0%" stop-color="#9ca3af"/><stop offset="100%" stop-color="#111827"/>
+                </radialGradient>
+              </defs>
+              <!-- skid -->
+              <rect x="18" y="118" width="175" height="12" rx="2" [attr.fill]="'url(#pmBase_' + el.id + ')'" stroke="#111827" stroke-width="1"/>
+              <circle cx="32" cy="124" r="2.2" fill="#1f2937"/><circle cx="58" cy="124" r="2.2" fill="#1f2937"/>
+              <circle cx="155" cy="124" r="2.2" fill="#1f2937"/><circle cx="180" cy="124" r="2.2" fill="#1f2937"/>
+              <!-- motor -->
+              <rect x="22" y="58" width="72" height="52" rx="6" [attr.fill]="'url(#pmMotor_' + el.id + ')'" stroke="#111827" stroke-width="1.2"/>
+              <g opacity="0.45">
+                <line *ngFor="let x of [30,38,46,54,62,70,78]" [attr.x1]="x" y1="64" [attr.x2]="x" y2="104" stroke="#111827" stroke-width="2"/>
+              </g>
+              <ellipse cx="22" cy="84" rx="8" ry="22" fill="#6b7280" stroke="#111827" stroke-width="1"/>
+              <circle cx="22" cy="84" r="5" fill="#111827"/>
+              <rect x="88" y="72" width="14" height="24" rx="2" fill="#4b5563" stroke="#111827"/>
+              <rect x="48" y="68" width="18" height="12" rx="1.5" fill="#e0e215" stroke="#6b6b0a" stroke-width="0.8"/>
+              <text x="57" y="77" text-anchor="middle" font-size="7" font-weight="800" fill="#111">M</text>
+              <!-- coupling -->
+              <rect x="100" y="78" width="12" height="8" rx="1" fill="#9ca3af" stroke="#111827"/>
+              <rect x="100" y="88" width="12" height="8" rx="1" fill="#6b7280" stroke="#111827"/>
+              <!-- volute -->
+              <circle cx="155" cy="86" r="36" [attr.fill]="'url(#pmVolute_' + el.id + ')'" stroke="#111827" stroke-width="1.5"/>
+              <circle cx="155" cy="86" r="28" fill="#1f2937" opacity="0.35"/>
+              <g [attr.transform]="'translate(155 86)'">
+                <g class="eq-pump-impeller">
+                  <path d="M0 0 L22 -5 L24 5 Z" fill="#0ea5e9"/><path d="M0 0 L5 22 L-5 24 Z" fill="#0284c7"/>
+                  <path d="M0 0 L-22 5 L-24 -5 Z" fill="#0ea5e9"/><path d="M0 0 L-5 -22 L5 -24 Z" fill="#0284c7"/>
+                  <path d="M0 0 L18 14 L10 20 Z" fill="#38bdf8"/><path d="M0 0 L-18 -14 L-10 -20 Z" fill="#38bdf8"/>
+                </g>
+              </g>
+              <circle cx="155" cy="86" r="9" [attr.fill]="'url(#pmEye_' + el.id + ')'" stroke="#374151" stroke-width="2"/>
+              <!-- outlet up -->
+              <rect x="146" y="18" width="18" height="34" fill="#6b7280" stroke="#111827"/>
+              <rect x="140" y="12" width="30" height="10" rx="1.5" fill="#9ca3af" stroke="#111827"/>
+              <circle cx="146" cy="17" r="1.6" fill="#1f2937"/><circle cx="164" cy="17" r="1.6" fill="#1f2937"/>
+              <!-- inlet right -->
+              <rect x="188" y="76" width="22" height="18" fill="#6b7280" stroke="#111827"/>
+              <rect x="206" y="70" width="10" height="30" rx="1.5" fill="#9ca3af" stroke="#111827"/>
+            </svg>
+            <span class="eq-badge" [class.eq-badge--off]="el.variant === 'off'">{{ el.variant === 'off' ? 'OFF' : 'ON' }}</span>
+            <span class="eq-tag">{{ el.content }}</span>
           </div>
 
           <!-- Flecha de flujo -->
-          <div class="water-flujo" *ngIf="el.type === 'flujo'" [ngClass]="'water-flujo--' + (el.variant || 'right')">
-            <span class="water-flujo-arrow" *ngFor="let _ of [1,2,3]"></span>
+          <div class="eq-svg eq-flujo" *ngIf="el.type === 'flujo'" [ngClass]="'eq-flujo--' + (el.variant || 'right')">
+            <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'fl_' + el.id" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#7dd3fc" stop-opacity="0.2"/>
+                  <stop offset="50%" stop-color="#0ea5e9"/>
+                  <stop offset="100%" stop-color="#0369a1"/>
+                </linearGradient>
+              </defs>
+              <path d="M4 20 H78 L68 8 M78 20 L68 32" fill="none" [attr.stroke]="'url(#fl_' + el.id + ')'" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" class="eq-flujo-line"/>
+              <path d="M40 20 H110 L98 6 M110 20 L98 34" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" opacity="0.55" class="eq-flujo-line eq-flujo-line--2"/>
+            </svg>
           </div>
 
-          <!-- Pozo de agua -->
-          <div class="water-pozo" *ngIf="el.type === 'pozo'">
-            <div class="water-pozo-sky"></div>
-            <div class="water-pozo-earth">
-              <div class="water-pozo-ring"></div>
-              <div class="water-pozo-water" [style.height.%]="getFillLevel(el)">
-                <div class="water-pozo-wave water-pozo-wave--1"></div>
-                <div class="water-pozo-wave water-pozo-wave--2"></div>
+          <!-- Tee acero -->
+          <div class="steel-tee" *ngIf="el.type === 'pipe-tee'">
+            <div class="steel-tee-arm steel-tee-arm--h">
+              <div class="steel-pipe-metal"></div>
+              <div class="steel-pipe-bore">
+                <div class="steel-pipe-liquid steel-pipe-liquid--h" [ngClass]="'steel-pipe-liquid--' + getFlowClass(el)"></div>
               </div>
-              <div class="water-pozo-depth"></div>
+              <div class="steel-pipe-gloss"></div>
             </div>
-            <span class="water-scene-label">{{ el.content }}</span>
-            <span class="water-scene-level">{{ getFillLevel(el) }}%</span>
+            <div class="steel-tee-arm steel-tee-arm--v">
+              <div class="steel-pipe-metal"></div>
+              <div class="steel-pipe-bore">
+                <div class="steel-pipe-liquid steel-pipe-liquid--v" [ngClass]="'steel-pipe-liquid--' + getFlowClass(el)"></div>
+              </div>
+              <div class="steel-pipe-gloss"></div>
+            </div>
+            <span class="steel-tee-hub"></span>
+            <span class="steel-pipe-flange steel-tee-end steel-tee-end--l"><span></span><span></span></span>
+            <span class="steel-pipe-flange steel-tee-end steel-tee-end--r"><span></span><span></span></span>
+            <span class="steel-pipe-flange steel-tee-end steel-tee-end--b"><span></span><span></span></span>
           </div>
 
-          <!-- Cárcamo -->
-          <div class="water-carcamo" *ngIf="el.type === 'carcamo'">
-            <div class="water-carcamo-ground"></div>
-            <div class="water-carcamo-chamber">
-              <div class="water-carcamo-water" [style.height.%]="getFillLevel(el)">
-                <div class="water-carcamo-ripple"></div>
-              </div>
-              <div class="water-carcamo-pipe-in"></div>
-              <div class="water-carcamo-pipe-out"></div>
-            </div>
-            <span class="water-scene-label">{{ el.content }}</span>
+          <!-- Pozo en corte SVG -->
+          <div class="eq-svg eq-well" *ngIf="el.type === 'pozo'">
+            <svg viewBox="0 0 160 220" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'wellSky_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#bae6fd"/><stop offset="100%" stop-color="#e7e5e4"/>
+                </linearGradient>
+                <linearGradient [attr.id]="'wellEarth_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#a8a29e"/><stop offset="30%" stop-color="#78716c"/>
+                  <stop offset="70%" stop-color="#57534e"/><stop offset="100%" stop-color="#292524"/>
+                </linearGradient>
+                <linearGradient [attr.id]="'wellWater_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7dd3fc"/><stop offset="40%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#0c4a6e"/>
+                </linearGradient>
+                <linearGradient [attr.id]="'wellPipe_' + el.id" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#d1d5db"/><stop offset="45%" stop-color="#4b5563"/><stop offset="100%" stop-color="#9ca3af"/>
+                </linearGradient>
+                <clipPath [attr.id]="'wellClip_' + el.id"><rect x="48" y="42" width="64" height="170"/></clipPath>
+              </defs>
+              <rect width="160" height="36" [attr.fill]="'url(#wellSky_' + el.id + ')'"/>
+              <rect y="36" width="160" height="184" [attr.fill]="'url(#wellEarth_' + el.id + ')'"/>
+              <line x1="0" y1="80" x2="160" y2="80" stroke="rgba(0,0,0,0.15)" stroke-width="2"/>
+              <line x1="0" y1="130" x2="160" y2="130" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+              <line x1="0" y1="175" x2="160" y2="175" stroke="rgba(0,0,0,0.1)" stroke-width="2"/>
+              <!-- casing -->
+              <rect x="48" y="36" width="64" height="176" fill="none" stroke="#44403c" stroke-width="5"/>
+              <rect x="52" y="36" width="56" height="176" fill="rgba(0,0,0,0.12)"/>
+              <!-- water clipped -->
+              <g [attr.clip-path]="'url(#wellClip_' + el.id + ')'">
+                <rect x="52" [attr.y]="36 + (176 * (1 - getFillLevel(el)/100))" width="56" [attr.height]="176 * (getFillLevel(el)/100)" [attr.fill]="'url(#wellWater_' + el.id + ')'"/>
+                <ellipse cx="80" [attr.cy]="36 + (176 * (1 - getFillLevel(el)/100))" rx="30" ry="4" fill="rgba(255,255,255,0.4)"/>
+              </g>
+              <!-- column + pump -->
+              <rect x="74" y="28" width="12" height="130" rx="2" [attr.fill]="'url(#wellPipe_' + el.id + ')'" stroke="#111827" stroke-width="0.8"/>
+              <rect x="64" y="150" width="32" height="28" rx="3" fill="#0284c7" stroke="#0c4a6e" stroke-width="1.2"/>
+              <line x1="68" y1="158" x2="92" y2="158" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="68" y1="166" x2="92" y2="166" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <!-- wellhead -->
+              <rect x="58" y="18" width="44" height="14" rx="2" fill="#6b7280" stroke="#111827"/>
+              <rect x="66" y="8" width="28" height="12" rx="2" fill="#9ca3af" stroke="#111827"/>
+              <rect x="100" y="22" width="28" height="8" rx="1" fill="#6b7280" stroke="#111827"/>
+            </svg>
+            <span class="eq-tag eq-tag--dark">{{ el.content }}</span>
+            <span class="eq-level">{{ getFillLevel(el) }}%</span>
           </div>
 
-          <!-- Estanque -->
-          <div class="water-estanque" *ngIf="el.type === 'estanque'">
-            <div class="water-estanque-tank">
-              <div class="water-estanque-fill" [style.height.%]="getFillLevel(el)">
-                <div class="water-estanque-surface"></div>
-              </div>
-              <div class="water-estanque-scale">
-                <span *ngFor="let tick of [100,75,50,25,0]">{{ tick }}</span>
-              </div>
-            </div>
-            <span class="water-scene-label">{{ el.content }}</span>
+          <!-- Cárcamo SVG -->
+          <div class="eq-svg eq-sump" *ngIf="el.type === 'carcamo'">
+            <svg viewBox="0 0 200 140" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'sumpW_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0369a1"/>
+                </linearGradient>
+              </defs>
+              <rect x="10" y="20" width="180" height="110" rx="4" fill="#78716c" stroke="#44403c" stroke-width="3"/>
+              <rect x="22" y="32" width="156" height="86" fill="#57534e"/>
+              <rect x="22" [attr.y]="32 + (86 * (1 - getFillLevel(el)/100))" width="156" [attr.height]="86 * (getFillLevel(el)/100)" [attr.fill]="'url(#sumpW_' + el.id + ')'"/>
+              <rect x="0" y="50" width="24" height="14" rx="2" fill="#6b7280" stroke="#111"/>
+              <rect x="176" y="70" width="24" height="14" rx="2" fill="#6b7280" stroke="#111"/>
+              <rect x="70" y="8" width="60" height="16" rx="2" fill="#a8a29e" stroke="#44403c"/>
+            </svg>
+            <span class="eq-tag eq-tag--dark">{{ el.content }}</span>
           </div>
 
-          <!-- Reservorio -->
-          <div class="water-reservorio" *ngIf="el.type === 'reservorio'">
-            <div class="water-reservorio-shore"></div>
-            <div class="water-reservorio-body" [style.--fill]="getFillLevel(el) + '%'">
-              <div class="water-reservorio-wave water-reservorio-wave--1"></div>
-              <div class="water-reservorio-wave water-reservorio-wave--2"></div>
-              <div class="water-reservorio-wave water-reservorio-wave--3"></div>
+          <!-- Estanque vertical SVG -->
+          <div class="eq-svg eq-tank" *ngIf="el.type === 'estanque'">
+            <svg viewBox="0 0 120 200" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'tankM_' + el.id" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#4b5563"/><stop offset="20%" stop-color="#d1d5db"/>
+                  <stop offset="50%" stop-color="#6b7280"/><stop offset="55%" stop-color="#374151"/>
+                  <stop offset="80%" stop-color="#e5e7eb"/><stop offset="100%" stop-color="#6b7280"/>
+                </linearGradient>
+                <linearGradient [attr.id]="'tankW_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0369a1"/>
+                </linearGradient>
+                <clipPath [attr.id]="'tankClip_' + el.id"><rect x="22" y="28" width="76" height="140" rx="2"/></clipPath>
+              </defs>
+              <ellipse cx="60" cy="24" rx="40" ry="12" [attr.fill]="'url(#tankM_' + el.id + ')'" stroke="#111827"/>
+              <rect x="20" y="24" width="80" height="148" rx="3" [attr.fill]="'url(#tankM_' + el.id + ')'" stroke="#111827" stroke-width="1.5"/>
+              <g [attr.clip-path]="'url(#tankClip_' + el.id + ')'">
+                <rect x="26" [attr.y]="28 + (140 * (1 - getFillLevel(el)/100))" width="68" [attr.height]="140 * (getFillLevel(el)/100)" [attr.fill]="'url(#tankW_' + el.id + ')'"/>
+              </g>
+              <line x1="20" y1="60" x2="100" y2="60" stroke="#1f2937" stroke-width="3"/>
+              <line x1="20" y1="100" x2="100" y2="100" stroke="#1f2937" stroke-width="3"/>
+              <line x1="20" y1="140" x2="100" y2="140" stroke="#1f2937" stroke-width="3"/>
+              <rect x="28" y="30" width="10" height="140" fill="rgba(255,255,255,0.25)"/>
+              <text x="92" y="50" font-size="7" fill="#111" font-weight="700">100</text>
+              <text x="94" y="100" font-size="7" fill="#111" font-weight="700">50</text>
+              <text x="96" y="155" font-size="7" fill="#111" font-weight="700">0</text>
+              <rect x="30" y="172" width="8" height="18" fill="#374151"/><rect x="54" y="172" width="8" height="18" fill="#374151"/>
+              <rect x="78" y="172" width="8" height="18" fill="#374151"/>
+              <rect x="96" y="150" width="14" height="10" rx="1" fill="#6b7280" stroke="#111"/>
+            </svg>
+            <span class="eq-tag eq-tag--dark">{{ el.content }}</span>
+          </div>
+
+          <!-- Cisterna horizontal SVG -->
+          <div class="eq-svg eq-cistern" *ngIf="el.type === 'cisterna'">
+            <svg viewBox="0 0 240 120" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'cisM_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f3f4f6"/><stop offset="30%" stop-color="#9ca3af"/>
+                  <stop offset="50%" stop-color="#374151"/><stop offset="100%" stop-color="#d1d5db"/>
+                </linearGradient>
+                <linearGradient [attr.id]="'cisW_' + el.id" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0369a1"/>
+                </linearGradient>
+                <clipPath [attr.id]="'cisClip_' + el.id"><ellipse cx="120" cy="52" rx="100" ry="38"/></clipPath>
+              </defs>
+              <path d="M40 100 L50 78 L70 78 L80 100 Z" fill="#4b5563"/><path d="M110 100 L120 78 L140 78 L150 100 Z" fill="#4b5563"/>
+              <path d="M180 100 L190 78 L210 78 L220 100 Z" fill="#4b5563"/>
+              <ellipse cx="120" cy="52" rx="102" ry="40" [attr.fill]="'url(#cisM_' + el.id + ')'" stroke="#111827" stroke-width="1.5"/>
+              <g [attr.clip-path]="'url(#cisClip_' + el.id + ')'">
+                <rect x="20" y="14" [attr.width]="200 * (getFillLevel(el)/100)" height="76" [attr.fill]="'url(#cisW_' + el.id + ')'"/>
+              </g>
+              <ellipse cx="28" cy="52" rx="10" ry="28" fill="#6b7280" stroke="#111827"/>
+              <ellipse cx="212" cy="52" rx="10" ry="28" fill="#6b7280" stroke="#111827"/>
+              <rect x="116" y="14" width="8" height="76" fill="#1f2937" opacity="0.7"/>
+              <rect x="108" y="22" width="24" height="16" rx="2" fill="#4b5563" stroke="#111"/>
+              <ellipse cx="70" cy="28" rx="10" ry="7" fill="#6b7280" stroke="#111"/>
+            </svg>
+            <span class="eq-tag eq-tag--dark">{{ el.content }}</span>
+            <span class="eq-level">{{ getFillLevel(el) }}%</span>
+          </div>
+
+          <!-- Reservorio SVG -->
+          <div class="eq-svg eq-reservoir" *ngIf="el.type === 'reservorio'">
+            <svg viewBox="0 0 240 140" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'resW_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0369a1"/>
+                </linearGradient>
+              </defs>
+              <path d="M10 40 L40 100 L200 100 L230 40 Z" fill="#a8a29e" stroke="#57534e" stroke-width="2"/>
+              <path d="M30 55 L50 95 L190 95 L210 55 Z" [attr.fill]="'url(#resW_' + el.id + ')'" [attr.opacity]="0.35 + getFillLevel(el)/150"/>
+              <ellipse cx="120" [attr.cy]="95 - getFillLevel(el)*0.4" rx="78" ry="10" fill="#38bdf8" opacity="0.7"/>
+              <rect x="210" y="35" width="18" height="65" fill="#6b7280" stroke="#111827"/>
+              <rect x="205" y="30" width="28" height="10" fill="#9ca3af" stroke="#111827"/>
+            </svg>
+            <span class="eq-tag eq-tag--dark">{{ el.content }}</span>
+          </div>
+
+          <!-- Caudalímetro SVG -->
+          <div class="eq-svg eq-flowmeter" *ngIf="el.type === 'caudalimetro'">
+            <svg viewBox="0 0 200 80" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'fmBody_' + el.id" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7dd3fc"/><stop offset="45%" stop-color="#0284c7"/><stop offset="100%" stop-color="#0c4a6e"/>
+                </linearGradient>
+                <linearGradient [attr.id]="'fmFl_' + el.id" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#e5e7eb"/><stop offset="50%" stop-color="#6b7280"/><stop offset="100%" stop-color="#1f2937"/>
+                </linearGradient>
+              </defs>
+              <rect x="4" y="18" width="18" height="44" rx="2" [attr.fill]="'url(#fmFl_' + el.id + ')'" stroke="#111"/>
+              <rect x="178" y="18" width="18" height="44" rx="2" [attr.fill]="'url(#fmFl_' + el.id + ')'" stroke="#111"/>
+              <circle cx="13" cy="28" r="2" fill="#111"/><circle cx="13" cy="52" r="2" fill="#111"/>
+              <circle cx="187" cy="28" r="2" fill="#111"/><circle cx="187" cy="52" r="2" fill="#111"/>
+              <rect x="20" y="28" width="16" height="24" fill="#6b7280" stroke="#111"/>
+              <rect x="164" y="28" width="16" height="24" fill="#6b7280" stroke="#111"/>
+              <rect x="34" y="14" width="132" height="52" rx="12" [attr.fill]="'url(#fmBody_' + el.id + ')'" stroke="#0c4a6e" stroke-width="2"/>
+              <rect x="50" y="20" width="100" height="10" rx="5" fill="rgba(255,255,255,0.35)"/>
+              <text x="100" y="38" text-anchor="middle" font-size="8" fill="#e0f2fe" letter-spacing="2" font-weight="700">FLOW</text>
+              <text x="100" y="54" text-anchor="middle" font-size="14" fill="#fff" font-weight="800">{{ getBoundValue(el) }}</text>
+            </svg>
+          </div>
+
+          <!-- Manómetro SVG -->
+          <div class="eq-svg eq-gauge" *ngIf="el.type === 'manometro'">
+            <svg viewBox="0 0 100 120" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <radialGradient [attr.id]="'mgFace_' + el.id" cx="40%" cy="35%" r="65%">
+                  <stop offset="0%" stop-color="#fff"/><stop offset="70%" stop-color="#e5e7eb"/><stop offset="100%" stop-color="#9ca3af"/>
+                </radialGradient>
+              </defs>
+              <circle cx="50" cy="48" r="40" fill="#374151" stroke="#111827" stroke-width="3"/>
+              <circle cx="50" cy="48" r="34" [attr.fill]="'url(#mgFace_' + el.id + ')'"/>
+              <g stroke="#4b5563" stroke-width="1.5">
+                <line x1="50" y1="18" x2="50" y2="24"/><line x1="78" y1="30" x2="74" y2="34"/>
+                <line x1="84" y1="48" x2="78" y2="48"/><line x1="78" y1="66" x2="74" y2="62"/>
+                <line x1="50" y1="78" x2="50" y2="72"/><line x1="22" y1="66" x2="26" y2="62"/>
+                <line x1="16" y1="48" x2="22" y2="48"/><line x1="22" y1="30" x2="26" y2="34"/>
+              </g>
+              <g [attr.transform]="'rotate(' + getNeedleRotation(el) + ' 50 48)'">
+                <polygon points="50,20 53,48 47,48" fill="#dc2626"/>
+              </g>
+              <circle cx="50" cy="48" r="5" fill="#1f2937" stroke="#9ca3af"/>
+              <rect x="44" y="88" width="12" height="22" fill="#6b7280" stroke="#111"/>
+              <rect x="40" y="108" width="20" height="8" rx="1" fill="#9ca3af" stroke="#111"/>
+            </svg>
+            <span class="eq-tag">{{ el.content }}</span>
+          </div>
+
+          <!-- PLC SVG -->
+          <div class="eq-svg eq-plc" *ngIf="el.type === 'plc'">
+            <svg viewBox="0 0 100 130" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient [attr.id]="'plc_' + el.id" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#1e3a5f"/><stop offset="100%" stop-color="#0b1c2c"/>
+                </linearGradient>
+              </defs>
+              <rect x="8" y="6" width="84" height="118" rx="4" [attr.fill]="'url(#plc_' + el.id + ')'" stroke="#166c9f" stroke-width="2"/>
+              <rect x="14" y="12" width="72" height="8" rx="1" fill="#0c3550"/>
+              <circle cx="22" cy="28" r="4" fill="#e0e215"/><circle cx="34" cy="28" r="4" fill="#22c55e"/><circle cx="46" cy="28" r="4" fill="#64748b"/>
+              <rect x="16" y="40" width="68" height="42" rx="2" fill="#04141f" stroke="#166c9f"/>
+              <text x="50" y="65" text-anchor="middle" fill="#7dd3fc" font-size="11" font-weight="700">{{ el.content }}</text>
+              <line x1="18" y1="96" x2="82" y2="96" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+              <line x1="18" y1="104" x2="82" y2="104" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+              <line x1="18" y1="112" x2="82" y2="112" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+            </svg>
+          </div>
+
+          <!-- Panel de datos (overlay tipo sinóptico) -->
+          <div class="scada-panel" *ngIf="el.type === 'panel-datos'">
+            <div class="scada-panel-row">
+              <span>{{ el.content || getBoundLabel(el) }}</span>
+              <strong>{{ getBoundValue(el) }}</strong>
             </div>
-            <div class="water-reservorio-dam"></div>
-            <span class="water-scene-label">{{ el.content }}</span>
+            <div class="scada-panel-row scada-panel-row--muted" *ngIf="el.bindField">
+              <span>tag</span>
+              <em>{{ el.bindField }}</em>
+            </div>
+          </div>
+
+          <!-- Widget valor -->
+          <div class="scada-valor" *ngIf="el.type === 'widget-valor'">
+            <span>{{ getBoundLabel(el) }}</span>
+            <strong>{{ getBoundValue(el) }}</strong>
+          </div>
+
+          <!-- Widget nivel vertical -->
+          <div class="scada-nivel" *ngIf="el.type === 'widget-nivel'">
+            <div class="scada-nivel-track">
+              <div class="scada-nivel-fill" [style.height.%]="getNumericBound(el)"></div>
+            </div>
+            <strong>{{ getNumericBound(el) | number:'1.0-0' }}%</strong>
+            <small>{{ el.content }}</small>
+          </div>
+
+          <!-- Semi-gauge -->
+          <div class="scada-gauge" *ngIf="el.type === 'widget-gauge'">
+            <svg viewBox="0 0 100 60" class="scada-gauge-svg">
+              <path d="M 14 48 A 36 36 0 0 1 86 48" fill="none" stroke="rgba(22,108,159,0.25)" stroke-width="8" stroke-linecap="round"/>
+              <path [attr.d]="getGaugeArc(el)" fill="none" stroke="#e0e215" stroke-width="8" stroke-linecap="round"/>
+              <text x="50" y="46" text-anchor="middle" class="scada-gauge-text">{{ getNumericBound(el) | number:'1.0-0' }}%</text>
+            </svg>
+            <small>{{ el.content }}</small>
+          </div>
+
+          <!-- Gráfico tendencia -->
+          <div class="scada-chart" *ngIf="el.type === 'widget-chart'">
+            <header>
+              <strong>{{ el.content }}</strong>
+              <span>24 h</span>
+            </header>
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none" class="scada-chart-svg">
+              <path [attr.d]="getChartPath()" fill="none" stroke="#166c9f" stroke-width="1.8"/>
+              <path [attr.d]="getChartPath() + ' L 100 40 L 0 40 Z'" fill="rgba(22,108,159,0.18)" stroke="none"/>
+            </svg>
+            <footer>
+              <i></i> Nivel / caudal
+            </footer>
+          </div>
+
+          <!-- Tabla -->
+          <div class="scada-table" *ngIf="el.type === 'widget-table'">
+            <header>{{ el.content }}</header>
+            <table>
+              <thead>
+                <tr><th>Tag</th><th>Valor</th><th>U.</th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of tableRows">
+                  <td>{{ row.tag }}</td>
+                  <td>{{ row.valor }}</td>
+                  <td>{{ row.unidad }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <!-- Handles de redimensionado -->
@@ -398,7 +742,7 @@
           <span>Tipo</span>
           <strong>{{ selectedElement.type }}</strong>
         </label>
-        <label class="diagram-props-field" *ngIf="selectedElement.type !== 'image' && selectedElement.type !== 'caudal' && !isWaterType(selectedElement.type)">
+        <label class="diagram-props-field" *ngIf="selectedElement.type !== 'image' && selectedElement.type !== 'caudal' && !isWaterType(selectedElement.type) && !isInstrumentType(selectedElement.type) && !isVizType(selectedElement.type)">
           <span>Contenido</span>
           <input type="text" [(ngModel)]="selectedElement.content" (ngModelChange)="onElementContentChange(selectedElement)" />
         </label>
@@ -409,8 +753,21 @@
           </select>
         </label>
 
+        <label class="diagram-props-field" *ngIf="isLiveSensorType(selectedElement.type) || isFillable(selectedElement.type)">
+          <span>Variable vinculada</span>
+          <select [(ngModel)]="selectedElement.bindField" (ngModelChange)="onBindFieldChange(selectedElement)">
+            <option [ngValue]="undefined">— Sin vincular —</option>
+            <option *ngFor="let v of estacionVariables" [ngValue]="v.key">{{ v.label }} ({{ v.value }}{{ v.unit ? ' ' + v.unit : '' }})</option>
+          </select>
+        </label>
+
+        <label class="diagram-props-field" *ngIf="isVizType(selectedElement.type) || selectedElement.type === 'plc' || selectedElement.type === 'caudalimetro' || selectedElement.type === 'manometro'">
+          <span>Etiqueta</span>
+          <input type="text" [(ngModel)]="selectedElement.content" (ngModelChange)="onElementContentChange(selectedElement)" />
+        </label>
+
         <!-- Propiedades simulación hídrica -->
-        <ng-container *ngIf="isWaterType(selectedElement.type)">
+        <ng-container *ngIf="isWaterType(selectedElement.type) || isInstrumentType(selectedElement.type)">
           <label class="diagram-props-field" *ngIf="selectedElement.type === 'valve'">
             <span>Estado llave</span>
             <select [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)">
@@ -425,7 +782,7 @@
               <option value="off">Apagada</option>
             </select>
           </label>
-          <label class="diagram-props-field" *ngIf="selectedElement.type === 'pipe-h' || selectedElement.type === 'pipe-v'">
+          <label class="diagram-props-field" *ngIf="selectedElement.type === 'pipe-h' || selectedElement.type === 'pipe-v' || selectedElement.type === 'pipe-tee'">
             <span>Velocidad flujo</span>
             <select [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)">
               <option value="slow">Lenta</option>
@@ -459,16 +816,22 @@
               <option value="up">Arriba</option>
             </select>
           </label>
-          <label class="diagram-props-field" *ngIf="selectedElement.type === 'pozo' || selectedElement.type === 'carcamo' || selectedElement.type === 'estanque' || selectedElement.type === 'reservorio'">
-            <span>Nivel de agua (%)</span>
+          <label class="diagram-props-field" *ngIf="isFillable(selectedElement.type)">
+            <span>Nivel / lectura (%)</span>
             <input type="range" min="10" max="95" [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)" />
             <strong class="diagram-props-level">{{ getFillLevel(selectedElement) }}%</strong>
           </label>
-          <label class="diagram-props-field" *ngIf="selectedElement.type !== 'pipe-h' && selectedElement.type !== 'pipe-v' && selectedElement.type !== 'pipe-elbow' && selectedElement.type !== 'flujo'">
+          <label class="diagram-props-field" *ngIf="selectedElement.type !== 'pipe-h' && selectedElement.type !== 'pipe-v' && selectedElement.type !== 'pipe-elbow' && selectedElement.type !== 'pipe-tee' && selectedElement.type !== 'flujo' && isWaterType(selectedElement.type)">
             <span>Etiqueta</span>
             <input type="text" [(ngModel)]="selectedElement.content" (ngModelChange)="onElementContentChange(selectedElement)" />
           </label>
         </ng-container>
+
+        <label class="diagram-props-field" *ngIf="isVizType(selectedElement.type) && isFillable(selectedElement.type)">
+          <span>Nivel / lectura (%)</span>
+          <input type="range" min="10" max="95" [(ngModel)]="selectedElement.variant" (ngModelChange)="onWaterVariantChange(selectedElement)" />
+          <strong class="diagram-props-level">{{ getFillLevel(selectedElement) }}%</strong>
+        </label>
       </div>
     </aside>
 

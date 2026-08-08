@@ -1,91 +1,87 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-
-import { AuthenticationService } from '../../../core/services/auth.service';
-import { AuthfakeauthenticationService } from '../../../core/services/authfake.service';
-
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
-import { environment } from '../../../../environments/environment';
+import { JwtAuthService } from '../../../core/services/jwt-auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-
-/**
- * Login component
- */
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loginForm: UntypedFormGroup;
   submitted = false;
-  error = '';
-  returnUrl: string;
+  loading = false;
+  showPassword = false;
 
-  // set the currenr year
   year: number = new Date().getFullYear();
 
-  // tslint:disable-next-line: max-line-length
-  constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
-    private authFackservice: AuthfakeauthenticationService) { }
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private router: Router,
+    private auth: JwtAuthService
+  ) {}
 
   ngOnInit() {
     document.body.setAttribute('class', 'authentication-bg');
 
     this.loginForm = this.formBuilder.group({
-      email: ['admin@themesbrand.com', [Validators.required, Validators.email]],
-      password: ['123456', [Validators.required]],
+      userName: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
-
-    // reset login status
-    // this.authenticationService.logout();
-    // get return url from route parameters or default to '/'
-    // tslint:disable-next-line: no-string-literal
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {}
+
+  ngOnDestroy() {
+    document.body.classList.remove('authentication-bg');
   }
 
-  ngOnDestroy() { 
-    document.body.classList.remove('authentication-bg')
+  get f() {
+    return this.loginForm.controls;
   }
 
-  // convenience getter for easy access to form fields
-  get f() { return this.loginForm.controls; }
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
-  /**
-   * Form submit
-   */
   onSubmit() {
     this.submitted = true;
 
-    // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
-    } else {
-      if (environment.defaultauth === 'firebase') {
-        this.authenticationService.login(this.f.email.value, this.f.password.value).then((res: any) => {
-          document.body.removeAttribute('class');
-          this.router.navigate(['/']);
-        })
-          .catch(error => {
-            this.error = error ? error : '';
-          });
-      } else {
-        this.authFackservice.login(this.f.email.value, this.f.password.value)
-          .pipe(first())
-          .subscribe(
-            data => {
-              this.router.navigate(['/']);
-            },
-            error => {
-              this.error = error ? error : '';
-            });
-      }
     }
+
+    this.loading = true;
+    this.auth
+      .login({
+        userName: this.f.userName.value,
+        password: this.f.password.value,
+      })
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          document.body.removeAttribute('class');
+          this.router.navigateByUrl(this.auth.getPostLoginRedirect());
+        },
+        error: err => {
+          this.loading = false;
+          Swal.fire({
+            title: '¡Ops!',
+            text: JwtAuthService.extractErrorMessage(err),
+            icon: 'error',
+            confirmButtonColor: '#c9a227',
+            confirmButtonText: 'Entendido',
+            allowOutsideClick: false,
+            background: '#141a21',
+            color: '#ffffff',
+          });
+        },
+      });
   }
 }

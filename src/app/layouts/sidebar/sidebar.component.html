@@ -71,7 +71,14 @@
             @if(item.badge){
             <span class="badge rounded-pill bg-{{item.badge.variant}} float-end">{{item.badge.text |
               translate}}</span>}
-          </a>}@else{
+          </a>          }@else if (item.action === 'logout') {
+          <a href="javascript:void(0);" class="side-nav-link-ref" (click)="logout($event)">
+            @if(item.icon){
+            <i class="bx {{ item.icon }}"></i>
+            }
+            <span> {{ item.label | translate}}</span>
+          </a>
+          }@else{
           <a [routerLink]="item.link" class="side-nav-link-ref" routerLinkActive="active">
             @if(item.icon){
             <i class="bx {{ item.icon }}"></i>

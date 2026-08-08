@@ -1,0 +1,188 @@
+<div class="page-root alarmas-page module-enter-root" [@moduleEnter]>
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
+          <div class="page-header-brand">Aquagenia</div>
+          <div class="page-header-body">
+            <span class="page-header-tag">Alarmas / Histórico</span>
+            <h1 class="page-header-title">Gestión de <span>Alarmas</span></h1>
+            <div class="page-header-chips">
+              <span class="page-chip"><i class="ti ti-bell"></i> Eventos y umbrales</span>
+            </div>
+          </div>
+          <div class="page-header-side">
+            <button type="button" class="page-btn-primary" (click)="abrirWizard()">
+              <i class="ti ti-plus"></i> Nueva alarma
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alarmas-body">
+    <section class="alarmas-filters">
+      <div class="alarmas-filter">
+        <label>Desde</label>
+        <dx-date-box type="date" [(value)]="dateFrom" displayFormat="dd/MM/yyyy" (onValueChanged)="onDateChange()"></dx-date-box>
+      </div>
+      <div class="alarmas-filter">
+        <label>Hasta</label>
+        <dx-date-box type="date" [(value)]="dateTo" displayFormat="dd/MM/yyyy" (onValueChanged)="onDateChange()"></dx-date-box>
+      </div>
+    </section>
+
+    <div class="grid-toolbar">
+      <button type="button" class="grid-btn-contraer" (click)="toggleExpandGroups()">
+        <i class="ti ti-arrows-minimize"></i> Contraer
+      </button>
+      <button type="button" class="grid-btn-reiniciar" (click)="limpiarCampos()">
+        <i class="ti ti-refresh"></i> Reiniciar
+      </button>
+    </div>
+
+    <dx-data-grid
+      [dataSource]="alarmas"
+      [showBorders]="true"
+      [rowAlternationEnabled]="true"
+      [columnHidingEnabled]="true"
+      [hoverStateEnabled]="true"
+      (onToolbarPreparing)="onToolbarPreparing($event)">
+
+      <dxo-grouping [autoExpandAll]="autoExpandAllGroups"></dxo-grouping>
+      <dxo-search-panel [visible]="true" [width]="220" placeholder="Buscar..."></dxo-search-panel>
+      <dxo-paging [pageSize]="20"></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 50]" [showInfo]="true"></dxo-pager>
+      <dxo-group-panel [visible]="true"></dxo-group-panel>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+      <dxi-column caption="Acciones" [width]="110" alignment="center" cellTemplate="accionesTpl" [allowSorting]="false"></dxi-column>
+      <dxi-column dataField="nombre" caption="Nombre"></dxi-column>
+      <dxi-column dataField="descripcion" caption="Descripción"></dxi-column>
+      <dxi-column dataField="fecha" caption="Fecha" alignment="center" [width]="150"></dxi-column>
+      <dxi-column dataField="tipo" caption="Tipo" alignment="center" [width]="110"></dxi-column>
+      <dxi-column dataField="estacionNombre" caption="Estación"></dxi-column>
+      <dxi-column dataField="severidad" caption="Severidad" alignment="center" [width]="120" cellTemplate="sevTpl"></dxi-column>
+      <dxi-column dataField="activa" caption="Activación" alignment="center" [width]="100" cellTemplate="boolTpl"></dxi-column>
+      <dxi-column dataField="generaNotificacion" caption="Envía notificación" alignment="center" [width]="140" cellTemplate="boolTpl"></dxi-column>
+      <dxi-column dataField="notificacionEnviada" caption="Notificación enviada" alignment="center" [width]="150" cellTemplate="boolTpl"></dxi-column>
+
+      <div *dxTemplate="let cell of 'accionesTpl'">
+        <button type="button" class="alarmas-link-btn" (click)="verDetalle(cell.data)">Detalle</button>
+      </div>
+      <div *dxTemplate="let cell of 'sevTpl'">
+        <span class="sev-pill" [attr.data-sev]="cell.value">Niv. {{ cell.value }}</span>
+      </div>
+      <div *dxTemplate="let cell of 'boolTpl'">
+        <i class="ti" [class.ti-check]="cell.value" [class.ti-x]="!cell.value"
+           [style.color]="cell.value ? '#e0e215' : 'rgba(255,255,255,0.35)'"></i>
+      </div>
+    </dx-data-grid>
+  </div>
+
+  <!-- Wizard Formulario (mismo patrón CRUD Administración) -->
+  <dx-popup
+    [visible]="popupVisible"
+    [showTitle]="true"
+    title="Configurar alarma"
+    [width]="560"
+    [height]="'auto'"
+    [maxHeight]="640"
+    [dragEnabled]="true"
+    [showCloseButton]="true"
+    (onHiding)="cerrarWizard()">
+
+    <div *dxTemplate="let d of 'content'">
+      <div class="wizard-steps">
+        <span [class.active]="wizardStep === 1">1. Datos básicos</span>
+        <span [class.active]="wizardStep === 2">2. Configuración</span>
+        <span [class.active]="wizardStep === 3">3. Contactos</span>
+      </div>
+
+      <div class="wizard-body" *ngIf="wizardStep === 1">
+        <label class="form-field">
+          <span>Nombre</span>
+          <dx-text-box [(value)]="form.nombre"></dx-text-box>
+        </label>
+        <label class="form-field">
+          <span>Descripción</span>
+          <dx-text-area [(value)]="form.descripcion" [height]="80"></dx-text-area>
+        </label>
+        <label class="form-field">
+          <span>Nivel de severidad</span>
+          <dx-select-box [items]="severidadItems" displayExpr="text" valueExpr="value" [(value)]="form.severidad"></dx-select-box>
+        </label>
+        <div class="form-row-switches">
+          <label class="form-switch"><span>Alarma activa</span><dx-switch [(value)]="form.activa"></dx-switch></label>
+          <label class="form-switch"><span>Genera notificación</span><dx-switch [(value)]="form.generaNotificacion"></dx-switch></label>
+        </div>
+      </div>
+
+      <div class="wizard-body" *ngIf="wizardStep === 2">
+        <label class="form-field">
+          <span>Estación / activo</span>
+          <dx-select-box [items]="estaciones" displayExpr="nombre" valueExpr="id" [(value)]="form.estacionId" [searchEnabled]="true"></dx-select-box>
+        </label>
+        <label class="form-field">
+          <span>Variable</span>
+          <dx-select-box [items]="variables" [(value)]="form.variable" [searchEnabled]="true"></dx-select-box>
+        </label>
+        <label class="form-field">
+          <span>Condición</span>
+          <dx-select-box [items]="condicionItems" displayExpr="text" valueExpr="value" [(value)]="form.condicion"></dx-select-box>
+        </label>
+        <label class="form-field">
+          <span>Valor umbral</span>
+          <dx-number-box [(value)]="form.umbral" [showSpinButtons]="true"></dx-number-box>
+        </label>
+      </div>
+
+      <div class="wizard-body" *ngIf="wizardStep === 3">
+        <label class="form-field">
+          <span>Contactos a notificar</span>
+          <dx-tag-box
+            [items]="contactos"
+            displayExpr="nombre"
+            valueExpr="id"
+            [(value)]="form.contactosIds"
+            [searchEnabled]="true"
+            placeholder="Seleccionar contactos">
+          </dx-tag-box>
+        </label>
+        <p class="form-hint">Los contactos se administran en Alarmas → Contactos.</p>
+      </div>
+
+      <div class="wizard-actions">
+        <button type="button" class="page-btn page-btn--ghost" *ngIf="wizardStep > 1" (click)="prevStep()">Atrás</button>
+        <button type="button" class="page-btn page-btn--ghost" (click)="cerrarWizard()">Cancelar</button>
+        <button type="button" class="page-btn-primary" *ngIf="wizardStep < 3" [disabled]="!canNext" (click)="nextStep()">Siguiente</button>
+        <button type="button" class="page-btn-primary" *ngIf="wizardStep === 3" (click)="guardarAlarma()">Guardar</button>
+      </div>
+    </div>
+  </dx-popup>
+
+  <dx-popup
+    [visible]="detalleVisible"
+    [showTitle]="true"
+    [title]="alarmaDetalle?.nombre || 'Detalle'"
+    [width]="480"
+    [height]="'auto'"
+    [showCloseButton]="true"
+    (onHiding)="detalleVisible = false">
+    <div *dxTemplate="let d of 'content'">
+      <ng-container *ngIf="alarmaDetalle as a">
+        <dl class="detalle-dl">
+          <dt>Descripción</dt><dd>{{ a.descripcion }}</dd>
+          <dt>Fecha</dt><dd>{{ a.fecha }}</dd>
+          <dt>Estación</dt><dd>{{ a.estacionNombre }}</dd>
+          <dt>Variable</dt><dd>{{ a.variable }}</dd>
+          <dt>Condición</dt><dd>{{ a.condicion }} {{ a.umbral }}</dd>
+          <dt>Severidad</dt><dd>Nivel {{ a.severidad }}</dd>
+          <dt>Tipo</dt><dd>{{ a.tipo }}</dd>
+        </dl>
+      </ng-container>
+    </div>
+  </dx-popup>
+</div>

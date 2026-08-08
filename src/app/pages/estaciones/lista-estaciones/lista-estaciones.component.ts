@@ -32,6 +32,7 @@ export class ListaEstacionesComponent implements OnInit, AfterViewInit {
       company: 'Operadora',
       date: '2024-03-10 12:52 PM',
       imageUrl: null,
+      active: true,
       position: { lat: 19.4326, lng: -99.1332 }
     },
     {
@@ -41,6 +42,7 @@ export class ListaEstacionesComponent implements OnInit, AfterViewInit {
       company: 'Operadora',
       date: '2024-06-19 11:37 AM',
       imageUrl: null,
+      active: true,
       position: { lat: 20.2975, lng: -103.2582 }
     },
     {
@@ -50,11 +52,13 @@ export class ListaEstacionesComponent implements OnInit, AfterViewInit {
       company: 'Operadora',
       date: '2024-06-19 11:37 AM',
       imageUrl: null,
+      active: false,
       position: { lat: 20.6597, lng: -103.3496 }
     }
   ];
 
   operations = [...this.allOperations];
+  statusFilter: 'all' | 'active' | 'inactive' = 'all';
 
   constructor(private route: Router) {}
 
@@ -72,18 +76,32 @@ export class ListaEstacionesComponent implements OnInit, AfterViewInit {
   }
 
   buscar() {
-    const term = this.searchTerm.trim().toLowerCase();
-    this.operations = term
-      ? this.allOperations.filter(op => String(op.det).toLowerCase().includes(term))
-      : [...this.allOperations];
-    this.updateMapMarkers();
+    this.applyFilters();
   }
 
   mostrarTodos() {
     this.searchTerm = '';
-    this.operations = [...this.allOperations];
-    this.updateMapMarkers();
+    this.statusFilter = 'all';
+    this.applyFilters();
     this.restaurarMapa();
+  }
+
+  setStatusFilter(filter: 'all' | 'active' | 'inactive') {
+    this.statusFilter = filter;
+    this.applyFilters();
+  }
+
+  private applyFilters() {
+    const term = this.searchTerm.trim().toLowerCase();
+    this.operations = this.allOperations.filter((op) => {
+      const matchTerm = !term || String(op.det).toLowerCase().includes(term) || op.name.toLowerCase().includes(term);
+      const matchStatus =
+        this.statusFilter === 'all' ||
+        (this.statusFilter === 'active' && op.active) ||
+        (this.statusFilter === 'inactive' && !op.active);
+      return matchTerm && matchStatus;
+    });
+    this.updateMapMarkers();
   }
 
   loadGoogleMaps() {

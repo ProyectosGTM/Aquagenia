@@ -675,3 +675,5 @@ $aquagenia-text-muted: rgba(255, 255, 255, 0.45);
 
 // Editor de diagramas — simulación hídrica (estilos globales por tamaño)
 @import 'app/pages/estaciones/detalle-estacion/diagram-editor/diagram-editor-water.scss';
+@import 'app/pages/estaciones/detalle-estacion/diagram-editor/diagram-editor-steel-pipes.scss';
+@import 'app/pages/estaciones/detalle-estacion/diagram-editor/diagram-editor-equipment.scss';

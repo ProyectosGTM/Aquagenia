@@ -1,0 +1,138 @@
+$aquagenia-blue: #166c9f;
+$aquagenia-yellow: #e0e215;
+$aquagenia-card-bg: #071b25;
+$aquagenia-bg-dark: #04141f;
+$aquagenia-layout-bg-soft: #0e3147;
+$aquagenia-text: rgba(255, 255, 255, 0.88);
+$aquagenia-text-muted: rgba(255, 255, 255, 0.45);
+
+.tableros-body {
+  padding: 18px 20px 32px;
+}
+
+.tableros-section { margin-bottom: 18px; }
+
+.tableros-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  background: $aquagenia-card-bg;
+  border: 1px solid rgba($aquagenia-blue, 0.28);
+  border-radius: 12px;
+}
+
+.tableros-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 160px;
+
+  &--grow {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $aquagenia-text-muted;
+  }
+}
+
+.tableros-select {
+  background: $aquagenia-bg-dark;
+  border: 1px solid rgba($aquagenia-blue, 0.4);
+  border-radius: 8px;
+  color: $aquagenia-text;
+  padding: 8px 10px;
+  font-size: 13px;
+  outline: none;
+
+  &:focus { border-color: rgba($aquagenia-yellow, 0.5); }
+}
+
+::ng-deep .tableros-filters {
+  .dx-texteditor {
+    background: $aquagenia-bg-dark;
+    border-color: rgba($aquagenia-blue, 0.4);
+    border-radius: 8px;
+    color: $aquagenia-text;
+  }
+  .dx-texteditor.dx-state-focused {
+    border-color: rgba($aquagenia-yellow, 0.5);
+  }
+  .dx-placeholder, .dx-texteditor-input {
+    color: $aquagenia-text;
+  }
+}
+
+.tableros-panel {
+  background: $aquagenia-card-bg;
+  border: 1px solid rgba($aquagenia-blue, 0.28);
+  border-radius: 12px;
+  padding: 16px 18px 12px;
+
+  &--mt { margin-top: 18px; }
+  &--gauge { height: 100%; }
+}
+
+.tableros-panel-head {
+  margin-bottom: 10px;
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  p {
+    margin: 0;
+    font-size: 12px;
+    color: $aquagenia-text-muted;
+  }
+}
+
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba($aquagenia-blue, 0.4);
+  background: rgba($aquagenia-blue, 0.15);
+  color: $aquagenia-text;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &--ghost:hover {
+    border-color: rgba($aquagenia-yellow, 0.5);
+    background: rgba($aquagenia-blue, 0.28);
+  }
+}
+
+.page-header-status--off .page-status-dot {
+  background: #64748b;
+  box-shadow: none;
+}
+
+::ng-deep .tableros-page {
+  .dx-datagrid {
+    background: transparent;
+    color: $aquagenia-text;
+  }
+  .dx-datagrid-headers {
+    background: $aquagenia-layout-bg-soft;
+    color: #fff;
+  }
+  .dx-datagrid-rowsview .dx-row {
+    background: $aquagenia-card-bg;
+  }
+  .dx-datagrid-rowsview .dx-row-alt > td {
+    background: rgba($aquagenia-blue, 0.08);
+  }
+}

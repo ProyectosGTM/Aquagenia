@@ -1,0 +1,142 @@
+<div class="page-root tableros-page module-enter-root" [@moduleEnter] *ngIf="estacion">
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
+          <div class="page-header-brand">Aquagenia</div>
+          <div class="page-header-body">
+            <span class="page-header-tag">Tableros / Detalle</span>
+            <h1 class="page-header-title">Estación <span>{{ estacion.nombre }}</span></h1>
+            <div class="page-header-chips">
+              <span class="page-chip"><i class="ti ti-hash"></i> ID {{ estacion.codigo }}</span>
+              <span class="page-chip"><i class="ti ti-map-pin"></i> {{ estacion.ubicacion }}</span>
+            </div>
+          </div>
+          <div class="page-header-side">
+            <span class="page-header-status" [class.page-header-status--off]="estacion.estado !== 'activo'">
+              <span class="page-status-dot"></span>
+              {{ estacion.estado === 'activo' ? 'Operativa' : 'Inactiva' }}
+            </span>
+            <div class="page-header-actions">
+              <button type="button" class="page-btn page-btn--ghost" (click)="volver()">
+                <i class="ti ti-arrow-left"></i> General
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tableros-body">
+    <!-- Filtros -->
+    <section class="tableros-filters">
+      <div class="tableros-filter tableros-filter--grow">
+        <label>Estación</label>
+        <dx-select-box
+          [dataSource]="estaciones"
+          displayExpr="nombre"
+          valueExpr="id"
+          [value]="estacionId"
+          [searchEnabled]="true"
+          placeholder="Seleccionar estación"
+          (onValueChanged)="onEstacionChange($event)">
+        </dx-select-box>
+      </div>
+      <div class="tableros-filter">
+        <label>Desde</label>
+        <dx-date-box
+          type="date"
+          [(value)]="dateFrom"
+          displayFormat="dd/MM/yyyy"
+          (onValueChanged)="onDateChange()">
+        </dx-date-box>
+      </div>
+      <div class="tableros-filter">
+        <label>Hasta</label>
+        <dx-date-box
+          type="date"
+          [(value)]="dateTo"
+          displayFormat="dd/MM/yyyy"
+          (onValueChanged)="onDateChange()">
+        </dx-date-box>
+      </div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="tableros-section">
+      <div class="row g-2">
+        <div class="col-xl-3 col-md-6 col-6">
+          <app-kpi-card label="Gasto instantáneo" [value]="estacion.caudalInstantaneo + ' L/s'" icon="ti ti-ripple" accent="blue" trend="up" trendLabel="+2.1%"></app-kpi-card>
+        </div>
+        <div class="col-xl-3 col-md-6 col-6">
+          <app-kpi-card label="Gasto acumulado" [value]="estacion.caudalAcumulado | number:'1.0-0'" icon="ti ti-sum" accent="yellow"></app-kpi-card>
+        </div>
+        <div class="col-xl-3 col-md-6 col-6">
+          <app-kpi-card label="PH Cárcamo" [value]="estacion.phCarcamo" icon="ti ti-test-pipe" accent="green" trend="flat" trendLabel="estable"></app-kpi-card>
+        </div>
+        <div class="col-xl-3 col-md-6 col-6">
+          <app-kpi-card label="Oxígeno disuelto" [value]="estacion.oxigenoDisuelto + ' mg/L'" icon="ti ti-droplet-half-2" accent="cyan" trend="down" trendLabel="-0.3"></app-kpi-card>
+        </div>
+      </div>
+    </section>
+
+    <div class="row g-3">
+      <div class="col-xl-8">
+        <section class="tableros-panel">
+          <header class="tableros-panel-head">
+            <div>
+              <h3>Tendencia multivariable</h3>
+              <p>PH, clarificador, demanda química y oxígeno</p>
+            </div>
+          </header>
+          <dx-chart [dataSource]="tendencia" [palette]="palette">
+            <dxo-common-series-settings argumentField="arg" type="spline"></dxo-common-series-settings>
+            <dxi-series valueField="phCarcamo" name="PH Cárcamo"></dxi-series>
+            <dxi-series valueField="phEnvio" name="PH Envío"></dxi-series>
+            <dxi-series valueField="clarificador" name="Clarificador"></dxi-series>
+            <dxi-series valueField="demandaQuimica" name="Demanda Química"></dxi-series>
+            <dxi-series valueField="oxigenoDisuelto" name="Oxígeno Disuelto"></dxi-series>
+            <dxo-legend verticalAlignment="bottom" horizontalAlignment="center"></dxo-legend>
+            <dxo-tooltip [enabled]="true"></dxo-tooltip>
+            <dxo-argument-axis>
+              <dxo-label [overlappingBehavior]="'rotate'" [rotationAngle]="40"></dxo-label>
+            </dxo-argument-axis>
+            <dxo-size [height]="320"></dxo-size>
+          </dx-chart>
+        </section>
+      </div>
+      <div class="col-xl-4">
+        <section class="tableros-panel tableros-panel--gauge">
+          <header class="tableros-panel-head">
+            <div>
+              <h3>Nivel / capacidad</h3>
+              <p>Actual vs máximo</p>
+            </div>
+          </header>
+          <dx-circular-gauge [value]="estacion.capacidadPct">
+            <dxo-scale [startValue]="0" [endValue]="100" [tickInterval]="25">
+              <dxo-label [customizeText]="gaugeLabel"></dxo-label>
+            </dxo-scale>
+            <dxo-range-container>
+              <dxi-range [startValue]="0" [endValue]="40" color="rgba(22,108,159,0.45)"></dxi-range>
+              <dxi-range [startValue]="40" [endValue]="70" color="#166c9f"></dxi-range>
+              <dxi-range [startValue]="70" [endValue]="100" color="#e0e215"></dxi-range>
+            </dxo-range-container>
+            <dxo-value-indicator type="rectangleNeedle" color="#e0e215"></dxo-value-indicator>
+            <dxo-title text="Capacidad" [font]="{ size: 14, color: '#fff' }"></dxo-title>
+            <dxo-size [height]="260"></dxo-size>
+          </dx-circular-gauge>
+        </section>
+      </div>
+    </div>
+
+    <section class="tableros-panel tableros-panel--mt">
+      <app-historial-lecturas
+        [dataSource]="historial"
+        title="Historial de lecturas"
+        subtitle="Filtrado por el rango de fechas seleccionado">
+      </app-historial-lecturas>
+    </section>
+  </div>
+</div>

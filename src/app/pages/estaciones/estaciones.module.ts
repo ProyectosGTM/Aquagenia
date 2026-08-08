@@ -11,7 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DxDataGridModule } from 'devextreme-angular';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [ListaEstacionesComponent, DetalleEstacionComponent, DiagramEditorComponent],
@@ -22,9 +22,9 @@ import { DxDataGridModule } from 'devextreme-angular';
     EstacionesRoutingModule,
     GoogleMapsModule,
     DxDataGridModule,
-
+    SharedModule,
     MatCardModule,
-    DragDropModule
+    DragDropModule,
   ],
 })
-export class EstacionesModule { }
+export class EstacionesModule {}

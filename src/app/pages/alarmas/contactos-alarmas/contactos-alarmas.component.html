@@ -1,0 +1,60 @@
+<div class="page-root alarmas-page module-enter-root" [@moduleEnter]>
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
+          <div class="page-header-brand">Aquagenia</div>
+          <div class="page-header-body">
+            <span class="page-header-tag">Alarmas / Contactos</span>
+            <h1 class="page-header-title">Contactos de <span>notificación</span></h1>
+            <div class="page-header-chips">
+              <span class="page-chip"><i class="ti ti-address-book"></i> CRUD editable</span>
+              <span class="page-chip" *ngIf="saveHint"><i class="ti ti-check"></i> {{ saveHint }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alarmas-body">
+    <div class="grid-toolbar">
+      <button type="button" class="grid-btn-contraer" (click)="toggleExpandGroups()">
+        <i class="ti ti-arrows-minimize"></i> Contraer
+      </button>
+      <button type="button" class="grid-btn-reiniciar" (click)="limpiarCampos()">
+        <i class="ti ti-refresh"></i> Reiniciar
+      </button>
+    </div>
+
+    <dx-data-grid
+      [dataSource]="contactos"
+      [showBorders]="true"
+      [rowAlternationEnabled]="true"
+      [columnHidingEnabled]="true"
+      keyExpr="id"
+      (onRowInserted)="onRowInserted($event)"
+      (onRowUpdated)="onRowUpdated()"
+      (onRowRemoved)="onRowRemoved()">
+
+      <dxo-editing
+        mode="row"
+        [allowAdding]="true"
+        [allowUpdating]="true"
+        [allowDeleting]="true"
+        [useIcons]="true">
+      </dxo-editing>
+
+      <dxo-search-panel [visible]="true" placeholder="Buscar contacto..."></dxo-search-panel>
+      <dxo-paging [pageSize]="20"></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 50]" [showInfo]="true"></dxo-pager>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+      <dxi-column dataField="nombre" caption="Nombre" [validationRules]="[{ type: 'required' }]"></dxi-column>
+      <dxi-column dataField="correo" caption="Correo electrónico" [validationRules]="[{ type: 'required' }, { type: 'email' }]"></dxi-column>
+      <dxi-column dataField="telefono" caption="Teléfono"></dxi-column>
+      <dxi-column dataField="comentario" caption="Comentario / rol"></dxi-column>
+    </dx-data-grid>
+  </div>
+</div>

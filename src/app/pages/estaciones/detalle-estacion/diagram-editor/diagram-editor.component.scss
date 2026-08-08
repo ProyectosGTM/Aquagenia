@@ -585,6 +585,64 @@ $canvas-grid: rgba($aquagenia-blue, 0.08);
   50% { opacity: 0.4; transform: scale(0.85); }
 }
 
+.diagram-el-sensor {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: linear-gradient(145deg, rgba($aquagenia-blue, 0.12) 0%, #f0f9ff 100%);
+  border: 2px solid $aquagenia-blue;
+  border-radius: 10px;
+  position: relative;
+  padding: 4px;
+
+  &-label {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $aquagenia-blue;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  strong {
+    font-size: clamp(11px, 1.6vw, 15px);
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  &-link {
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    font-size: 10px;
+    color: $aquagenia-yellow;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.35));
+  }
+}
+
+.diagram-el-live-badge {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba($aquagenia-bg-dark, 0.85);
+  color: $aquagenia-yellow;
+  border: 1px solid rgba($aquagenia-yellow, 0.4);
+  pointer-events: none;
+}
+
 // ── Resize handles ──
 .diagram-resize {
   position: absolute;

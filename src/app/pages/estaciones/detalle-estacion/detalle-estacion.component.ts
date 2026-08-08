@@ -6,7 +6,8 @@ import { moduleEnterAnimation } from 'src/app/core/animations/module-enter.anima
 import { GridToolbarBase } from 'src/app/core/helpers/grid-toolbar.base';
 import { EstacionesService } from '../servicios/estaciones.service';
 import { DiagramEditorComponent } from './diagram-editor/diagram-editor.component';
-import { DiagramCard, DiagramElement } from './diagram-editor/diagram-editor.types';
+import { DiagramBindableVariable, DiagramCard, DiagramElement } from './diagram-editor/diagram-editor.types';
+import { DiagramPersistService } from './diagram-persist.service';
 
 @Component({
   selector: 'app-detalle-estacion',
@@ -17,6 +18,10 @@ import { DiagramCard, DiagramElement } from './diagram-editor/diagram-editor.typ
   preserveWhitespaces: true,
 })
 export class DetalleEstacionComponent extends GridToolbarBase implements OnInit, AfterViewInit {
+
+  /** ID de estación actual (mock Chapala hasta que venga por ruta) */
+  estacionId = 'chapala';
+  saveStatus = '';
 
   dataSources: any[] = [
     { gastoInstantaneo: 0.57, gastoAcumulado: 302916.78, phCarcamo: 9.37, phEnvio: 5.57, clarificador: 38.79, demandaQuimica: 2.19, oxigenoDisuelto: 0.57, nitrogenoAmoniacal: 18.62, cloroResidual: 0.03 },
@@ -58,19 +63,46 @@ export class DetalleEstacionComponent extends GridToolbarBase implements OnInit,
   constructor(
     service: Service,
     private param: EstacionesService,
-    private router: Router
+    private router: Router,
+    private diagramPersist: DiagramPersistService
   ) {
     super();
     this.customers = service.getCustomers();
   }
 
+  get estacionVariables(): DiagramBindableVariable[] {
+    const row = this.dataSources[0] || {};
+    const caudalLive = this.listaParametros?.[0]?.Caudal ?? row.gastoInstantaneo ?? '--';
+    return [
+      { key: 'caudal', label: 'Caudal', unit: 'L/s', value: caudalLive },
+      { key: 'nivel_actual', label: 'Nivel actual', unit: '%', value: 68 },
+      { key: 'ph_carcamo', label: 'PH Cárcamo', unit: '', value: row.phCarcamo ?? '--' },
+      { key: 'ph_envio', label: 'PH Envío', unit: '', value: row.phEnvio ?? '--' },
+      { key: 'oxigeno_disuelto', label: 'Oxígeno disuelto', unit: 'mg/L', value: row.oxigenoDisuelto ?? '--' },
+      { key: 'cloro_residual', label: 'Cloro residual', unit: 'mg/L', value: row.cloroResidual ?? '--' },
+      { key: 'gasto_acumulado', label: 'Gasto acumulado', unit: 'm³', value: row.gastoAcumulado ?? '--' },
+    ];
+  }
+
   ngOnInit(): void {
+    this.cargarDiagramas();
     this.obtenerParametros();
     setInterval(() => this.obtenerParametros(), 35000);
   }
 
   ngAfterViewInit(): void {
     this.loadGoogleMaps();
+  }
+
+  cargarDiagramas(): void {
+    this.diagramPersist.load(this.estacionId).subscribe((cards) => {
+      this.cards = cards.map((c) => ({
+        ...c,
+        isEditable: c.isEditable ?? false,
+        isTitleEditable: c.isTitleEditable ?? false,
+        estacionId: this.estacionId,
+      }));
+    });
   }
 
   obtenerParametros(): void {
@@ -108,7 +140,14 @@ export class DetalleEstacionComponent extends GridToolbarBase implements OnInit,
 
   saveDiagram(index: number): void {
     const card = this.cards[index];
+    card.estacionId = this.estacionId;
+    this.diagramPersist.save(this.estacionId, this.cards).subscribe((res) => {
+      this.saveStatus = res.ok ? `Guardado ${new Date(res.savedAt).toLocaleTimeString()}` : 'Error al guardar';
+      setTimeout(() => (this.saveStatus = ''), 3500);
+    });
+
     const payload = {
+      estacionId: this.estacionId,
       title: card.title,
       elements: card.elements,
       savedAt: new Date().toISOString(),
@@ -117,17 +156,18 @@ export class DetalleEstacionComponent extends GridToolbarBase implements OnInit,
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `diagrama_${index + 1}.json`;
+    a.download = `diagrama_${this.estacionId}_${index + 1}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }
 
   addNewCard(): void {
     this.cards.push({
-      title: `Nuevo Diagrama ${this.cards.length + 1}`,
+      title: `Diagrama ${this.estacionId} · ${this.cards.length + 1}`,
       isEditable: true,
       isTitleEditable: true,
       elements: [],
+      estacionId: this.estacionId,
     });
   }
 
@@ -159,6 +199,7 @@ export class DetalleEstacionComponent extends GridToolbarBase implements OnInit,
   crearDiagrama(): void {
     const eraVacio = this.cards.length === 0;
     this.addNewCard();
+    this.diagramPersist.save(this.estacionId, this.cards).subscribe();
     setTimeout(() => this.scrollToLastCard(eraVacio), eraVacio ? 120 : 0);
   }
 

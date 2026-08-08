@@ -51,40 +51,16 @@
           </header>
           <div class="row g-2">
             <div class="col-xl-3 col-md-6 col-6">
-              <div class="estacion-kpi estacion-kpi--blue">
-                <div class="estacion-kpi-icon"><i class="ti ti-ripple"></i></div>
-                <div class="estacion-kpi-body">
-                  <span>Gasto Instantáneo</span>
-                  <strong>{{ dataSources[0]?.gastoInstantaneo ?? '--' }}</strong>
-                </div>
-              </div>
+              <app-kpi-card label="Gasto Instantáneo" [value]="dataSources[0]?.gastoInstantaneo ?? '--'" icon="ti ti-ripple" accent="blue"></app-kpi-card>
             </div>
             <div class="col-xl-3 col-md-6 col-6">
-              <div class="estacion-kpi estacion-kpi--yellow">
-                <div class="estacion-kpi-icon"><i class="ti ti-sum"></i></div>
-                <div class="estacion-kpi-body">
-                  <span>Gasto Acumulado</span>
-                  <strong>{{ dataSources[0]?.gastoAcumulado ?? '--' }}</strong>
-                </div>
-              </div>
+              <app-kpi-card label="Gasto Acumulado" [value]="dataSources[0]?.gastoAcumulado ?? '--'" icon="ti ti-sum" accent="yellow"></app-kpi-card>
             </div>
             <div class="col-xl-3 col-md-6 col-6">
-              <div class="estacion-kpi estacion-kpi--green">
-                <div class="estacion-kpi-icon"><i class="ti ti-test-pipe"></i></div>
-                <div class="estacion-kpi-body">
-                  <span>PH Cárcamo</span>
-                  <strong>{{ dataSources[0]?.phCarcamo ?? '--' }}</strong>
-                </div>
-              </div>
+              <app-kpi-card label="PH Cárcamo" [value]="dataSources[0]?.phCarcamo ?? '--'" icon="ti ti-test-pipe" accent="green"></app-kpi-card>
             </div>
             <div class="col-xl-3 col-md-6 col-6">
-              <div class="estacion-kpi estacion-kpi--cyan">
-                <div class="estacion-kpi-icon"><i class="ti ti-droplet-half-2"></i></div>
-                <div class="estacion-kpi-body">
-                  <span>Oxígeno Disuelto</span>
-                  <strong>{{ dataSources[0]?.oxigenoDisuelto ?? '--' }}</strong>
-                </div>
-              </div>
+              <app-kpi-card label="Oxígeno Disuelto" [value]="dataSources[0]?.oxigenoDisuelto ?? '--'" icon="ti ti-droplet-half-2" accent="cyan"></app-kpi-card>
             </div>
           </div>
         </section>
@@ -147,49 +123,11 @@
 
         <!-- HISTORIAL -->
         <section class="estacion-section">
-          <header class="estacion-section-head">
-            <div>
-              <h3>Historial de lecturas</h3>
-              <p>Últimos 20 registros de la estación</p>
-            </div>
-            <span class="estacion-section-tag"><i class="ti ti-table"></i> Datos</span>
-          </header>
-          <div class="estacion-grid-wrap">
-            <div class="grid-toolbar">
-              <button type="button" class="grid-btn-contraer" (click)="toggleExpandGroups()">
-                <i class="ti ti-arrows-minimize"></i> Contraer
-              </button>
-              <button type="button" class="grid-btn-reiniciar" (click)="limpiarCampos()">
-                <i class="ti ti-refresh"></i> Reiniciar
-              </button>
-            </div>
-            <dx-data-grid
-              id="gridContainer"
-              [columnHidingEnabled]="true"
-              [showBorders]="true"
-              [rowAlternationEnabled]="true"
-              [dataSource]="dataSources"
-              [width]="'100%'">
-
-              <dxo-grouping [autoExpandAll]="autoExpandAllGroups"></dxo-grouping>
-              <dxo-search-panel [visible]="true" [width]="200"></dxo-search-panel>
-              <dxo-paging [pageSize]="20"></dxo-paging>
-              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20,50,100,200]" [showInfo]="true"></dxo-pager>
-              <dxo-selection mode="multiple"></dxo-selection>
-              <dxo-group-panel [emptyPanelText]="mensajeAgrupar" [visible]="true"></dxo-group-panel>
-              <dxo-filter-row [visible]="showFilterRow"></dxo-filter-row>
-              <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
-              <dxi-column alignment="center" dataField="gastoInstantaneo"   caption="Gasto Instantáneo"   dataType="number"></dxi-column>
-              <dxi-column alignment="center" dataField="gastoAcumulado"     caption="Gasto Acumulado"     dataType="number"></dxi-column>
-              <dxi-column alignment="center" dataField="phCarcamo"          caption="PH Cárcamo"          dataType="number"></dxi-column>
-              <dxi-column alignment="center" dataField="phEnvio"            caption="PH Envío"            dataType="number"></dxi-column>
-              <dxi-column alignment="center" dataField="clarificador"       caption="Clarificador"        dataType="number"></dxi-column>
-              <dxi-column alignment="center" dataField="demandaQuimica"     caption="Demanda Química"     dataType="number"></dxi-column>
-              <dxi-column alignment="center" dataField="oxigenoDisuelto"    caption="Oxígeno Disuelto"    dataType="number"></dxi-column>
-              <dxi-column alignment="center" dataField="nitrogenoAmoniacal" caption="Nitrógeno Amoniacal" dataType="number"></dxi-column>
-              <dxi-column alignment="center" dataField="cloroResidual"      caption="Cloro Residual"      dataType="number"></dxi-column>
-            </dx-data-grid>
-          </div>
+          <app-historial-lecturas
+            [dataSource]="dataSources"
+            title="Historial de lecturas"
+            subtitle="Últimos registros de la estación">
+          </app-historial-lecturas>
         </section>
 
         <!-- DIAGRAMAS (debajo del historial) -->
@@ -222,6 +160,7 @@
                 <button type="button" class="estacion-btn estacion-btn--create estacion-btn--sm" (click)="saveDiagram(i)">
                   <i class="ti ti-device-floppy"></i> Guardar
                 </button>
+                <span class="estacion-save-hint" *ngIf="saveStatus">{{ saveStatus }}</span>
               </div>
             </div>
             <div class="estacion-diagram-body">
@@ -229,6 +168,7 @@
                 [elements]="card.elements"
                 [locked]="!card.isEditable"
                 [listaParametros]="listaParametros"
+                [estacionVariables]="estacionVariables"
                 [paletteImages]="paletteImages"
                 (elementsChange)="onElementsChange(i, $event)">
               </app-diagram-editor>

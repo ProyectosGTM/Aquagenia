@@ -150,6 +150,12 @@ $tick-h:  36px;
     &:hover { background: darken($aquagenia-yellow, 8%); color: $aquagenia-bg-dark; }
   }
 
+  &.hud-btn-active {
+    background: rgba($aquagenia-blue, 0.35);
+    border-color: rgba($aquagenia-yellow, 0.55);
+    color: #fff;
+  }
+
   &.hud-btn-danger {
     background: rgba(220, 60, 60, 0.12);
     color: #e05c5c;

@@ -1,0 +1,822 @@
+// =============================================================================
+// Tuberías de acero industrial — look realista SCADA
+// =============================================================================
+
+$steel-hi: #f4f4f5;
+$steel-mid: #a1a1aa;
+$steel-dark: #3f3f46;
+$steel-deep: #18181b;
+$steel-edge: #71717a;
+$water-core: #0ea5e9;
+$water-glow: #7dd3fc;
+$water-deep: #0369a1;
+
+// ── Piezas compartidas ──────────────────────────────────────────────────────
+
+.steel-pipe-metal {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.steel-pipe-bore {
+  position: absolute;
+  overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #0c1929 0%, #1e293b 40%, #0f172a 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.65),
+    inset 0 -1px 3px rgba(255, 255, 255, 0.08);
+}
+
+.steel-pipe-gloss {
+  position: absolute;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 3;
+}
+
+.steel-pipe-liquid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.95;
+
+  &--h {
+    background:
+      linear-gradient(180deg,
+        rgba($water-glow, 0.15) 0%,
+        rgba($water-core, 0.55) 35%,
+        rgba($water-deep, 0.85) 55%,
+        rgba($water-core, 0.5) 75%,
+        rgba($water-glow, 0.2) 100%),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 28px,
+        rgba(255, 255, 255, 0.08) 28px,
+        rgba($water-glow, 0.55) 40px,
+        rgba($water-core, 0.7) 52px,
+        rgba(255, 255, 255, 0.12) 64px,
+        transparent 78px,
+        transparent 110px
+      );
+    background-size: 100% 100%, 110px 100%;
+    filter: blur(0.3px);
+    animation: steel-liquid-h 1.1s linear infinite;
+
+    &.steel-pipe-liquid--slow { animation-duration: 2s; }
+    &.steel-pipe-liquid--fast { animation-duration: 0.55s; }
+  }
+
+  &--v {
+    background:
+      linear-gradient(90deg,
+        rgba($water-glow, 0.15) 0%,
+        rgba($water-core, 0.55) 35%,
+        rgba($water-deep, 0.85) 55%,
+        rgba($water-core, 0.5) 75%,
+        rgba($water-glow, 0.2) 100%),
+      repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 28px,
+        rgba(255, 255, 255, 0.08) 28px,
+        rgba($water-glow, 0.55) 40px,
+        rgba($water-core, 0.7) 52px,
+        rgba(255, 255, 255, 0.12) 64px,
+        transparent 78px,
+        transparent 110px
+      );
+    background-size: 100% 100%, 100% 110px;
+    filter: blur(0.3px);
+    animation: steel-liquid-v 1.1s linear infinite;
+
+    &.steel-pipe-liquid--slow { animation-duration: 2s; }
+    &.steel-pipe-liquid--fast { animation-duration: 0.55s; }
+  }
+
+  &--stopped {
+    animation: none !important;
+    opacity: 0.2;
+    filter: grayscale(0.7) blur(0.5px);
+  }
+}
+
+// Brida con tornillos
+.steel-pipe-flange {
+  position: absolute;
+  z-index: 5;
+  background:
+    radial-gradient(circle at 30% 30%, #e4e4e7 0%, $steel-mid 38%, $steel-dark 72%, $steel-deep 100%);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(24, 24, 27, 0.55);
+
+  span {
+    position: absolute;
+    width: 18%;
+    height: 18%;
+    min-width: 3px;
+    min-height: 3px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #d4d4d8, #52525b 55%, #18181b);
+    box-shadow: inset 0 0.5px 1px rgba(255, 255, 255, 0.4), 0 0.5px 1px rgba(0, 0, 0, 0.5);
+  }
+}
+
+// ── Tubería recta ───────────────────────────────────────────────────────────
+
+.steel-pipe {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  pointer-events: none;
+
+  &-shadow {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.18);
+    filter: blur(4px);
+    z-index: 0;
+  }
+
+  &-barrel {
+    position: absolute;
+    z-index: 2;
+    overflow: hidden;
+    box-shadow:
+      0 4px 10px rgba(0, 0, 0, 0.28),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  &-rim {
+    position: absolute;
+    z-index: 4;
+    background: linear-gradient(180deg, #d4d4d8, #52525b 50%, #27272a);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+  }
+
+  &-edge {
+    position: absolute;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  // Horizontal
+  &--h {
+    .steel-pipe-shadow {
+      left: 4%;
+      right: 4%;
+      top: 62%;
+      height: 18%;
+      border-radius: 50%;
+    }
+
+    .steel-pipe-barrel {
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 52%;
+      transform: translateY(-50%);
+      border-radius: 4px;
+    }
+
+    .steel-pipe-metal {
+      background:
+        linear-gradient(180deg,
+          #fafafa 0%,
+          #d4d4d8 8%,
+          #a1a1aa 22%,
+          #71717a 38%,
+          #3f3f46 48%,
+          #27272a 52%,
+          #52525b 62%,
+          #a1a1aa 78%,
+          #e4e4e7 92%,
+          #fafafa 100%);
+    }
+
+    .steel-pipe-bore {
+      top: 22%;
+      bottom: 22%;
+      left: 0;
+      right: 0;
+      border-radius: 2px;
+    }
+
+    .steel-pipe-gloss {
+      top: 6%;
+      left: 0;
+      right: 0;
+      height: 18%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0));
+    }
+
+    .steel-pipe-rim--a {
+      left: 22%;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+    }
+
+    .steel-pipe-rim--b {
+      right: 22%;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+    }
+
+    .steel-pipe-edge--top {
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .steel-pipe-edge--bot {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    .steel-pipe-flange--l,
+    .steel-pipe-flange--r {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 9%;
+      height: 78%;
+      border-radius: 3px;
+
+      span:nth-child(1) { top: 10%; left: 50%; transform: translateX(-50%); }
+      span:nth-child(2) { bottom: 10%; left: 50%; transform: translateX(-50%); }
+      span:nth-child(3) { top: 50%; left: 12%; transform: translateY(-50%); }
+      span:nth-child(4) { top: 50%; right: 12%; transform: translateY(-50%); }
+    }
+
+    .steel-pipe-flange--l { left: 0; }
+    .steel-pipe-flange--r { right: 0; }
+  }
+
+  // Vertical
+  &--v {
+    .steel-pipe-shadow {
+      top: 4%;
+      bottom: 4%;
+      left: 62%;
+      width: 18%;
+      border-radius: 50%;
+    }
+
+    .steel-pipe-barrel {
+      left: 50%;
+      top: 5%;
+      bottom: 5%;
+      width: 52%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+    }
+
+    .steel-pipe-metal {
+      background:
+        linear-gradient(90deg,
+          #fafafa 0%,
+          #d4d4d8 8%,
+          #a1a1aa 22%,
+          #71717a 38%,
+          #3f3f46 48%,
+          #27272a 52%,
+          #52525b 62%,
+          #a1a1aa 78%,
+          #e4e4e7 92%,
+          #fafafa 100%);
+    }
+
+    .steel-pipe-bore {
+      left: 22%;
+      right: 22%;
+      top: 0;
+      bottom: 0;
+      border-radius: 2px;
+    }
+
+    .steel-pipe-gloss {
+      left: 6%;
+      top: 0;
+      bottom: 0;
+      width: 18%;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0));
+    }
+
+    .steel-pipe-rim--a {
+      top: 22%;
+      left: 0;
+      right: 0;
+      height: 5px;
+    }
+
+    .steel-pipe-rim--b {
+      bottom: 22%;
+      left: 0;
+      right: 0;
+      height: 5px;
+    }
+
+    .steel-pipe-edge--left {
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .steel-pipe-edge--right {
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    .steel-pipe-flange--t,
+    .steel-pipe-flange--b {
+      left: 50%;
+      transform: translateX(-50%);
+      width: 78%;
+      height: 9%;
+      border-radius: 3px;
+
+      span:nth-child(1) { left: 10%; top: 50%; transform: translateY(-50%); }
+      span:nth-child(2) { right: 10%; top: 50%; transform: translateY(-50%); }
+      span:nth-child(3) { top: 12%; left: 50%; transform: translateX(-50%); }
+      span:nth-child(4) { bottom: 12%; left: 50%; transform: translateX(-50%); }
+    }
+
+    .steel-pipe-flange--t { top: 0; }
+    .steel-pipe-flange--b { bottom: 0; }
+  }
+}
+
+// ── Codo ────────────────────────────────────────────────────────────────────
+
+.steel-elbow {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  pointer-events: none;
+
+  &-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.28));
+  }
+
+  &-flow {
+    animation: steel-elbow-dash 1.1s linear infinite;
+
+    &--slow { animation-duration: 2s; }
+    &--fast { animation-duration: 0.55s; }
+  }
+
+  &-clamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22%;
+    height: 22%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 28%, #f4f4f5 0%, #a1a1aa 40%, #3f3f46 70%, #18181b 100%);
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.45),
+      0 2px 6px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(24, 24, 27, 0.5);
+    z-index: 4;
+  }
+
+  .steel-elbow-end {
+    &.steel-elbow-end--l,
+    &.steel-elbow-end--r {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12%;
+      height: 42%;
+      border-radius: 3px;
+
+      span:nth-child(1) { top: 12%; left: 50%; transform: translateX(-50%); }
+      span:nth-child(2) { bottom: 12%; left: 50%; transform: translateX(-50%); }
+      span:nth-child(3) { top: 50%; left: 14%; transform: translateY(-50%); }
+      span:nth-child(4) { top: 50%; right: 14%; transform: translateY(-50%); }
+    }
+
+    &.steel-elbow-end--t,
+    &.steel-elbow-end--b {
+      left: 50%;
+      transform: translateX(-50%);
+      width: 42%;
+      height: 12%;
+      border-radius: 3px;
+
+      span:nth-child(1) { left: 12%; top: 50%; transform: translateY(-50%); }
+      span:nth-child(2) { right: 12%; top: 50%; transform: translateY(-50%); }
+      span:nth-child(3) { top: 14%; left: 50%; transform: translateX(-50%); }
+      span:nth-child(4) { bottom: 14%; left: 50%; transform: translateX(-50%); }
+    }
+
+    &--l { left: -1%; }
+    &--r { right: -1%; }
+    &--t { top: -1%; }
+    &--b { bottom: -1%; }
+  }
+}
+
+// ── Tee ─────────────────────────────────────────────────────────────────────
+
+.steel-tee {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  pointer-events: none;
+
+  &-arm {
+    position: absolute;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+
+    &--h {
+      top: 50%;
+      left: 4%;
+      right: 4%;
+      height: 32%;
+      transform: translateY(-50%);
+
+      .steel-pipe-metal {
+        background: linear-gradient(180deg,
+          #fafafa 0%, #d4d4d8 10%, #71717a 40%, #27272a 50%, #71717a 60%, #e4e4e7 90%, #fafafa 100%);
+      }
+
+      .steel-pipe-bore {
+        top: 24%;
+        bottom: 24%;
+        left: 0;
+        right: 0;
+      }
+
+      .steel-pipe-gloss {
+        top: 5%;
+        left: 0;
+        right: 0;
+        height: 20%;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent);
+      }
+    }
+
+    &--v {
+      left: 50%;
+      top: 50%;
+      bottom: 4%;
+      width: 32%;
+      transform: translateX(-50%);
+
+      .steel-pipe-metal {
+        background: linear-gradient(90deg,
+          #fafafa 0%, #d4d4d8 10%, #71717a 40%, #27272a 50%, #71717a 60%, #e4e4e7 90%, #fafafa 100%);
+      }
+
+      .steel-pipe-bore {
+        left: 24%;
+        right: 24%;
+        top: 0;
+        bottom: 0;
+      }
+
+      .steel-pipe-gloss {
+        left: 5%;
+        top: 0;
+        bottom: 0;
+        width: 20%;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), transparent);
+      }
+    }
+  }
+
+  &-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36%;
+    height: 36%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 28%, #f4f4f5 0%, #a1a1aa 35%, #52525b 60%, #18181b 100%);
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.5),
+      0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(24, 24, 27, 0.55);
+    z-index: 4;
+  }
+
+  .steel-tee-end {
+    &--l, &--r {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8%;
+      height: 48%;
+      border-radius: 2px;
+      span { width: 22%; height: 22%; }
+      span:nth-child(1) { top: 15%; left: 50%; transform: translateX(-50%); }
+      span:nth-child(2) { bottom: 15%; left: 50%; transform: translateX(-50%); }
+    }
+    &--l { left: 0; }
+    &--r { right: 0; }
+    &--b {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48%;
+      height: 8%;
+      border-radius: 2px;
+      span { width: 22%; height: 22%; }
+      span:nth-child(1) { left: 15%; top: 50%; transform: translateY(-50%); }
+      span:nth-child(2) { right: 15%; top: 50%; transform: translateY(-50%); }
+    }
+  }
+}
+
+// ── Válvula industrial ──────────────────────────────────────────────────────
+
+.steel-valve {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  pointer-events: none;
+  gap: 0;
+
+  &-pipe {
+    flex: 1;
+    height: 34%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+
+    .steel-pipe-metal {
+      background: linear-gradient(180deg,
+        #fafafa 0%, #d4d4d8 12%, #71717a 42%, #27272a 52%, #a1a1aa 78%, #f4f4f5 100%);
+    }
+
+    .steel-pipe-bore {
+      top: 24%;
+      bottom: 24%;
+      left: 0;
+      right: 0;
+    }
+
+    .steel-pipe-gloss {
+      top: 5%;
+      left: 0;
+      right: 0;
+      height: 22%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), transparent);
+    }
+  }
+
+  &-core {
+    width: 38%;
+    height: 88%;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &-body {
+    position: absolute;
+    inset: 28% 8% 8%;
+    border-radius: 6px;
+    background:
+      linear-gradient(145deg, #d4d4d8 0%, #71717a 35%, #3f3f46 55%, #a1a1aa 100%);
+    border: 1px solid #27272a;
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.4),
+      0 3px 8px rgba(0, 0, 0, 0.35);
+  }
+
+  &-bolts {
+    position: absolute;
+    inset: 28% 8% 8%;
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      width: 14%;
+      height: 10%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #e4e4e7, #52525b 60%, #18181b);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+
+      &:nth-child(1) { top: 8%; left: 8%; }
+      &:nth-child(2) { top: 8%; right: 8%; }
+      &:nth-child(3) { bottom: 8%; left: 8%; }
+      &:nth-child(4) { bottom: 8%; right: 8%; }
+    }
+  }
+
+  &-stem {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12%;
+    height: 28%;
+    background: linear-gradient(90deg, #52525b, #d4d4d8, #52525b);
+    border-radius: 2px;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  &-wheel {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 58%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+      conic-gradient(from 0deg, #71717a, #e4e4e7, #52525b, #a1a1aa, #3f3f46, #d4d4d8, #71717a);
+    border: 3px solid #27272a;
+    box-shadow:
+      0 3px 10px rgba(0, 0, 0, 0.4),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
+    animation: steel-valve-spin 4s ease-in-out infinite;
+    z-index: 3;
+
+    i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background: #27272a;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+
+      &:first-child {
+        width: 72%;
+        height: 14%;
+        transform: translate(-50%, -50%);
+      }
+
+      &:last-child {
+        width: 14%;
+        height: 72%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 32%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #a1a1aa, #27272a);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  &--closed .steel-valve-wheel {
+    animation: none;
+    transform: translateX(-50%) rotate(45deg);
+    filter: grayscale(0.35) brightness(0.9);
+  }
+
+  &-label {
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #3f3f46;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 4;
+  }
+}
+
+// ── Animaciones ─────────────────────────────────────────────────────────────
+
+@keyframes steel-liquid-h {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 0, 110px 0; }
+}
+
+@keyframes steel-liquid-v {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 0, 0 110px; }
+}
+
+@keyframes steel-elbow-dash {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -32; }
+}
+
+@keyframes steel-valve-spin {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  50% { transform: translateX(-50%) rotate(90deg); }
+}
+
+// ── Caudalímetro tipo electromagnético industrial ──
+.water-flowmeter {
+  gap: 0;
+
+  &-flange {
+    width: 11%;
+    height: 82%;
+    border-radius: 3px;
+    border: 1px solid #18181b;
+    background:
+      radial-gradient(circle at 30% 25%, #e4e4e7 0%, #a1a1aa 40%, #3f3f46 75%, #18181b 100%);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,0.45),
+      inset 0 -2px 3px rgba(0,0,0,0.4),
+      0 2px 6px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 2;
+
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      width: 22%;
+      height: 14%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #d4d4d8, #27272a);
+    }
+    &::before { top: 12%; }
+    &::after { bottom: 12%; }
+
+    &--l { margin-right: -1%; }
+    &--r { margin-left: -1%; }
+  }
+
+  &-body {
+    height: 72%;
+    border-radius: 12px 12px 10px 10px;
+    border: 2px solid #0c4a6e;
+    background:
+      linear-gradient(160deg, #7dd3fc 0%, #0ea5e9 28%, #0369a1 62%, #0c4a6e 100%);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,0.4),
+      inset 0 -4px 10px rgba(0,0,0,0.25),
+      0 4px 14px rgba(3,105,161,0.35);
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 8%;
+      left: 12%;
+      right: 12%;
+      height: 18%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.45), transparent);
+      pointer-events: none;
+    }
+  }
+
+  &-display {
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+
+    small {
+      font-size: 7px;
+      letter-spacing: 0.14em;
+      opacity: 0.85;
+    }
+    strong {
+      font-size: clamp(12px, 1.6vw, 16px);
+      letter-spacing: 0.02em;
+    }
+  }
+}

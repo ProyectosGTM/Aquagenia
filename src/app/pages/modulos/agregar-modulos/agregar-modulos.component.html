@@ -1,1 +1,93 @@
-<p>agregar-modulos works!</p>
+<div class="page-root modulo-form-page" [@moduleEnter]>
+
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
+
+          <div class="page-header-brand">Aquagenia</div>
+
+          <div class="page-header-body">
+            <span class="page-header-tag">Aquagenia / Módulos</span>
+            <h1 class="page-header-title">{{ tituloPagina }} <span>Módulo</span></h1>
+            <div class="page-header-chips">
+              <button type="button" class="modulo-back" (click)="cancelar()">
+                <i class="ti ti-arrow-left"></i> Volver al listado
+              </button>
+            </div>
+          </div>
+
+          <div class="page-header-side">
+            <span class="page-header-status">
+              <i class="ti ti-layout-grid"></i>
+              {{ esEdicion ? 'Edición' : 'Alta' }}
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 p-3">
+    <div class="col-12">
+      <article class="modulo-form-card">
+
+        <header class="modulo-form-head">
+          <div class="modulo-form-head-icon"><i class="ti ti-puzzle"></i></div>
+          <div>
+            <h2>{{ esEdicion ? 'Actualizar módulo' : 'Registrar módulo' }}</h2>
+            <p>Completa nombre, descripción y estatus según el contrato del API.</p>
+          </div>
+        </header>
+
+        <form class="modulo-form" [formGroup]="form" (ngSubmit)="guardar()">
+          <div class="row g-3 px-4 pb-2">
+
+            <div class="col-md-6" [class.modulo-field--error]="campoInvalido('nombre')">
+              <div class="modulo-field">
+                <label for="nombre">
+                  <i class="ti ti-tag"></i>
+                  <span>Nombre</span>
+                  <span class="modulo-req">*</span>
+                </label>
+                <input
+                  id="nombre"
+                  type="text"
+                  formControlName="nombre"
+                  placeholder="Ej. Módulos"
+                  autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="col-md-6" [class.modulo-field--error]="campoInvalido('descripcion')">
+              <div class="modulo-field">
+                <label for="descripcion">
+                  <i class="ti ti-notes"></i>
+                  <span>Descripción</span>
+                  <span class="modulo-req">*</span>
+                </label>
+                <input type="text" formControlName="descripcion" placeholder="Ej. Módulo">
+              </div>
+            </div>
+
+          </div>
+
+          <footer class="modulo-form-foot">
+            <p><i class="ti ti-info-circle"></i> Los campos marcados son requeridos para guardar el módulo.</p>
+            <div class="modulo-form-actions">
+              <button type="button" class="modulo-btn modulo-btn--ghost" (click)="cancelar()" [disabled]="enviando">
+                Cancelar
+              </button>
+              <button type="submit" class="modulo-btn modulo-btn--primary" [disabled]="enviando || cargando">
+                {{ enviando ? 'Guardando...' : (esEdicion ? 'Actualizar' : 'Guardar') }}
+              </button>
+            </div>
+          </footer>
+        </form>
+
+      </article>
+    </div>
+  </div>
+
+</div>

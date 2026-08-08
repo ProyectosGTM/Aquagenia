@@ -7,11 +7,14 @@ import { FileManagerComponent } from './file-manager/file-manager.component';
 import { DiagramaComponent } from './diagrama/diagrama.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboards/default', pathMatch: 'full' },
+  { path: '', redirectTo: 'tablero', pathMatch: 'full' },
   { path: 'calendar', component: CalendarComponent },
   { path: 'chat', component: ChatComponent },
   { path: 'file-manager',component:FileManagerComponent},
   { path: 'dashboards', loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule) },
+  { path: 'tablero', loadChildren: () => import('./tableros/tableros.module').then(m => m.TablerosModule) },
+  { path: 'tableros', redirectTo: 'tablero', pathMatch: 'prefix' },
+  { path: 'alarmas', loadChildren: () => import('./alarmas/alarmas.module').then(m => m.AlarmasModule) },
   { path: 'ecommerce', loadChildren: () => import('./ecommerce/ecommerce.module').then(m => m.EcommerceModule) },
   { path: 'email', loadChildren: () => import('./email/email.module').then(m => m.EmailModule) },
   { path: 'invoices', loadChildren: () => import('./invoices/invoices.module').then(m => m.InvoicesModule) },

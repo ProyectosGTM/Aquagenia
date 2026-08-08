@@ -1,0 +1,155 @@
+// =============================================================================
+// Equipo hidráulico — ilustraciones SVG (NO modifica tuberías steel-pipe)
+// =============================================================================
+
+.eq-svg {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.22));
+  }
+}
+
+.eq-badge {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #16a34a;
+  padding: 2px 6px;
+  border-radius: 3px;
+  box-shadow: 0 0 8px rgba(22, 163, 74, 0.5);
+  z-index: 2;
+
+  &--off {
+    background: #64748b;
+    box-shadow: none;
+  }
+}
+
+.eq-tag {
+  position: absolute;
+  bottom: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #374151;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 1px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  z-index: 2;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &--dark {
+    color: #fff;
+    background: rgba(17, 24, 39, 0.72);
+  }
+}
+
+.eq-level {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  font-size: 9px;
+  font-weight: 800;
+  color: #0369a1;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 2;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+// Bomba — impulsor giratorio
+.eq-pump {
+  .eq-pump-impeller {
+    transform-origin: 0 0;
+    animation: eq-spin 0.75s linear infinite;
+  }
+
+  &--off {
+    .eq-pump-impeller {
+      animation: none;
+      opacity: 0.35;
+      filter: grayscale(1);
+    }
+
+    > svg {
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.22)) saturate(0.55);
+    }
+  }
+}
+
+@keyframes eq-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Válvula — volante
+.eq-valve {
+  .eq-valve-wheel {
+    transform-origin: 80px 18px;
+    animation: eq-valve-turn 3.5s ease-in-out infinite;
+  }
+
+  &--closed .eq-valve-wheel {
+    animation: none;
+  }
+}
+
+@keyframes eq-valve-turn {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(90deg); }
+}
+
+// Flujo
+.eq-flujo {
+  > svg {
+    filter: none;
+  }
+
+  &-line {
+    animation: eq-flujo-pulse 1.2s ease-in-out infinite;
+
+    &--2 {
+      animation-delay: 0.35s;
+    }
+  }
+
+  &--left > svg { transform: scaleX(-1); }
+  &--down > svg { transform: rotate(90deg); }
+  &--up > svg { transform: rotate(-90deg); }
+}
+
+@keyframes eq-flujo-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+// Contenedores con borde suave
+.eq-well > svg,
+.eq-sump > svg,
+.eq-tank > svg,
+.eq-cistern > svg,
+.eq-reservoir > svg {
+  border-radius: 6px;
+}

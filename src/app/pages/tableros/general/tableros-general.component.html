@@ -1,0 +1,208 @@
+<div class="page-root tableros-page module-enter-root" [@moduleEnter]>
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
+          <div class="page-header-brand">Aquagenia</div>
+          <div class="page-header-body">
+            <span class="page-header-tag">Tableros / BI</span>
+            <h1 class="page-header-title">Vista <span>General</span></h1>
+            <div class="page-header-chips">
+              <span class="page-chip"><i class="ti ti-building-factory-2"></i> Todas las estaciones</span>
+              <span class="page-chip"><i class="ti ti-chart-donut-3"></i> Cuadro de mando</span>
+            </div>
+          </div>
+          <div class="page-header-side">
+            <span class="page-header-status">
+              <span class="page-status-dot"></span>
+              Sistema operativo
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tableros-body">
+    <!-- Menú radial (card principal del hub) -->
+    <section class="tableros-section">
+      <app-radial-hub></app-radial-hub>
+    </section>
+
+    <!-- KPIs -->
+    <section class="tableros-section">
+      <div class="row g-2">
+        <div class="col-xl-3 col-md-6 col-6">
+          <app-kpi-card
+            label="Estaciones activas"
+            [value]="resumen.estacionesActivas + ' / ' + resumen.estacionesTotales"
+            icon="ti ti-building-warehouse"
+            accent="blue">
+          </app-kpi-card>
+        </div>
+        <div class="col-xl-3 col-md-6 col-6">
+          <app-kpi-card
+            label="% operativas"
+            [value]="resumen.pctOperativas + '%'"
+            icon="ti ti-activity"
+            accent="yellow"
+            trend="up"
+            trendLabel="vs. período anterior">
+          </app-kpi-card>
+        </div>
+        <div class="col-xl-3 col-md-6 col-6">
+          <app-kpi-card
+            label="Caudal total"
+            [value]="resumen.caudalTotal + ' L/s'"
+            icon="ti ti-ripple"
+            accent="cyan">
+          </app-kpi-card>
+        </div>
+        <div class="col-xl-3 col-md-6 col-6">
+          <app-kpi-card
+            label="Alertas activas"
+            [value]="resumen.alertasActivas"
+            icon="ti ti-bell"
+            accent="green"
+            trend="flat"
+            trendLabel="placeholder Fase 2">
+          </app-kpi-card>
+        </div>
+      </div>
+    </section>
+
+    <div class="row g-3 tableros-map-row">
+      <!-- Dona volumen -->
+      <div class="col-xl-4 col-lg-5">
+        <section class="tableros-panel tableros-panel--stretch">
+          <header class="tableros-panel-head">
+            <div>
+              <h3>Volumen disponible</h3>
+              <p>Distribución por estación</p>
+            </div>
+          </header>
+          <div class="tableros-panel-body">
+            <dx-pie-chart
+              [dataSource]="volumenData"
+              type="doughnut"
+              [palette]="palette"
+              [resolveLabelOverlapping]="'shift'"
+              (onPointClick)="onPieClick($event)">
+              <dxi-series argumentField="nombre" valueField="volumen">
+                <dxo-label [visible]="true" [customizeText]="customizeVolumenLabel">
+                  <dxo-connector [visible]="true"></dxo-connector>
+                </dxo-label>
+              </dxi-series>
+              <dxo-legend [visible]="true" horizontalAlignment="center" verticalAlignment="bottom"></dxo-legend>
+              <dxo-tooltip [enabled]="true"></dxo-tooltip>
+              <dxo-size [height]="mapChartHeight"></dxo-size>
+            </dx-pie-chart>
+          </div>
+        </section>
+      </div>
+
+      <!-- Mini mapa -->
+      <div class="col-xl-8 col-lg-7">
+        <section class="tableros-panel tableros-panel--stretch">
+          <header class="tableros-panel-head">
+            <div>
+              <h3>Mapa de estaciones</h3>
+              <p>Estado operativo georreferenciado</p>
+            </div>
+            <span class="tableros-legend">
+              <i class="dot dot--on"></i> Activo
+              <i class="dot dot--off"></i> Inactivo
+            </span>
+          </header>
+          <div class="tableros-panel-body">
+            <app-estaciones-map-widget
+              [stations]="mapStations"
+              [height]="mapChartHeight + 'px'"
+              (stationClick)="onMapStation($event)">
+            </app-estaciones-map-widget>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Capacidad multi-serie -->
+    <section class="tableros-panel tableros-panel--mt">
+      <header class="tableros-panel-head">
+        <div>
+          <h3>% de capacidad</h3>
+          <p>Evolución últimos 30 días por estación</p>
+        </div>
+      </header>
+      <dx-chart [dataSource]="capacidadChartData" [palette]="palette">
+        <dxo-common-series-settings argumentField="fecha" type="spline"></dxo-common-series-settings>
+        <dxi-series *ngFor="let name of capacidadSeriesNames" [valueField]="name" [name]="name"></dxi-series>
+        <dxo-argument-axis>
+          <dxo-label [overlappingBehavior]="'rotate'" [rotationAngle]="45"></dxo-label>
+        </dxo-argument-axis>
+        <dxo-legend verticalAlignment="bottom" horizontalAlignment="center"></dxo-legend>
+        <dxo-tooltip [enabled]="true"></dxo-tooltip>
+        <dxo-size [height]="320"></dxo-size>
+      </dx-chart>
+    </section>
+
+    <!-- Gauges -->
+    <section class="tableros-section">
+      <header class="tableros-panel-head">
+        <div>
+          <h3>Indicadores por estación</h3>
+          <p>% de capacidad actual</p>
+        </div>
+      </header>
+      <div class="row g-3">
+        <div class="col-md-4 col-6" *ngFor="let e of estaciones">
+          <div class="tableros-gauge" (click)="irDetalle(e)" role="button" tabindex="0">
+            <div class="tableros-gauge-name">{{ e.nombre }}</div>
+            <dx-circular-gauge [value]="e.capacidadPct">
+              <dxo-scale [startValue]="0" [endValue]="100" [tickInterval]="20">
+                <dxo-label [customizeText]="gaugeLabel"></dxo-label>
+              </dxo-scale>
+              <dxo-range-container>
+                <dxi-range [startValue]="0" [endValue]="40" color="rgba(22,108,159,0.45)"></dxi-range>
+                <dxi-range [startValue]="40" [endValue]="70" color="#166c9f"></dxi-range>
+                <dxi-range [startValue]="70" [endValue]="100" color="#e0e215"></dxi-range>
+              </dxo-range-container>
+              <dxo-value-indicator type="rectangleNeedle" color="#e0e215"></dxo-value-indicator>
+              <dxo-size [height]="160"></dxo-size>
+            </dx-circular-gauge>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabla resumen -->
+    <section class="tableros-panel">
+      <header class="tableros-panel-head">
+        <div>
+          <h3>Resumen de estaciones</h3>
+          <p>Clic en una fila para abrir el detalle BI</p>
+        </div>
+      </header>
+      <dx-data-grid
+        [dataSource]="estaciones"
+        [showBorders]="true"
+        [rowAlternationEnabled]="true"
+        [columnHidingEnabled]="true"
+        [hoverStateEnabled]="true"
+        (onRowClick)="onGridRowClick($event)">
+        <dxo-search-panel [visible]="true"></dxo-search-panel>
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxi-column dataField="nombre" caption="Estación"></dxi-column>
+        <dxi-column dataField="codigo" caption="ID" alignment="center"></dxi-column>
+        <dxi-column dataField="estado" caption="Estado" alignment="center" cellTemplate="estadoTpl"></dxi-column>
+        <dxi-column dataField="lastReading" caption="Último dato" alignment="center"></dxi-column>
+        <dxi-column dataField="ubicacion" caption="Ubicación"></dxi-column>
+        <dxi-column dataField="capacidadPct" caption="% Capacidad" alignment="center" dataType="number"></dxi-column>
+        <div *dxTemplate="let cell of 'estadoTpl'">
+          <span class="estado-pill" [class.estado-pill--on]="cell.value === 'activo'">
+            {{ cell.value === 'activo' ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+      </dx-data-grid>
+    </section>
+  </div>
+</div>

@@ -33,7 +33,7 @@
 
   <div class="form-area">
     <div class="glyph">
-      <i class="ti ti-user-plus"></i>
+      <i class="ti ti-lock"></i>
     </div>
 
     <div class="sys-id">
@@ -43,18 +43,10 @@
 
     <div class="panel panel--wide">
       <div class="status-row">
-        <div class="status-dot">Nuevo operador</div>
+        <div class="status-dot">Cambiar contraseña</div>
       </div>
 
-      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-
-        @if(successmsg) {
-          <ngb-alert type="success" [dismissible]="false">Registro completado correctamente.</ngb-alert>
-        }
-
-        @if(error) {
-          <ngb-alert type="danger" [dismissible]="false">{{ error }}</ngb-alert>
-        }
+      <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmit()">
 
         <div class="fld">
           <label class="fld-label" for="email">Correo electrónico</label>
@@ -63,6 +55,7 @@
             id="email"
             formControlName="email"
             placeholder="usuario@aquagenia.mx"
+            autocomplete="email"
             [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
           />
           @if(submitted && f.email.errors) {
@@ -74,43 +67,95 @@
         </div>
 
         <div class="fld">
-          <label class="fld-label" for="username">Nombre de usuario</label>
-          <input
-            type="text"
-            id="username"
-            formControlName="username"
-            placeholder="operador_aquagenia"
-            [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
-          />
-          @if(submitted && f.username.errors) {
+          <label class="fld-label" for="password">Nueva contraseña</label>
+          <div class="fld-input-wrap">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              placeholder="••••••••••••"
+              autocomplete="new-password"
+              (focus)="onPasswordFocus()"
+              (blur)="onPasswordBlur()"
+              [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+            />
+            <button
+              type="button"
+              class="pwd-toggle"
+              (mousedown)="$event.preventDefault()"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <i class="ti" [ngClass]="showPassword ? 'ti-eye-off' : 'ti-eye'"></i>
+            </button>
+          </div>
+          @if(submitted && f.password.errors?.required) {
             <div class="fld-error"><span>Campo requerido</span></div>
           }
+
+          <ul class="pwd-rules" [class.visible]="showPasswordRules" aria-live="polite">
+            <li [class.met]="passwordRules.length">
+              <span class="pwd-rule-icon" aria-hidden="true"></span>
+              <span>La contraseña debe tener entre 7 y 15 caracteres.</span>
+            </li>
+            <li [class.met]="passwordRules.case">
+              <span class="pwd-rule-icon" aria-hidden="true"></span>
+              <span>Al menos una mayúscula y una minúscula.</span>
+            </li>
+            <li [class.met]="passwordRules.special">
+              <span class="pwd-rule-icon" aria-hidden="true"></span>
+              <span>Un carácter no alfanumérico (por ejemplo #, $ o %).</span>
+            </li>
+            <li [class.met]="passwordRules.number">
+              <span class="pwd-rule-icon" aria-hidden="true"></span>
+              <span>Un número.</span>
+            </li>
+          </ul>
         </div>
 
         <div class="fld">
-          <label class="fld-label" for="password">Clave de acceso</label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            placeholder="••••••••••••"
-            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
-          />
-          @if(submitted && f.password.errors) {
-            <div class="fld-error"><span>Campo requerido</span></div>
-          }
+          <label class="fld-label" for="confirmPassword">Confirmar contraseña</label>
+          <div class="fld-input-wrap">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="••••••••••••"
+              autocomplete="new-password"
+              [ngClass]="{
+                'is-invalid': (submitted || f.confirmPassword.touched) && (f.confirmPassword.errors || changePasswordForm.errors?.passwordsMismatch),
+                'is-valid': passwordsMatch
+              }"
+            />
+            <button
+              type="button"
+              class="pwd-toggle"
+              (click)="toggleConfirmPasswordVisibility()"
+              [attr.aria-label]="showConfirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <i class="ti" [ngClass]="showConfirmPassword ? 'ti-eye-off' : 'ti-eye'"></i>
+            </button>
+          </div>
+          <div
+            class="fld-feedback fld-error"
+            [class.visible]="(submitted || f.confirmPassword.touched) && f.confirmPassword.errors?.required"
+          >
+            <span>Campo requerido</span>
+          </div>
+          <div
+            class="fld-feedback fld-error"
+            [class.visible]="(submitted || f.confirmPassword.touched) && !f.confirmPassword.errors?.required && changePasswordForm.errors?.passwordsMismatch"
+          >
+            <span>Las contraseñas no coinciden</span>
+          </div>
+          <div class="fld-feedback fld-ok" [class.visible]="passwordsMatch">
+            <span>Las contraseñas coinciden</span>
+          </div>
         </div>
 
-        <div class="fld-check">
-          <input type="checkbox" id="auth-terms-condition-check">
-          <label for="auth-terms-condition-check">
-            Acepto los <a href="javascript:void(0);">Términos y condiciones</a>
-          </label>
-        </div>
-
-        <button class="submit-btn" type="submit">
-          <i class="ti ti-user-check"></i>
-          <span>Registrar</span>
+        <button class="submit-btn" type="submit" [disabled]="changePasswordForm.invalid">
+          <i class="ti ti-lock-check"></i>
+          <span>Cambiar contraseña</span>
         </button>
 
         <div class="row-link">

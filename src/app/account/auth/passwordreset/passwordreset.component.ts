@@ -1,6 +1,7 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 import { AuthenticationService } from '../../../core/services/auth.service';
 import { environment } from '../../../../environments/environment';
@@ -10,23 +11,20 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './passwordreset.component.html',
   styleUrls: ['./passwordreset.component.scss']
 })
-
-/**
- * Reset-password component
- */
-export class PasswordresetComponent implements OnInit, AfterViewInit {
+export class PasswordresetComponent implements OnInit, AfterViewInit, OnDestroy {
 
   resetForm: UntypedFormGroup;
   submitted = false;
-  error = '';
-  success = '';
   loading = false;
 
-  // set the currenr year
   year: number = new Date().getFullYear();
 
-  // tslint:disable-next-line: max-line-length
-  constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) { }
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     document.body.setAttribute('class', 'authentication-bg');
@@ -35,32 +33,63 @@ export class PasswordresetComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {}
+
+  ngOnDestroy() {
+    document.body.classList.remove('authentication-bg');
   }
 
-  ngOnDestroy() { 
-    document.body.classList.remove('authentication-bg')
+  get f() {
+    return this.resetForm.controls;
   }
 
-  // convenience getter for easy access to form fields
-  get f() { return this.resetForm.controls; }
-
-  /**
-   * On submit form
-   */
   onSubmit() {
-    this.success = '';
     this.submitted = true;
 
-    // stop here if form is invalid
     if (this.resetForm.invalid) {
       return;
     }
+
     if (environment.defaultauth === 'firebase') {
-      this.authenticationService.resetPassword(this.f.email.value)
+      this.authenticationService
+        .resetPassword(this.f.email.value)
+        .then(() => {
+          Swal.fire({
+            title: 'Listo',
+            text: 'Revisa tu correo para restablecer el acceso.',
+            icon: 'success',
+            confirmButtonColor: '#c9a227',
+            confirmButtonText: 'Entendido',
+            allowOutsideClick: false,
+            background: '#141a21',
+            color: '#ffffff',
+          });
+        })
         .catch(error => {
-          this.error = error ? error : '';
+          Swal.fire({
+            title: '¡Ops!',
+            text: error ? String(error) : 'No se pudo enviar la solicitud.',
+            icon: 'error',
+            confirmButtonColor: '#c9a227',
+            confirmButtonText: 'Entendido',
+            allowOutsideClick: false,
+            background: '#141a21',
+            color: '#ffffff',
+          });
         });
+      return;
     }
+
+    // JWT: conectar con /login/usuario/recuperar/acceso cuando esté disponible
+    Swal.fire({
+      title: 'Listo',
+      text: 'Si el correo existe, recibirás instrucciones para restablecer el acceso.',
+      icon: 'success',
+      confirmButtonColor: '#c9a227',
+      confirmButtonText: 'Entendido',
+      allowOutsideClick: false,
+      background: '#141a21',
+      color: '#ffffff',
+    });
   }
 }

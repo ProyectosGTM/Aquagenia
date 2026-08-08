@@ -1,1 +1,43 @@
 @import '../auth-layout.scss';
+
+.fld-input-wrap {
+  position: relative;
+
+  input {
+    padding-right: 44px;
+  }
+}
+
+.pwd-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: rgba(255, 221, 0, 0.7);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease;
+
+  i {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  &:hover {
+    color: #ffdd00;
+    background: rgba(255, 221, 0, 0.08);
+  }
+
+  &:focus-visible {
+    outline: 1px solid rgba(255, 221, 0, 0.6);
+    outline-offset: 1px;
+  }
+}

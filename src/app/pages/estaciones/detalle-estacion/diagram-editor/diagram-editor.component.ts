@@ -10,6 +10,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  DiagramBindField,
+  DiagramBindableVariable,
   DiagramElement,
   DiagramElementType,
   DiagramPaletteItem,
@@ -39,6 +41,8 @@ export class DiagramEditorComponent implements OnChanges {
   @Input() locked = false;
   @Input() listaParametros: any[] = [];
   @Input() paletteImages: string[] = [];
+  /** Variables de estación para vincular shapes (Ilustración 7 — vista de variables) */
+  @Input() estacionVariables: DiagramBindableVariable[] = [];
 
   @Output() elementsChange = new EventEmitter<DiagramElement[]>();
 
@@ -51,30 +55,69 @@ export class DiagramEditorComponent implements OnChanges {
   private nextZ = 1;
 
   readonly paletteItems: DiagramPaletteItem[] = [
-    { type: 'heading', label: 'Título', icon: 'ti ti-heading', category: 'contenido', defaultWidth: 40, defaultHeight: 8, defaultContent: 'Título del proceso' },
-    { type: 'text', label: 'Texto', icon: 'ti ti-letter-t', category: 'contenido', defaultWidth: 28, defaultHeight: 7, defaultContent: 'Texto descriptivo' },
-    { type: 'badge', label: 'Etiqueta', icon: 'ti ti-tag', category: 'contenido', defaultWidth: 18, defaultHeight: 6, defaultContent: 'Etiqueta' },
+    { type: 'heading', label: 'Título del sitio', icon: 'ti ti-heading', category: 'contenido', defaultWidth: 42, defaultHeight: 8, defaultContent: 'POZO / ESTACIÓN' },
+    { type: 'text', label: 'Texto', icon: 'ti ti-letter-t', category: 'contenido', defaultWidth: 28, defaultHeight: 7, defaultContent: 'Descripción del proceso' },
+    { type: 'badge', label: 'Etiqueta', icon: 'ti ti-tag', category: 'contenido', defaultWidth: 18, defaultHeight: 6, defaultContent: 'TAG' },
+    { type: 'panel-datos', label: 'Panel de datos', icon: 'ti ti-layout-bottombar', category: 'contenido', defaultWidth: 28, defaultHeight: 14, defaultContent: 'Nivel bomba', bindField: 'nivel_actual' },
     { type: 'input', label: 'Campo texto', icon: 'ti ti-forms', category: 'formulario', defaultWidth: 26, defaultHeight: 7, defaultContent: 'Valor' },
     { type: 'textarea', label: 'Área texto', icon: 'ti ti-align-left', category: 'formulario', defaultWidth: 32, defaultHeight: 14, defaultContent: 'Notas del proceso...' },
-    { type: 'shape', label: 'Bloque', icon: 'ti ti-square', category: 'proceso', defaultWidth: 22, defaultHeight: 12, defaultContent: 'Etapa' },
-    { type: 'caudal', label: 'Sensor caudal', icon: 'ti ti-gauge', category: 'proceso', defaultWidth: 20, defaultHeight: 9, defaultContent: '--' },
+    { type: 'shape', label: 'Bloque proceso', icon: 'ti ti-square', category: 'proceso', defaultWidth: 22, defaultHeight: 12, defaultContent: 'Etapa' },
+    { type: 'caudal', label: 'Sensor caudal vivo', icon: 'ti ti-gauge', category: 'proceso', defaultWidth: 20, defaultHeight: 9, defaultContent: '--' },
   ];
 
-  /** Componentes de simulación hídrica — no modificar paletteItems existente */
+  /** Agua / hidráulica — tuberías, tanques, bombas */
   readonly waterPaletteItems: DiagramPaletteItem[] = [
-    { type: 'pipe-h', label: 'Tubería horizontal', icon: 'ti ti-arrows-horizontal', category: 'hidraulica', defaultWidth: 36, defaultHeight: 7, variant: 'normal' },
-    { type: 'pipe-v', label: 'Tubería vertical', icon: 'ti ti-arrows-vertical', category: 'hidraulica', defaultWidth: 7, defaultHeight: 28, variant: 'normal' },
-    { type: 'pipe-elbow', label: 'Codo / curva', icon: 'ti ti-corner-down-right', category: 'hidraulica', defaultWidth: 16, defaultHeight: 16, defaultContent: 'normal', variant: 'se' },
-    { type: 'valve', label: 'Llave de paso', icon: 'ti ti-toggle-left', category: 'hidraulica', defaultWidth: 12, defaultHeight: 12, defaultContent: 'Llave', variant: 'open' },
-    { type: 'bomba', label: 'Bomba', icon: 'ti ti-engine', category: 'hidraulica', defaultWidth: 14, defaultHeight: 14, defaultContent: 'Bomba', variant: 'on' },
+    { type: 'pipe-h', label: 'Tubería horizontal', icon: 'ti ti-arrows-horizontal', category: 'hidraulica', defaultWidth: 38, defaultHeight: 10, variant: 'normal' },
+    { type: 'pipe-v', label: 'Tubería vertical', icon: 'ti ti-arrows-vertical', category: 'hidraulica', defaultWidth: 10, defaultHeight: 30, variant: 'normal' },
+    { type: 'pipe-elbow', label: 'Codo / curva', icon: 'ti ti-corner-down-right', category: 'hidraulica', defaultWidth: 18, defaultHeight: 18, defaultContent: 'normal', variant: 'se' },
+    { type: 'pipe-tee', label: 'Tee / derivación', icon: 'ti ti-arrows-split-2', category: 'hidraulica', defaultWidth: 20, defaultHeight: 20, variant: 'normal' },
+    { type: 'valve', label: 'Válvula / llave', icon: 'ti ti-adjustments-horizontal', category: 'hidraulica', defaultWidth: 16, defaultHeight: 16, defaultContent: 'Válvula', variant: 'open' },
+    { type: 'bomba', label: 'Bomba', icon: 'ti ti-engine', category: 'hidraulica', defaultWidth: 22, defaultHeight: 16, defaultContent: 'Bomba', variant: 'on' },
     { type: 'flujo', label: 'Flecha de flujo', icon: 'ti ti-arrow-big-right', category: 'hidraulica', defaultWidth: 16, defaultHeight: 8, variant: 'right' },
-    { type: 'pozo', label: 'Pozo de agua', icon: 'ti ti-cylinder', category: 'hidraulica', defaultWidth: 22, defaultHeight: 26, defaultContent: 'Pozo', variant: '62' },
+    { type: 'pozo', label: 'Pozo (corte)', icon: 'ti ti-cylinder', category: 'hidraulica', defaultWidth: 24, defaultHeight: 32, defaultContent: 'Pozo', variant: '62' },
     { type: 'carcamo', label: 'Cárcamo', icon: 'ti ti-box', category: 'hidraulica', defaultWidth: 28, defaultHeight: 20, defaultContent: 'Cárcamo', variant: '75' },
-    { type: 'estanque', label: 'Estanque', icon: 'ti ti-database', category: 'hidraulica', defaultWidth: 16, defaultHeight: 28, defaultContent: 'Estanque', variant: '68' },
+    { type: 'estanque', label: 'Estanque vertical', icon: 'ti ti-database', category: 'hidraulica', defaultWidth: 16, defaultHeight: 28, defaultContent: 'Estanque', variant: '68' },
+    { type: 'cisterna', label: 'Cisterna / depósito', icon: 'ti ti-barrel', category: 'hidraulica', defaultWidth: 32, defaultHeight: 18, defaultContent: 'Cisterna', variant: '70' },
     { type: 'reservorio', label: 'Reservorio', icon: 'ti ti-waves-electricity', category: 'hidraulica', defaultWidth: 38, defaultHeight: 22, defaultContent: 'Reservorio', variant: '80' },
   ];
 
-  private readonly backgroundWaterTypes = new Set<DiagramElementType>(['pozo', 'estanque', 'carcamo', 'reservorio']);
+  /** Instrumentación de campo */
+  readonly instrumentPaletteItems: DiagramPaletteItem[] = [
+    { type: 'caudalimetro', label: 'Caudalímetro', icon: 'ti ti-topology-ring', category: 'instrumentacion', defaultWidth: 22, defaultHeight: 12, defaultContent: 'Q', bindField: 'caudal' },
+    { type: 'manometro', label: 'Manómetro', icon: 'ti ti-gauge', category: 'instrumentacion', defaultWidth: 12, defaultHeight: 14, defaultContent: 'P', variant: '55' },
+    { type: 'medidor', label: 'Medidor / contador', icon: 'ti ti-chart-dots', category: 'instrumentacion', defaultWidth: 18, defaultHeight: 11, defaultContent: '--', bindField: 'gasto_acumulado' },
+    { type: 'sensor-nivel', label: 'Sensor de nivel', icon: 'ti ti-ruler-measure', category: 'instrumentacion', defaultWidth: 16, defaultHeight: 10, defaultContent: '--', bindField: 'nivel_actual' },
+    { type: 'sensor-ph', label: 'Sensor PH', icon: 'ti ti-test-pipe', category: 'instrumentacion', defaultWidth: 16, defaultHeight: 10, defaultContent: '--', bindField: 'ph_carcamo' },
+    { type: 'sensor-cloro', label: 'Sensor cloro', icon: 'ti ti-flask', category: 'instrumentacion', defaultWidth: 16, defaultHeight: 10, defaultContent: '--', bindField: 'cloro_residual' },
+    { type: 'sensor-oxigeno', label: 'Sensor oxígeno', icon: 'ti ti-droplet-half-2', category: 'instrumentacion', defaultWidth: 16, defaultHeight: 10, defaultContent: '--', bindField: 'oxigeno_disuelto' },
+    { type: 'plc', label: 'PLC / gabinete', icon: 'ti ti-server', category: 'instrumentacion', defaultWidth: 14, defaultHeight: 18, defaultContent: 'PLC' },
+  ];
+
+  /** Widgets de visualización (estilo sinóptico SCADA) */
+  readonly vizPaletteItems: DiagramPaletteItem[] = [
+    { type: 'widget-valor', label: 'Valor en vivo', icon: 'ti ti-square-number-1', category: 'visualizacion', defaultWidth: 18, defaultHeight: 12, defaultContent: 'Valor', bindField: 'caudal' },
+    { type: 'widget-nivel', label: 'Gauge de nivel', icon: 'ti ti-chart-bar', category: 'visualizacion', defaultWidth: 10, defaultHeight: 28, defaultContent: 'Nivel', bindField: 'nivel_actual', variant: '65' },
+    { type: 'widget-gauge', label: 'Semi-gauge', icon: 'ti ti-chart-arcs', category: 'visualizacion', defaultWidth: 20, defaultHeight: 16, defaultContent: 'Capacidad', bindField: 'nivel_actual', variant: '72' },
+    { type: 'widget-chart', label: 'Gráfico tendencia', icon: 'ti ti-chart-line', category: 'visualizacion', defaultWidth: 36, defaultHeight: 22, defaultContent: 'Tendencia 24h' },
+    { type: 'widget-table', label: 'Tabla de lecturas', icon: 'ti ti-table', category: 'visualizacion', defaultWidth: 34, defaultHeight: 24, defaultContent: 'Lecturas' },
+  ];
+
+  private readonly backgroundWaterTypes = new Set<DiagramElementType>([
+    'pozo', 'estanque', 'carcamo', 'reservorio', 'cisterna',
+  ]);
+
+  private readonly fillableTypes = new Set<DiagramElementType>([
+    'pozo', 'estanque', 'carcamo', 'reservorio', 'cisterna', 'widget-nivel', 'widget-gauge', 'manometro',
+  ]);
+
+  /** Serie mock para widget-chart */
+  readonly chartSeries = [42, 48, 45, 55, 62, 58, 70, 68, 74, 71, 80, 76, 82, 78, 85];
+  readonly tableRows = [
+    { tag: 'Q inst.', valor: '12.4', unidad: 'L/s' },
+    { tag: 'Nivel', valor: '68', unidad: '%' },
+    { tag: 'PH', valor: '7.2', unidad: '' },
+    { tag: 'Cloro', valor: '0.6', unidad: 'mg/L' },
+  ];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['elements'] && this.elements?.length) {
@@ -84,8 +127,7 @@ export class DiagramEditorComponent implements OnChanges {
   }
 
   get categories(): string[] {
-    const base = [...new Set(this.paletteItems.map((p) => p.category))];
-    return [...base, 'hidraulica'];
+    return ['contenido', 'formulario', 'proceso', 'hidraulica', 'instrumentacion', 'visualizacion'];
   }
 
   get categoryLabel(): Record<string, string> {
@@ -94,7 +136,9 @@ export class DiagramEditorComponent implements OnChanges {
       formulario: 'Formulario',
       proceso: 'Proceso',
       iconos: 'Iconos',
-      hidraulica: 'Simulación hídrica',
+      hidraulica: 'Agua e hidráulica',
+      instrumentacion: 'Instrumentación',
+      visualizacion: 'Visualización',
     };
   }
 
@@ -102,11 +146,29 @@ export class DiagramEditorComponent implements OnChanges {
     if (cat === 'hidraulica') {
       return this.waterPaletteItems;
     }
+    if (cat === 'instrumentacion') {
+      return this.instrumentPaletteItems;
+    }
+    if (cat === 'visualizacion') {
+      return this.vizPaletteItems;
+    }
     return this.paletteItems.filter((p) => p.category === cat);
   }
 
   isWaterType(type: DiagramElementType): boolean {
     return this.waterPaletteItems.some((p) => p.type === type);
+  }
+
+  isInstrumentType(type: DiagramElementType): boolean {
+    return this.instrumentPaletteItems.some((p) => p.type === type);
+  }
+
+  isVizType(type: DiagramElementType): boolean {
+    return this.vizPaletteItems.some((p) => p.type === type) || type === 'panel-datos';
+  }
+
+  isFillable(type: DiagramElementType): boolean {
+    return this.fillableTypes.has(type);
   }
 
   isBackgroundElement(el: DiagramElement): boolean {
@@ -369,20 +431,129 @@ export class DiagramEditorComponent implements OnChanges {
     return param?.Caudal ?? el.content;
   }
 
+  isLiveSensorType(type: DiagramElementType): boolean {
+    return (
+      type === 'caudal' ||
+      type === 'sensor-nivel' ||
+      type === 'sensor-ph' ||
+      type === 'sensor-cloro' ||
+      type === 'sensor-oxigeno' ||
+      type === 'medidor' ||
+      type === 'caudalimetro' ||
+      type === 'widget-valor' ||
+      type === 'panel-datos' ||
+      type === 'widget-nivel' ||
+      type === 'widget-gauge'
+    );
+  }
+
+  getNumericBound(el: DiagramElement): number {
+    const raw = this.getBoundValue(el);
+    const n = parseFloat(String(raw).replace(/[^\d.-]/g, ''));
+    if (!isNaN(n)) {
+      return Math.max(0, Math.min(100, n > 100 ? n % 100 : n));
+    }
+    return this.getFillLevel(el);
+  }
+
+  getChartPath(): string {
+    const data = this.chartSeries;
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const span = Math.max(1, max - min);
+    const w = 100;
+    const h = 40;
+    return data
+      .map((v, i) => {
+        const x = (i / (data.length - 1)) * w;
+        const y = h - ((v - min) / span) * (h - 4) - 2;
+        return `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`;
+      })
+      .join(' ');
+  }
+
+  getGaugeArc(el: DiagramElement): string {
+    const pct = this.getNumericBound(el) / 100;
+    const start = Math.PI;
+    const end = Math.PI + Math.PI * pct;
+    const r = 36;
+    const cx = 50;
+    const cy = 48;
+    const x1 = cx + r * Math.cos(start);
+    const y1 = cy + r * Math.sin(start);
+    const x2 = cx + r * Math.cos(end);
+    const y2 = cy + r * Math.sin(end);
+    const large = pct > 0.5 ? 1 : 0;
+    return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
+  }
+
+  getNeedleRotation(el: DiagramElement): number {
+    return -90 + (this.getNumericBound(el) / 100) * 180;
+  }
+
+  getBoundValue(el: DiagramElement): string {
+    if (el.type === 'caudal' && el.paramId) {
+      return this.getCaudalValue(el);
+    }
+    if (el.bindField && this.estacionVariables?.length) {
+      const v = this.estacionVariables.find((x) => x.key === el.bindField);
+      if (v != null) {
+        return `${v.value}${v.unit ? ' ' + v.unit : ''}`;
+      }
+    }
+    return el.content || '--';
+  }
+
+  getBoundLabel(el: DiagramElement): string {
+    if (el.bindField && this.estacionVariables?.length) {
+      const v = this.estacionVariables.find((x) => x.key === el.bindField);
+      if (v) {
+        return v.label;
+      }
+    }
+    const defaults: Partial<Record<DiagramElementType, string>> = {
+      caudal: 'Caudal',
+      'sensor-nivel': 'Nivel',
+      'sensor-ph': 'PH',
+      'sensor-cloro': 'Cloro',
+      'sensor-oxigeno': 'Oxígeno',
+      medidor: 'Medidor',
+      caudalimetro: 'Caudal',
+      manometro: 'Presión',
+      'panel-datos': 'Dato',
+      'widget-valor': 'Valor',
+      'widget-nivel': 'Nivel',
+      'widget-gauge': 'Capacidad',
+    };
+    return defaults[el.type] ?? 'Variable';
+  }
+
+  onBindFieldChange(el: DiagramElement): void {
+    el.content = this.getBoundValue(el);
+    this.emitChange();
+  }
+
   syncCaudalElements(): void {
     let changed = false;
     this.elements.forEach((el) => {
-      if (el.type !== 'caudal' || !el.paramId) {
+      if (el.type === 'caudal' && el.paramId) {
+        const param = this.listaParametros?.find((p) => p.Id === el.paramId);
+        if (!param) {
+          return;
+        }
+        const val = String(param.Caudal);
+        if (el.content !== val) {
+          el.content = val;
+          changed = true;
+        }
         return;
       }
-      const param = this.listaParametros?.find((p) => p.Id === el.paramId);
-      if (!param) {
-        return;
-      }
-      const val = String(param.Caudal);
-      if (el.content !== val) {
-        el.content = val;
-        changed = true;
+      if (el.bindField && this.isLiveSensorType(el.type)) {
+        const next = this.getBoundValue(el);
+        if (el.content !== next) {
+          el.content = next;
+          changed = true;
+        }
       }
     });
     if (changed) {
@@ -426,6 +597,10 @@ export class DiagramEditorComponent implements OnChanges {
         ? this.listaParametros[0].Id
         : undefined);
 
+    const bindField: DiagramBindField | undefined =
+      item.bindField ??
+      (item.type === 'caudal' ? 'caudal' : undefined);
+
     const el: DiagramElement = {
       id: this.newId(),
       type: item.type,
@@ -443,9 +618,14 @@ export class DiagramEditorComponent implements OnChanges {
           : (item.defaultContent ?? ''),
       imageUrl: item.imageUrl,
       paramId,
+      bindField,
       variant: item.variant,
       zIndex: this.backgroundWaterTypes.has(item.type) ? 1 : this.nextZ++,
     };
+
+    if (bindField && this.isLiveSensorType(item.type) && item.type !== 'caudal') {
+      el.content = this.getBoundValue(el);
+    }
 
     this.elements = [...this.elements, el];
     this.selectedId = el.id;

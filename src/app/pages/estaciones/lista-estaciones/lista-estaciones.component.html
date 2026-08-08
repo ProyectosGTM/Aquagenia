@@ -12,8 +12,14 @@
         <i class="ti ti-search"></i>
         <input type="text" placeholder="Buscar N° Determinante..." [(ngModel)]="searchTerm" />
       </div>
-      <button class="hud-btn" (click)="mostrarTodos()">
+      <button class="hud-btn" (click)="mostrarTodos()" [class.hud-btn-active]="statusFilter === 'all' && !searchTerm">
         <i class="ti ti-list"></i><span>Todos</span>
+      </button>
+      <button class="hud-btn" (click)="setStatusFilter('active')" [class.hud-btn-active]="statusFilter === 'active'">
+        <i class="ti ti-circle-check"></i><span>Activos</span>
+      </button>
+      <button class="hud-btn" (click)="setStatusFilter('inactive')" [class.hud-btn-active]="statusFilter === 'inactive'">
+        <i class="ti ti-circle-x"></i><span>Inactivos</span>
       </button>
       <button class="hud-btn hud-btn-accent" (click)="buscar()">
         <i class="ti ti-search"></i><span>Buscar</span>

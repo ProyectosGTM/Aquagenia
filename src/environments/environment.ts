@@ -3,9 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: true,
+  production: false,
   googleMapsApiKey: 'AIzaSyCViGKafQxsHPmgGtlPsUDIaOdttLKJLk4',
-  defaultauth: 'fackbackend',
+  /** JWT Bearer auth against real API (no cookies / no fake backend). */
+  defaultauth: 'jwt',
+  /** Base URL for auth and business APIs. Paths: /login, /login/refresh, /login/logout, /login/me */
+  apiBase: 'https://aquagenia.mx/aquageniaAPI',
   firebaseConfig: {
     apiKey: '',
     authDomain: '',

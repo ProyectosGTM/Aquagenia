@@ -1,68 +1,131 @@
 <div class="page-root" [@moduleEnter]>
 
-    <!-- HEADER -->
-    <div class="row g-0">
-      <div class="col-12">
-        <div class="page-header">
-          <div class="page-header-inner">
+  <!-- HEADER -->
+  <div class="row g-0">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="page-header-inner">
 
-            <div class="page-header-brand">Aquagenia</div>
+          <div class="page-header-brand">Aquagenia</div>
 
-            <div class="page-header-body">
-              <span class="page-header-tag">Aquagenia / Módulos</span>
-              <h1 class="page-header-title">Módulos del <span>Sistema</span></h1>
-              <div class="page-header-chips">
-                <app-page-header-datetime></app-page-header-datetime>
-              </div>
+          <div class="page-header-body">
+            <span class="page-header-tag">Aquagenia / Módulos</span>
+            <h1 class="page-header-title">Módulos del <span>Sistema</span></h1>
+            <div class="page-header-chips">
+              <app-page-header-datetime></app-page-header-datetime>
             </div>
+          </div>
 
-            <div class="page-header-side">
-              <button class="page-btn-primary">
-                <i class="ti ti-plus"></i> Agregar
-              </button>
-            </div>
+          <div class="page-header-side">
+            <button type="button" class="page-btn-primary" (click)="irAgregar()">
+              <i class="ti ti-plus"></i> Agregar
+            </button>
+          </div>
 
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="row g-3 p-3">
+    <div class="col-12">
+
+      <div class="grid-toolbar">
+        <button type="button" class="grid-btn-contraer" (click)="toggleExpandGroups()">
+          <i class="ti ti-arrows-minimize"></i> Contraer
+        </button>
+        <button type="button" class="grid-btn-reiniciar" (click)="limpiarCampos()">
+          <i class="ti ti-refresh"></i> Reiniciar
+        </button>
+      </div>
+
+      <dx-load-panel
+        [visible]="cargando"
+        [showIndicator]="true"
+        [showPane]="true"
+        [shading]="true"
+        message="Cargando módulos..."
+        shadingColor="rgba(0,0,0,0.35)">
+      </dx-load-panel>
+
+      <dx-data-grid
+        id="gridModulos"
+        [dataSource]="listaModulos"
+        [keyExpr]="'id'"
+        [columnHidingEnabled]="true"
+        [showBorders]="true"
+        [showColumnLines]="true"
+        [showRowLines]="true"
+        [rowAlternationEnabled]="true"
+        [width]="'100%'">
+
+        <dxo-grouping [autoExpandAll]="autoExpandAllGroups"></dxo-grouping>
+
+        <dxo-search-panel [visible]="true" [width]="200" placeholder="Buscar..."></dxo-search-panel>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20]" [showInfo]="true"></dxo-pager>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-paging [pageSize]="20"></dxo-paging>
+
+        <dxi-column
+          caption="Acciones"
+          alignment="center"
+          [width]="120"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          cellTemplate="accionesTpl">
+        </dxi-column>
+        <dxi-column dataField="nombre" caption="Nombre" alignment="center" dataType="string"></dxi-column>
+        <dxi-column dataField="descripcion" caption="Descripción" alignment="center" dataType="string"></dxi-column>
+        <dxi-column
+          dataField="estatus"
+          caption="Estatus"
+          alignment="center"
+          dataType="number"
+          cellTemplate="estatusTpl">
+        </dxi-column>
+
+        <div *dxTemplate="let cell of 'accionesTpl'">
+          <div class="modulos-acciones">
+            <button
+              type="button"
+              class="modulos-accion-btn"
+              title="Editar"
+              (click)="irEditar(cell.data)">
+              <i class="ti ti-pencil"></i>
+            </button>
+            <button
+              *ngIf="estaActivo(cell.data)"
+              type="button"
+              class="modulos-accion-btn modulos-accion-btn--off"
+              title="Desactivar"
+              (click)="cambiarEstatus(cell.data)">
+              <i class="ti ti-circle-off"></i>
+            </button>
+            <button
+              *ngIf="!estaActivo(cell.data)"
+              type="button"
+              class="modulos-accion-btn modulos-accion-btn--on"
+              title="Activar"
+              (click)="cambiarEstatus(cell.data)">
+              <i class="ti ti-circle-check"></i>
+            </button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- CONTENIDO -->
-    <div class="row g-3 p-3">
-      <div class="col-12">
-
-        <div class="grid-toolbar">
-          <button type="button" class="grid-btn-contraer" (click)="toggleExpandGroups()">
-            <i class="ti ti-arrows-minimize"></i> Contraer
-          </button>
-          <button type="button" class="grid-btn-reiniciar" (click)="limpiarCampos()">
-            <i class="ti ti-refresh"></i> Reiniciar
-          </button>
+        <div *dxTemplate="let cell of 'estatusTpl'">
+          <span
+            class="modulos-estatus"
+            [class.modulos-estatus--activo]="cell.value === 1"
+            [class.modulos-estatus--inactivo]="cell.value !== 1">
+            {{ estatusTexto(cell.value) }}
+          </span>
         </div>
 
-        <dx-data-grid id="gridModulos"
-          [keyExpr]="'id'"
-          [columnHidingEnabled]="true"
-          [showBorders]="true"
-          [showColumnLines]="true"
-          [showRowLines]="true"
-          [rowAlternationEnabled]="true"
-          [width]="'100%'">
-
-          <dxo-grouping [autoExpandAll]="autoExpandAllGroups"></dxo-grouping>
-
-          <dxo-search-panel [visible]="true" [width]="200" placeholder="Buscar..."></dxo-search-panel>
-          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20]" [showInfo]="true"></dxo-pager>
-          <dxo-group-panel [visible]="true"></dxo-group-panel>
-          <dxo-filter-row [visible]="true"></dxo-filter-row>
-          <dxo-header-filter [visible]="true"></dxo-header-filter>
-
-          <dxi-column caption="Acciones" alignment="center" [width]="150"></dxi-column>
-          <dxi-column dataField="nombre" caption="Nombre" alignment="center" dataType="string"></dxi-column>
-          <dxi-column dataField="estatus" caption="Estatus" alignment="center" dataType="string"></dxi-column>
-
-        </dx-data-grid>
-      </div>
+      </dx-data-grid>
     </div>
-
   </div>
+
+</div>

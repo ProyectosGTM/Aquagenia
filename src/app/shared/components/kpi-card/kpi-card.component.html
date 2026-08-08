@@ -1,0 +1,11 @@
+<div class="kpi-card kpi-card--{{ accent }}">
+  <div class="kpi-card-icon"><i [class]="icon"></i></div>
+  <div class="kpi-card-body">
+    <span>{{ label }}</span>
+    <strong>{{ value }}</strong>
+    <small class="kpi-card-trend" *ngIf="trend" [class.kpi-card-trend--up]="trend === 'up'" [class.kpi-card-trend--down]="trend === 'down'">
+      <i class="ti" [class.ti-arrow-up]="trend === 'up'" [class.ti-arrow-down]="trend === 'down'" [class.ti-minus]="trend === 'flat'"></i>
+      {{ trendLabel }}
+    </small>
+  </div>
+</div>

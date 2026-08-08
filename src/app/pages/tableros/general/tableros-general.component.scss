@@ -1,0 +1,150 @@
+$aquagenia-blue: #166c9f;
+$aquagenia-yellow: #e0e215;
+$aquagenia-card-bg: #071b25;
+$aquagenia-layout-bg-soft: #0e3147;
+$aquagenia-text-muted: rgba(255, 255, 255, 0.45);
+
+.tableros-body {
+  padding: 18px 20px 32px;
+}
+
+.tableros-section {
+  margin-bottom: 18px;
+}
+
+.tableros-panel {
+  background: $aquagenia-card-bg;
+  border: 1px solid rgba($aquagenia-blue, 0.28);
+  border-radius: 12px;
+  padding: 16px 18px 12px;
+  margin-bottom: 0;
+
+  &--mt { margin-top: 18px; margin-bottom: 18px; }
+
+  &--stretch {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.tableros-panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+
+  app-estaciones-map-widget {
+    flex: 1 1 auto;
+    display: block;
+    min-height: 0;
+  }
+}
+
+.tableros-map-row {
+  > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.tableros-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  p {
+    margin: 0;
+    font-size: 12px;
+    color: $aquagenia-text-muted;
+  }
+}
+
+.tableros-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: $aquagenia-text-muted;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 2px;
+
+    &--on { background: $aquagenia-yellow; }
+    &--off { background: #64748b; }
+  }
+}
+
+.tableros-gauge {
+  background: $aquagenia-card-bg;
+  border: 1px solid rgba($aquagenia-blue, 0.28);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+
+  &:hover {
+    border-color: rgba($aquagenia-yellow, 0.45);
+    transform: translateY(-2px);
+  }
+}
+
+.tableros-gauge-name {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.estado-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(100, 116, 139, 0.25);
+  color: #94a3b8;
+  border: 1px solid rgba(100, 116, 139, 0.4);
+
+  &--on {
+    background: rgba($aquagenia-yellow, 0.12);
+    color: $aquagenia-yellow;
+    border-color: rgba($aquagenia-yellow, 0.4);
+  }
+}
+
+::ng-deep .tableros-page {
+  .dx-widget { color: rgba(255, 255, 255, 0.88); }
+  .dx-datagrid {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.88);
+  }
+  .dx-datagrid-headers {
+    background: $aquagenia-layout-bg-soft;
+    color: #fff;
+  }
+  .dx-datagrid-rowsview .dx-row {
+    background: $aquagenia-card-bg;
+  }
+  .dx-datagrid-rowsview .dx-row-alt > td {
+    background: rgba($aquagenia-blue, 0.08);
+  }
+  .dx-piechart path,
+  .dx-chart path {
+    stroke: transparent;
+  }
+}
